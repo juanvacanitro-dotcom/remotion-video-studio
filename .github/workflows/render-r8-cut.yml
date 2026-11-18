@@ -1,0 +1,45 @@
+name: Render GTA VI R8 real-footage cut
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/compositions/GTA6R8Cut.tsx'
+      - 'src/Root.tsx'
+      - '.github/workflows/render-r8-cut.yml'
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install tools
+        run: |
+          pip install gdown
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      - name: Download R7 source from Drive
+        run: |
+          mkdir -p public/media
+          gdown "https://drive.google.com/uc?id=1jKbONQjBByhi8T-vW_EZPsQggwSbtF3_" -O public/media/GTA6-R7-source.mp4
+      - name: Install Remotion
+        run: npm install
+      - name: Ensure browser
+        run: npx remotion browser ensure
+      - name: Render R8 real-footage cut
+        run: npx remotion render src/index.ts GTA6R8Cut out/GTA6-R8-real-footage.mp4 --codec=h264
+      - name: Verify output
+        run: ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 out/GTA6-R8-real-footage.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-R8-real-footage
+          path: out/GTA6-R8-real-footage.mp4
+          retention-days: 7
