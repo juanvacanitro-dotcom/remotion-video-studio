@@ -1,0 +1,29 @@
+name: Inspect user source clips for R8
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: |
+          pip install gdown
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Download first source clips
+        run: |
+          mkdir -p inspect
+          gdown 'https://drive.google.com/uc?id=1CLjql_xDTMiIGUc8OIbzTim9yDrYlVMC' -O inspect/01.mp4
+          gdown 'https://drive.google.com/uc?id=1YQj0yBKRus3n4v7Zn9OyGycSWvWfPyiE' -O inspect/02.mp4
+          gdown 'https://drive.google.com/uc?id=1FaSB1Oq92gu5gmPmfYq78w7pCU6oOQaz' -O inspect/04.mp4
+          gdown 'https://drive.google.com/uc?id=1bdtDAcHlHqu70p44ydClhn6mWLysYRcs' -O inspect/05.mp4
+          gdown 'https://drive.google.com/uc?id=1t9A8G9wavYapS-j_GL5LQKZWx-A0_Phb' -O inspect/06.mp4
+      - name: Create visual contact sheets
+        run: |
+          for f in inspect/*.mp4; do echo "== $f =="; ffprobe -v error -show_entries format=duration -of csv=p=0 "$f"; ffmpeg -y -loglevel error -i "$f" -vf "fps=1/2,scale=480:270,tile=3x3" -frames:v 1 "${f%.mp4}.jpg"; done
+      - run: zip -q inspect-clips.zip inspect/*
+      - uses: actions/upload-artifact@v4
+        with: {name: inspect-source-clips, path: inspect-clips.zip, retention-days: 7}
