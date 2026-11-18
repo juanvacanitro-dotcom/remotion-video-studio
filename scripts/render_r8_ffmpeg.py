@@ -5,8 +5,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 ROOT=Path("work")
-MEDIA=ROOT/"media"; ASSETS=ROOT/"assets"; OUT=ROOT/"out"; CARDS=ROOT/"cards"; SEG=ROOT/"segments"
-for p in [MEDIA,ASSETS,OUT,CARDS,SEG]: p.mkdir(parents=True,exist_ok=True)
+MEDIA=ROOT/"media"; ASSETS=ROOT/"assets"; STILLS=ROOT/"stills"; OUT=ROOT/"out"; CARDS=ROOT/"cards"; SEG=ROOT/"segments"
+for p in [MEDIA,ASSETS,STILLS,OUT,CARDS,SEG]: p.mkdir(parents=True,exist_ok=True)
 W,H,FPS=1920,1080,30
 FONT="/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf"
 FONT_REG="/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
@@ -237,6 +237,19 @@ def make_cut(src,start,dur,out,nico=False,logo=False,zoomdir=1):
 def make_card_cut(card,dur,out):
     vf="zoompan=z='min(zoom+0.0007,1.045)':x='iw/2-(iw/zoom/2)+sin(on/20)*6':y='ih/2-(ih/zoom/2)':d=1:s=1920x1080:fps=30,eq=contrast=1.02:saturation=1.02,setsar=1,format=yuv420p"
     run(["ffmpeg","-y","-loop","1","-i",str(card),"-t",str(dur),"-vf",vf,"-an","-r",str(FPS),"-c:v","libx264","-preset","veryfast","-crf","19","-pix_fmt","yuv420p",str(out)],quiet=True)
+def make_still_cut(src,dur,out,nico=False,logo=False):
+    src=Path(src)
+    base_vf="scale=2300:1294:force_original_aspect_ratio=increase,crop=1920:1080,zoompan=z='min(zoom+0.0014,1.10)':x='iw/2-(iw/zoom/2)+sin(on/13)*18':y='ih/2-(ih/zoom/2)+cos(on/17)*10':d=1:s=1920x1080:fps=30,eq=contrast=1.12:saturation=1.20:gamma=0.98,unsharp=5:5:0.5,setsar=1"
+    if nico:
+        filt=f"[0:v]{base_vf}[bg];[1:v]scale=430:-1,format=rgba[st];[bg][st]overlay=x='W-w-90+18*sin(t*4)':y='H-h-35+10*sin(t*5)':enable='between(t,0.08,{max(.1,dur-.05):.3f})':shortest=1,format=yuv420p[v]"
+        cmd=["ffmpeg","-y","-loop","1","-i",str(src),"-loop","1","-i",str(ROOT/"nico_cutout.png"),"-t",str(dur),"-filter_complex",filt,"-map","[v]","-an","-r",str(FPS),"-c:v","libx264","-preset","veryfast","-crf","19","-pix_fmt","yuv420p",str(out)]
+    else:
+        vf=base_vf
+        if logo:
+            vf+=",drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf:text='GTA VI':x=68:y=55:fontsize=66:fontcolor=white:borderw=5:bordercolor=black:shadowx=4:shadowy=4"
+        cmd=["ffmpeg","-y","-loop","1","-i",str(src),"-t",str(dur),"-vf",vf,"-an","-r",str(FPS),"-c:v","libx264","-preset","veryfast","-crf","19","-pix_fmt","yuv420p",str(out)]
+    run(cmd,quiet=True)
+
 def main():
     # Prepare the user's own visual identity.
     nico_src=ASSETS/"Nico.jpg"
@@ -259,6 +272,8 @@ def main():
     gta5=first([MEDIA/"gta5_trailer.mp4",MEDIA/"gta5_trailer.*"])
     if gta6 is None: gta6=first([ROOT/"rockstar"/"clips"/"GTAVI_Official_Cover_Art_Landscape.mp4",ROOT/"lineart"/"Clip03.mp4"])
     if gta5 is None: gta5=gta6
+    stills={p.stem:p for p in STILLS.glob("*.jpg")}
+    def still(name): return stills.get(name) or next(iter(stills.values()))
     if gta6 is None or gta5 is None: raise RuntimeError("No GTA VI/GTA V video source was downloaded.")
     # Official short character clips and user's own reaction assets.
     rj=ROOT/"rockstar"/"clips"
@@ -325,6 +340,7 @@ def main():
             typ,src,start,_,nico,logo=spec
             out=SEG/f"s{si}_{k:02d}.mp4"
             if typ=="card": make_card_cut(src,dur,out)
+            elif typ=="img": make_still_cut(src,dur,out,nico=nico,logo=(logo or (si==1 and k==0)))
             else: make_cut(src,start,dur,out,nico=nico,logo=(logo or (si==1 and k==0)))
             scene_files.append(out)
             if k in (0,3,6): sfx_events.append(global_offset+sum(segdur[:k]))
