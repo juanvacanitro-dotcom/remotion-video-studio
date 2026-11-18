@@ -1,0 +1,58 @@
+name: Inspect R8 footage, assets and narration for FFmpeg edit
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-r8-media.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Download current project media from Drive
+        run: |
+          pip install gdown
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          mkdir -p media assets
+          gdown 'https://drive.google.com/uc?id=1_Og2Wa_zEWfR3x_JpUiOZFZ_U8Nn3XLi' -O media/r8-footage.zip
+          unzip -oq media/r8-footage.zip -d media/r8-footage
+          gdown 'https://drive.google.com/uc?id=1VeEa0Cmt1F4Vf38pt40CWBkiPNJ5NYoV' -O assets/style-key.jpg
+          gdown 'https://drive.google.com/uc?id=1TbX-srtQLaOojT-UKD4Qjb8kAFYEF7AQ' -O assets/sala-gamer.jpg
+          gdown 'https://drive.google.com/uc?id=1SdoozbJgN_8RQoRyyAx1vZIvNlvCZPr5' -O assets/nico.jpg
+          gdown 'https://drive.google.com/uc?id=10m7MY2TBd43kP9yul3KhOhUt7TyxroHg' -O assets/escenario-datos.jpg
+          gdown 'https://drive.google.com/uc?id=16_OqDxawqJBkguET74JgLrAxhmyhD5KL' -O assets/ciudad-neon.jpg
+          for i in 1 2 3 4; do
+            case $i in 1) id=1tRiOV8LjqZmHMqjcM5zwZ79q9bxjSyNv;; 2) id=15Muh9JO_rZQNnbKz03rRuhmEHNeCFyFk;; 3) id=19BKQcWl5u-JQ-RdVMS5XUe5Lz9LkMMN3;; 4) id=1NZT8FXrTAByLRcbrdYeHAWP1GfxCP78D;; esac
+            gdown "https://drive.google.com/uc?id=$id" -O media/voice-$i.mp3
+            echo "VOICE_$i $(ffprobe -v error -show_entries format=duration -of csv=p=0 media/voice-$i.mp3)"
+          done
+          echo '--- FOOTAGE FILES ---'
+          find media/r8-footage -type f | sort | head -80
+          for f in $(find media/r8-footage -type f \( -iname '*.mp4' -o -iname '*.mov' -o -iname '*.webm' \) | head -20); do
+            echo "CLIP $(basename "$f") $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")"
+            ffmpeg -y -loglevel error -ss 1 -i "$f" -frames:v 1 -vf "scale=320:180" "/tmp/$(basename "$f").jpg" || true
+          done
+          python - <<'PY'
+          from PIL import Image,ImageOps,ImageDraw
+          import glob,os,math
+          fs=glob.glob('/tmp/*.mp4.jpg')+glob.glob('/tmp/*.mov.jpg')+glob.glob('/tmp/*.webm.jpg')
+          fs=fs[:48]
+          if fs:
+            ims=[]
+            for f in fs:
+              im=Image.open(f).convert('RGB'); im.thumbnail((320,180))
+              canvas=Image.new('RGB',(340,215),'#111')
+              canvas.paste(im,((340-im.width)//2,0))
+              ImageDraw.Draw(canvas).text((8,185),os.path.basename(f)[:42],fill='white')
+              ims.append(canvas)
+            sheet=Image.new('RGB',(340*4,215*math.ceil(len(ims)/4)),'#111')
+            for i,im in enumerate(ims): sheet.paste(im,((i%4)*340,(i//4)*215))
+            sheet.save('/tmp/footage-sheet.jpg',quality=88)
+            import base64
+            print('FOOTAGE_SHEET='+base64.b64encode(open('/tmp/footage-sheet.jpg','rb').read()).decode())
+          PY
+          for f in assets/*.jpg; do echo "ASSET $(basename "$f") $(identify -format '%wx%h' "$f" 2>/dev/null || true)"; done
