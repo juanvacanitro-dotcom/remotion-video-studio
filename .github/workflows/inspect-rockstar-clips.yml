@@ -1,0 +1,43 @@
+name: Inspect official Rockstar GTA VI media clips
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-rockstar-clips.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Download Rockstar official clips and build contact sheet
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          mkdir -p rockstar
+          curl -fL --retry 3 --retry-delay 2 'https://media-rockstargames-com.akamaized.net/VI/downloads/videos/GTAVI_Videos.zip' -o rockstar/videos.zip
+          unzip -oq rockstar/videos.zip -d rockstar/clips
+          echo '--- OFFICIAL CLIPS ---'
+          find rockstar/clips -type f | sort | head -80
+          for f in $(find rockstar/clips -type f \( -iname '*.mp4' -o -iname '*.mov' -o -iname '*.webm' \) | head -30); do
+            echo "OFFICIAL $(basename "$f") $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")"
+            ffmpeg -y -loglevel error -ss 2 -i "$f" -frames:v 1 -vf "scale=320:180" "/tmp/$(basename "$f").jpg" || true
+          done
+          python - <<'PY'
+          from PIL import Image,ImageDraw
+          import glob,os,math,base64
+          fs=sorted(glob.glob('/tmp/*.mp4.jpg')+glob.glob('/tmp/*.mov.jpg')+glob.glob('/tmp/*.webm.jpg'))
+          ims=[]
+          for f in fs:
+            im=Image.open(f).convert('RGB'); im.thumbnail((320,180))
+            c=Image.new('RGB',(340,215),'#111'); c.paste(im,((340-im.width)//2,0))
+            ImageDraw.Draw(c).text((8,185),os.path.basename(f)[:42],fill='white')
+            ims.append(c)
+          if ims:
+            sh=Image.new('RGB',(1360,215*math.ceil(len(ims)/4)),'#111')
+            for i,im in enumerate(ims): sh.paste(im,((i%4)*340,(i//4)*215))
+            sh.save('/tmp/rockstar.jpg',quality=88)
+            print('ROCKSTAR_SHEET='+base64.b64encode(open('/tmp/rockstar.jpg','rb').read()).decode())
+          PY
