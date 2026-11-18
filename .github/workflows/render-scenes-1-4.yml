@@ -27,7 +27,7 @@ jobs:
           gdown 'https://drive.google.com/uc?id=15Muh9JO_rZQNnbKz03rRuhmEHNeCFyFk' -O /tmp/v2.mp3
           gdown 'https://drive.google.com/uc?id=19BKQcWl5u-JQ-RdVMS5XUe5Lz9LkMMN3' -O /tmp/v3.mp3
           gdown 'https://drive.google.com/uc?id=1NZT8FXrTAByLRcbrdYeHAWP1GfxCP78D' -O /tmp/v4.mp3
-          for i in 1 2 3 4; do ffmpeg -y -i /tmp/v$i.mp3 -af 'loudnorm=I=-16:TP=-1.5:LRA=7,afade=t=in:st=0:d=0.08,afade=t=out:st=$(echo "$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/v$i.mp3)-0.12" | bc):d=0.12' -ar 48000 -ac 2 -c:a pcm_s16le public/media/voice-$i.wav; done
+          for i in 1 2 3 4; do dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/v$i.mp3); fade=$(python -c "print(max(0,float('$dur')-0.12))"); ffmpeg -y -i /tmp/v$i.mp3 -af "loudnorm=I=-16:TP=-1.5:LRA=7,afade=t=in:st=0:d=0.08,afade=t=out:st=$fade:d=0.12" -ar 48000 -ac 2 -c:a pcm_s16le public/media/voice-$i.wav; done
       - run: npm install
       - run: npx remotion browser ensure
       - name: Render complete first four scenes
