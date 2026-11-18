@@ -78,7 +78,14 @@ def draw_center(draw,text,y,fnt,fill,stroke="#101018",sw=5):
     x=(W-(bb[2]-bb[0]))//2
     draw.text((x,y),text,font=fnt,fill=fill,stroke_width=sw,stroke_fill=stroke)
 def make_card(name,title,subtitle="",accent="#FFD52E",nico=True,smalltag="ZINKO"):
-    base=Image.open(ROOT/"paper.png").convert("RGBA")
+    bgmap={"question":"Style-Key.jpg","zinko":"Sala-Gamer.jpg","two_questions":"Sala-Gamer.jpg","what_is":"Ciudad-Neon.jpg","gta5":"Escenario-Datos.jpg"}
+    bgfile=ASSETS/bgmap.get(name,"Style-Key.jpg")
+    if bgfile.exists():
+        bg=Image.open(bgfile).convert("RGB").resize((W,H),Image.Resampling.LANCZOS).filter(ImageFilter.GaussianBlur(1.4))
+        tint=Image.new("RGB",(W,H),(7,6,24)); bg=Image.blend(bg,tint,0.28)
+        base=bg.convert("RGBA")
+    else:
+        base=Image.open(ROOT/"paper.png").convert("RGBA")
     # tilted paper panel with a torn-looking irregular edge and shadow
     panel=Image.new("RGBA",(1160,650),(0,0,0,0))
     pd=ImageDraw.Draw(panel)
@@ -113,7 +120,11 @@ def make_card(name,title,subtitle="",accent="#FFD52E",nico=True,smalltag="ZINKO"
     d.line((1350,425,1510,385,1590,420),fill="#39DDD8",width=8)
     base.convert("RGB").save(CARDS/f"{name}.jpg",quality=94)
 def make_calendar():
-    im=Image.open(ROOT/"paper.png").convert("RGBA")
+    bgfile=ASSETS/"Ciudad-Neon.jpg"
+    if bgfile.exists():
+        bg=Image.open(bgfile).convert("RGB").resize((W,H),Image.Resampling.LANCZOS).filter(ImageFilter.GaussianBlur(1.2))
+        im=Image.blend(bg,Image.new("RGB",(W,H),(8,7,24)),0.32).convert("RGBA")
+    else: im=Image.open(ROOT/"paper.png").convert("RGBA")
     # big calendar card with a shadow
     card=Image.new("RGBA",(560,670),(0,0,0,0)); d=ImageDraw.Draw(card)
     d.rounded_rectangle((22,22,538,648),radius=22,fill="#FFFDF7",outline="#181820",width=7)
@@ -130,7 +141,12 @@ def make_calendar():
     n=Image.open(ROOT/"nico_cutout.png").convert("RGBA"); n.thumbnail((470,650),Image.Resampling.LANCZOS); im.alpha_composite(n,(1300,400))
     im.convert("RGB").save(CARDS/"calendar.jpg",quality=94)
 def make_chart():
-    im=Image.open(ROOT/"paper.png").convert("RGBA"); d=ImageDraw.Draw(im)
+    bgfile=ASSETS/"Escenario-Datos.jpg"
+    if bgfile.exists():
+        bg=Image.open(bgfile).convert("RGB").resize((W,H),Image.Resampling.LANCZOS).filter(ImageFilter.GaussianBlur(1.0))
+        im=Image.blend(bg,Image.new("RGB",(W,H),(7,6,24)),0.28).convert("RGBA")
+    else: im=Image.open(ROOT/"paper.png").convert("RGBA")
+    d=ImageDraw.Draw(im)
     d.rounded_rectangle((260,170,1650,900),radius=28,fill="#0C0A20",outline="#39DDD8",width=8)
     d.text((390,240),"GTA V",font=font(110),fill="#FFD52E",stroke_width=8,stroke_fill="#090914")
     d.text((400,390),"EL FENÓMENO QUE LO CAMBIÓ TODO",font=font(42),fill="#FFFFFF",stroke_width=2,stroke_fill="#090914")
