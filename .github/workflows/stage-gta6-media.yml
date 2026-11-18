@@ -1,0 +1,63 @@
+name: Stage GTA VI source media
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Google Drive downloader
+        run: pip install gdown
+      - name: Download creator-provided source media
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p staging/video staging/audio
+          gdown --fuzzy "https://drive.google.com/file/d/14w2QPb7XMjSAgscbDBOR6qLxkKdqz5MG/view" -O "staging/video/01.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1E0md2g-jjzUIrULRTnLPAbY2QDDwDaYy/view" -O "staging/video/02.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1SjCXFE91cZ7vHLXMlFNIWjFAk7Q9jWDQ/view" -O "staging/video/04.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1TGLkYiC3vjMWil2bgK66KbUoX5eo3tzx/view" -O "staging/video/05.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1Js_O44zRPtIjcRY-TiMSUDVmKIy7o0yb/view" -O "staging/video/06.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1d0YE2fgAsTiz8nzOWNNYFY9woRH-VLwN/view" -O "staging/video/07.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1eP6cxlWHpiJKtBO2gQTusj8MFNFO1OAP/view" -O "staging/video/08.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1O8psr23vYuGhdzFDhJwOKnIYr--ckT8_/view" -O "staging/video/09.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1c-qyK95m7dJZZ9nKhdo9ZKNhf7VhBvsU/view" -O "staging/video/10.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1agtSDGeibN5DpbxR50a8K83NrWuawklM/view" -O "staging/video/11.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1aT54mgQulWWYlYCFdtBm2pR2CiHU99NG/view" -O "staging/video/12.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1lw4mD2WU1LrB-rBV2hr7qQ1JMiHmfPFL/view" -O "staging/video/13.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1NmdJBmF3h8JY3qWzmqqD2gaipduev0iF/view" -O "staging/video/14.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/12EL_98dnX7_9pwa8XRAZuLo2MxZDszwO/view" -O "staging/video/15.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1ZWKsmvrJ82RRQ8YA5kDYADdwxF4bySZt/view" -O "staging/video/16.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1-CY58uo9K0Pu7dlK4VA84SeUTi1SfjES/view" -O "staging/video/18.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/13yoP8BFVUleMN_6P4_i-PAwKUBmFPf_-/view" -O "staging/video/19.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/18khFTMVmKreY4TtXtkc6zeh28tposTvJ/view" -O "staging/video/20.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1Uun4egaerhq8fLHisGzeHLU-4fp-Jkl5/view" -O "staging/video/21.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1Jq_OaZzZ5iKU3L1W1E7SV43bDd2qMw6l/view" -O "staging/video/22.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1JCMm_4sLEqKpEU-iStcGKwMjFNVQ3_mN/view" -O "staging/video/23.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1VbOzbT2IQL6WNGOLowSK7CJhb6BBUyOr/view" -O "staging/video/24.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1TL3OS_dcnBp9v0CM9YD_aN2i0Z_Om2nC/view" -O "staging/video/25.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1TsyoQVDs4eL8qGhqELlYqP7xHCQWmJpI/view" -O "staging/video/26.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1jKbONQjBByhi8T-vW_EZPsQggwSbtF3_/view" -O "staging/video/R7-reference.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1sv8Gw29HIhV4tFn1u1RzGZd5OAnYQyqq/view" -O "staging/video/style-reference.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1oc6-YqmBRB8IUd7KOHCqBMAPAnVItTRr/view" -O "staging/video/extra-clip-01.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1siKgGbFWqKXH2xwm4mn8AAxB3CLzGim-/view" -O "staging/video/extra-clip-02.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1W66LxrTw1he1lkAsfxP6sux9wxBLYXt-/view" -O "staging/video/extra-clip-03.mp4"
+          gdown --fuzzy "https://drive.google.com/file/d/1ftiOcVOSy2bxyftlS2xywzhZ5a-HPPfW/view" -O "staging/audio/sfx-40-pack.zip"
+          gdown --fuzzy "https://drive.google.com/file/d/1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74/view" -O "staging/audio/sfx-pack-03.zip"
+      - name: Verify downloads
+        run: |
+          find staging -type f -printf '%p %s bytes\n' | sort
+          test "$(find staging -type f | wc -l)" -ge 31
+      - name: Package source media
+        run: zip -qr GTA6-R8-source-media.zip staging
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-R8-source-media
+          path: GTA6-R8-source-media.zip
+          retention-days: 7
