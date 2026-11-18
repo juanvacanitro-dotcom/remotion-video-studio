@@ -1,0 +1,27 @@
+name: Inspect user's actual R7 editing reference
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-r7-reference.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Download and create reference contact sheets
+        run: |
+          pip install gdown
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          mkdir -p ref
+          gdown 'https://drive.google.com/uc?id=1QPQd8W0YiyMjH8uu6bXcmEuMvjENmMhW' -O ref/R7.mp4
+          gdown 'https://drive.google.com/uc?id=1wIxuiPBHL2jeuVdDhRUupJdpqq3X4i9o' -O ref/tiktok.mp4
+          for f in ref/*.mp4; do
+            echo "=== $(basename "$f") ==="
+            ffprobe -v error -show_entries format=duration,size:stream=width,height,r_frame_rate -of default=noprint_wrappers=1 "$f"
+            ffmpeg -y -loglevel error -i "$f" -vf "fps=1,scale=320:180,tile=4x4" -frames:v 1 "${f%.mp4}.jpg"
+            echo "SHEET_$(basename "$f")=$(base64 -w0 "${f%.mp4}.jpg")"
+          done
