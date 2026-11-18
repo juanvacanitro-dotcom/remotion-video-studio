@@ -1,0 +1,72 @@
+name: Inspect original R8 clips and assets
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-original-clips.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Download user's raw clips and create visual index
+        run: |
+          pip install gdown pillow
+          sudo apt-get update && sudo apt-get install -y ffmpeg imagemagick
+          mkdir -p clips assets
+          gdown 'https://drive.google.com/uc?id=1c-qyK95m7dJZZ9nKhdo9ZKNhf7VhBvsU' -O "clips/10.mp4"
+          gdown 'https://drive.google.com/uc?id=1agtSDGeibN5DpbxR50a8K83NrWuawklM' -O "clips/11.mp4"
+          gdown 'https://drive.google.com/uc?id=1aT54mgQulWWYlYCFdtBm2pR2CiHU99NG' -O "clips/12.mp4"
+          gdown 'https://drive.google.com/uc?id=1lw4mD2WU1LrB-rBV2hr7qQ1JMiHmfPFL' -O "clips/13.mp4"
+          gdown 'https://drive.google.com/uc?id=1NmdJBmF3h8JY3qWzmqqD2gaipduev0iF' -O "clips/14.mp4"
+          gdown 'https://drive.google.com/uc?id=12EL_98dnX7_9pwa8XRAZuLo2MxZDszwO' -O "clips/15.mp4"
+          gdown 'https://drive.google.com/uc?id=1ZWKsmvrJ82RRQ8YA5kDYADdwxF4bySZt' -O "clips/16.mp4"
+          gdown 'https://drive.google.com/uc?id=1-CY58uo9K0Pu7dlK4VA84SeUTi1SfjES' -O "clips/18.mp4"
+          gdown 'https://drive.google.com/uc?id=13yoP8BFVUleMN_6P4_i-PAwKUBmFPf_-' -O "clips/19.mp4"
+          gdown 'https://drive.google.com/uc?id=18khFTMVmKreY4TtXtkc6zeh28tposTvJ' -O "clips/20.mp4"
+          gdown 'https://drive.google.com/uc?id=1Uun4egaerhq8fLHisGzeHLU-4fp-Jkl5' -O "clips/21.mp4"
+          gdown 'https://drive.google.com/uc?id=1Jq_OaZzZ5iKU3L1W1E7SV43bDd2qMw6l' -O "clips/22.mp4"
+          gdown 'https://drive.google.com/uc?id=1JCMm_4sLEqKpEU-iStcGKwMjFNVQ3_mN' -O "clips/23.mp4"
+          gdown 'https://drive.google.com/uc?id=1VbOzbT2IQL6WNGOLowSK7CJhb6BBUyOr' -O "clips/24.mp4"
+          gdown 'https://drive.google.com/uc?id=1TL3OS_dcnBp9v0CM9YD_aN2i0Z_Om2nC' -O "clips/25.mp4"
+          gdown 'https://drive.google.com/uc?id=1TsyoQVDs4eL8qGhqELlYqP7xHCQWmJpI' -O "clips/26.mp4"
+          gdown 'https://drive.google.com/uc?id=14w2QPb7XMjSAgscbDBOR6qLxkKdqz5MG' -O "clips/01.mp4"
+          gdown 'https://drive.google.com/uc?id=1E0md2g-jjzUIrULRTnLPAbY2QDDwDaYy' -O "clips/02.mp4"
+          gdown 'https://drive.google.com/uc?id=1SjCXFE91cZ7vHLXMlFNIWjFAk7Q9jWDQ' -O "clips/04.mp4"
+          gdown 'https://drive.google.com/uc?id=1TGLkYiC3vjMWil2bgK66KbUoX5eo3tzx' -O "clips/05.mp4"
+          gdown 'https://drive.google.com/uc?id=1Js_O44zRPtIjcRY-TiMSUDVmKIy7o0yb' -O "clips/06.mp4"
+          gdown 'https://drive.google.com/uc?id=1d0YE2fgAsTiz8nzOWNNYFY9woRH-VLwN' -O "clips/07.mp4"
+          gdown 'https://drive.google.com/uc?id=1eP6cxlWHpiJKtBO2gQTusj8MFNFO1OAP' -O "clips/08.mp4"
+          gdown 'https://drive.google.com/uc?id=1O8psr23vYuGhdzFDhJwOKnIYr--ckT8_' -O "clips/09.mp4"
+          gdown 'https://drive.google.com/uc?id=1fdKJ6mN7h53uInnI4Mq_YesZT6tTZbWe' -O "clips/Clip01.mp4"
+          gdown 'https://drive.google.com/uc?id=1DaOf8AFjlfAXVhLBnW1M8NoupRoQAFz4' -O "clips/Clip02.mp4"
+          gdown 'https://drive.google.com/uc?id=1ZVOrfJfAk2QLbnWrbgKdPg807ptgj8HU' -O "clips/Clip03.mp4"
+          gdown 'https://drive.google.com/uc?id=1SdoozbJgN_8RQoRyyAx1vZIvNlvCZPr5' -O assets/nico.jpg
+          gdown 'https://drive.google.com/uc?id=1VeEa0Cmt1F4Vf38pt40CWBkiPNJ5NYoV' -O assets/style-key.jpg
+          for f in clips/*.mp4; do
+            dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")
+            echo "CLIP $(basename "$f") $dur"
+            ffmpeg -y -loglevel error -ss 0.7 -i "$f" -frames:v 1 -vf "scale=320:180" "/tmp/$(basename "$f").jpg" || true
+          done
+          python - <<'PY'
+          from PIL import Image,ImageDraw
+          import glob,os,math,base64
+          fs=sorted(glob.glob('/tmp/*.mp4.jpg'))
+          ims=[]
+          for f in fs:
+            im=Image.open(f).convert('RGB'); im.thumbnail((320,180))
+            c=Image.new('RGB',(340,215),'#111'); c.paste(im,((340-im.width)//2,0))
+            ImageDraw.Draw(c).text((8,185),os.path.basename(f),fill='white')
+            ims.append(c)
+          sh=Image.new('RGB',(1360,215*math.ceil(len(ims)/4)),'#111')
+          for i,im in enumerate(ims): sh.paste(im,((i%4)*340,(i//4)*215))
+          sh.save('/tmp/clips.jpg',quality=88)
+          print('CLIPS_SHEET='+base64.b64encode(open('/tmp/clips.jpg','rb').read()).decode())
+          for f in glob.glob('assets/*.jpg'):
+            im=Image.open(f).convert('RGB'); im.thumbnail((480,320)); im.save('/tmp/'+os.path.basename(f))
+            print('ASSET_SHEET_'+os.path.basename(f)+'='+base64.b64encode(open('/tmp/'+os.path.basename(f),'rb').read()).decode())
+          PY
