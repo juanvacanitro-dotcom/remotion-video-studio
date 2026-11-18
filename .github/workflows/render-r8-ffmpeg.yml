@@ -21,10 +21,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-dejavu-core unzip
-          pip install --upgrade gdown pillow numpy faster-whisper yt-dlp
+          pip install --upgrade gdown pillow numpy faster-whisper
       - name: Download the user's narration, assets, original clips and sound effects
         run: |
-          mkdir -p work/media work/assets work/lineart work/clips work/rockstar/clips work/sfx work/out
+          mkdir -p work/media work/assets work/stills work/lineart work/clips work/rockstar/clips work/sfx work/out
           gdown 'https://drive.google.com/uc?id=1tRiOV8LjqZmHMqjcM5zwZ79q9bxjSyNv' -O work/media/voice-1.mp3
           gdown 'https://drive.google.com/uc?id=15Muh9JO_rZQNnbKz03rRuhmEHNeCFyFk' -O work/media/voice-2.mp3
           gdown 'https://drive.google.com/uc?id=19BKQcWl5u-JQ-RdVMS5XUe5Lz9LkMMN3' -O work/media/voice-3.mp3
@@ -44,19 +44,25 @@ jobs:
           gdown 'https://drive.google.com/uc?id=1VbOzbT2IQL6WNGOLowSK7CJhb6BBUyOr' -O work/clips/24.mp4
           gdown 'https://drive.google.com/uc?id=1cRrpEKrZKybLa22BJZAAkrKhslvYbOMI' -O work/sfx-pack.zip
           unzip -oq work/sfx-pack.zip -d work/sfx
-      - name: Download official Rockstar game footage
+      - name: Download official Rockstar GTA VI media and screenshot cutaways
         run: |
-          set +e
-          yt-dlp --no-warnings --no-progress --no-playlist --extractor-args 'youtube:player_client=android' -f 'bv*[height<=1080][ext=mp4]/b[height<=1080]' --merge-output-format mp4 -o 'work/media/gta6_trailer2.%(ext)s' 'https://www.youtube.com/watch?v=VQRLujxTm3c'
-          yt-dlp --no-warnings --no-progress --no-playlist --extractor-args 'youtube:player_client=android' -f 'bv*[height<=1080][ext=mp4]/b[height<=1080]' --merge-output-format mp4 -o 'work/media/gta5_trailer.%(ext)s' 'https://www.youtube.com/watch?v=hvoD7ehZPcM'
-          set -e
           curl -fL --retry 3 --retry-delay 2 'https://media-rockstargames-com.akamaized.net/VI/downloads/videos/GTAVI_Videos.zip' -o work/media/GTAVI_Videos.zip
           unzip -oq work/media/GTAVI_Videos.zip -d work/rockstar/clips
-          echo '--- FOOTAGE SOURCES ---'
-          find work/media work/rockstar/clips -maxdepth 2 -type f | sort
-          for f in work/media/gta6_trailer2.* work/media/gta5_trailer.*; do
-            [ -f "$f" ] && ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 "$f"
-          done
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_01.0naeahss9-1x6.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Jason_and_Lucia_01.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_02.0uig00eojlokf.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Jason_and_Lucia_02.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_03.15z-.c0tptrzs.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Jason_and_Lucia_03.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Jason_Duval_11.019l5gj6~0~0v.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Jason_Duval_11.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_13.0iq8ff474tsdx.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Vice_City_13.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_14.0fu8u9jh5hkg7.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Vice_City_14.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_15.11tb0mz68edqo.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Vice_City_15.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_16.16hjjmnxqg9mv.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Vice_City_16.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_20.18c75478u52nf.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Vice_City_20.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Leonida_Keys_07.0z9tb69ssp4rq.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Leonida_Keys_07.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Port_Gellhorn_07.053ldlg0m.2r..jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Port_Gellhorn_07.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Grassrivers_07.0txitddjiq5o1.jpg?akim=1&imdensity=1&imwidth=3840' -o work/stills/Grassrivers_07.jpg
+          curl -fL --retry 3 'https://media-rockstargames-com.akamaized.net/tina-uploads/tina-modules/gta-v/911bff9fca5209b94dd22bcba795eefdd4b71993.jpg' -o work/stills/gta5-official.jpg
+          echo '--- OFFICIAL MEDIA ---'
+          find work/rockstar/clips work/stills -maxdepth 1 -type f | sort
       - name: Render first four scenes with direct FFmpeg editing
         run: python scripts/render_r8_ffmpeg.py
       - name: Validate MP4 and create review sheet
