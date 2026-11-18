@@ -1,0 +1,36 @@
+name: Inspect latest single editing reference
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-latest-reference.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Download the latest reference and inspect it
+        run: |
+          pip install gdown
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          mkdir -p ref
+          gdown 'https://drive.google.com/uc?id=1sv8Gw29HIhV4tFn1u1RzGZd5OAnYQyqq' -O ref/reference.mp4
+          ffprobe -v error -show_entries format=duration,size:stream=width,height,r_frame_rate -of default=noprint_wrappers=1 ref/reference.mp4
+          ffmpeg -y -loglevel error -i ref/reference.mp4 -vf "fps=1,scale=360:640,tile=4x4" -frames:v 1 ref/sheet.jpg
+          echo "REFERENCE_SHEET=$(base64 -w0 ref/sheet.jpg)"
+          python - <<'PY'
+          import cv2
+          c=cv2.VideoCapture('ref/reference.mp4'); fps=c.get(cv2.CAP_PROP_FPS); n=0; prev=None; cuts=[]
+          while True:
+            ok,f=c.read()
+            if not ok: break
+            if n%max(1,int(fps/4))==0:
+              g=cv2.cvtColor(cv2.resize(f,(160,284)),cv2.COLOR_BGR2GRAY)
+              if prev is not None and cv2.absdiff(g,prev).mean()>22: cuts.append(round(n/fps,2))
+              prev=g
+            n+=1
+          print('CUT_CHANGE_TIMES',cuts[:120])
+          PY
