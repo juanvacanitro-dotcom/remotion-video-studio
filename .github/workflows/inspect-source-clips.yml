@@ -1,6 +1,9 @@
 name: Inspect user source clips for R8
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-source-clips.yml']
 permissions:
   contents: read
 jobs:
