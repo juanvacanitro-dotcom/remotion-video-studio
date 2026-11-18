@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "remotion studio src/index.ts",
     "render:landscape": "remotion render src/index.ts CinematicLandscape out/cinematic-landscape.mp4",
-    "render:vertical": "remotion render src/index.ts CinematicVertical out/cinematic-vertical.mp4"
+    "render:vertical": "remotion render src/index.ts CinematicVertical out/cinematic-vertical.mp4",
+    "render:r8": "remotion render src/index.ts GTA6R8Intro out/GTA6-R8-preview.mp4 --codec=h264"
   },
   "dependencies": {
     "@remotion/cli": "4.0.544",
