@@ -300,33 +300,33 @@ def main():
     # paper cut-ins, Nico sticker reactions, quick meme punches, then back to footage.
     plans=[
       [
-       ("v",gta6,4.0,1.22,True,True),("v",gta6,18.0,1.05,False,False),
-       ("v",lucia,0.0,.72,True,False),("card",CARDS/"calendar.jpg",0,1.45,False,False),
-       ("v",gta6,33.0,1.08,True,False),("v",gta6,49.0,1.00,False,False),
-       ("v",memes["reaction"],.4,.62,False,False),("v",gta6,68.0,1.15,True,False),
-       ("card",CARDS/"question.jpg",0,1.42,False,False),("v",gta6,86.0,1.55,True,False)
+       ("img",still("Jason_and_Lucia_01"),0,1.18,True,True),("v",gta6,4.0,1.05,False,False),
+       ("v",lucia,0.0,.72,True,False),("card",CARDS/"calendar.jpg",0,1.40,False,False),
+       ("img",still("Vice_City_13"),0,1.08,True,False),("img",still("Jason_and_Lucia_02"),0,1.00,False,False),
+       ("v",memes["reaction"],.4,.62,False,False),("img",still("Vice_City_14"),0,1.12,True,False),
+       ("card",CARDS/"question.jpg",0,1.42,False,False),("v",gta6,18.0,1.55,True,False)
       ],
       [
-       ("card",CARDS/"zinko.jpg",0,1.65,False,False),("v",gta6,98.0,1.10,True,False),
-       ("v",jason,0,.70,True,False),("v",gta6,112.0,1.08,False,False),
-       ("v",memes["streamer"],.6,.62,False,False),("v",gta6,126.0,1.08,True,False),
+       ("card",CARDS/"zinko.jpg",0,1.60,False,False),("img",still("Jason_Duval_11"),0,1.08,True,False),
+       ("v",jason,0,.70,True,False),("img",still("Vice_City_15"),0,1.08,False,False),
+       ("v",memes["streamer"],.6,.62,False,False),("img",still("Leonida_Keys_07"),0,1.08,True,False),
        ("v",line1,1.0,1.05,False,False),("card",CARDS/"two_questions.jpg",0,1.48,False,False),
-       ("v",gta6,139.0,1.05,True,False),("v",memes["family"],1.2,.58,False,False),
-       ("v",gta6,151.0,.60,False,False)
+       ("img",still("Grassrivers_07"),0,1.05,True,False),("v",memes["family"],1.2,.58,False,False),
+       ("v",gta6,12.0,.60,False,False)
       ],
       [
-       ("v",gta6,9.0,1.10,True,False),("v",lucia,0,.72,False,False),
-       ("v",gta6,26.0,1.12,True,False),("card",CARDS/"what_is.jpg",0,1.40,False,False),
-       ("v",gta6,43.0,1.10,False,False),("v",line3,1.4,1.00,True,False),
-       ("v",gta6,60.0,1.12,False,False),("card",CARDS/"calendar.jpg",0,1.18,False,False),
-       ("v",memes["cj"],.8,.62,False,False),("v",gta6,78.0,.72,True,False)
+       ("img",still("Vice_City_16"),0,1.10,True,False),("v",lucia,0,.72,False,False),
+       ("img",still("Jason_and_Lucia_03"),0,1.12,True,False),("card",CARDS/"what_is.jpg",0,1.40,False,False),
+       ("img",still("Port_Gellhorn_07"),0,1.10,False,False),("v",line3,1.4,1.00,True,False),
+       ("img",still("Vice_City_20"),0,1.12,False,False),("card",CARDS/"calendar.jpg",0,1.18,False,False),
+       ("v",memes["cj"],.8,.62,False,False),("v",gta6,22.0,.72,True,False)
       ],
       [
-       ("v",gta5,3.0,1.15,True,False),("v",gta5,10.0,1.10,False,False),
-       ("v",gta5,18.0,1.10,True,False),("v",memes["kid"],.4,.60,False,False),
-       ("v",gta5,28.0,1.15,False,False),("card",CARDS/"gta5.jpg",0,1.55,False,False),
-       ("v",gta5,39.0,1.10,True,False),("v",gta5,51.0,1.10,False,False),
-       ("card",CARDS/"chart.jpg",0,1.50,False,False),("v",gta5,62.0,0.92,True,False)
+       ("img",still("gta5-official"),0,1.15,True,False),("img",still("gta5-official"),0,1.10,False,False),
+       ("v",memes["cj"],.3,1.10,True,False),("v",memes["kid"],.4,.60,False,False),
+       ("img",still("gta5-official"),0,1.15,False,False),("card",CARDS/"gta5.jpg",0,1.55,False,False),
+       ("v",line2,1.0,1.10,True,False),("img",still("gta5-official"),0,1.10,False,False),
+       ("card",CARDS/"chart.jpg",0,1.50,False,False),("v",memes["reaction"],.8,.92,True,False)
       ]
     ]
     # Render each scene's clips, proportionally stretching the last planned beat to
