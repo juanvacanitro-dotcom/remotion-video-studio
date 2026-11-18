@@ -27,6 +27,9 @@ jobs:
       - name: Create visual contact sheets
         run: |
           for f in inspect/*.mp4; do echo "== $f =="; ffprobe -v error -show_entries format=duration -of csv=p=0 "$f"; ffmpeg -y -loglevel error -i "$f" -vf "fps=1/2,scale=480:270,tile=3x3" -frames:v 1 "${f%.mp4}.jpg"; done
+      - name: Expose compact contact sheets for review
+        run: |
+          for f in inspect/*.jpg; do echo "CONTACT_SHEET_$(basename "$f")=$(base64 -w0 "$f")"; done
       - run: zip -q inspect-clips.zip inspect/*
       - uses: actions/upload-artifact@v4
         with: {name: inspect-source-clips, path: inspect-clips.zip, retention-days: 7}
