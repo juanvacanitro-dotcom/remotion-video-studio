@@ -1,4 +1,4 @@
-name: Render rebuilt GTA VI scenes 1-4
+name: Render GTA VI ZINKO scenes 1-4 user-style cut
 on:
   workflow_dispatch:
   push:
@@ -11,30 +11,51 @@ permissions:
 jobs:
   render:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: 22}
-      - name: Install tools
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Install media tools
         run: |
           pip install gdown
-          sudo apt-get update && sudo apt-get install -y ffmpeg
-      - name: Download original narrations
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      - name: Download original narration, user's footage and original assets
         run: |
-          mkdir -p public/media out
+          mkdir -p public/media public/assets out
           gdown 'https://drive.google.com/uc?id=1tRiOV8LjqZmHMqjcM5zwZ79q9bxjSyNv' -O /tmp/v1.mp3
           gdown 'https://drive.google.com/uc?id=15Muh9JO_rZQNnbKz03rRuhmEHNeCFyFk' -O /tmp/v2.mp3
           gdown 'https://drive.google.com/uc?id=19BKQcWl5u-JQ-RdVMS5XUe5Lz9LkMMN3' -O /tmp/v3.mp3
           gdown 'https://drive.google.com/uc?id=1NZT8FXrTAByLRcbrdYeHAWP1GfxCP78D' -O /tmp/v4.mp3
-          for i in 1 2 3 4; do dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 /tmp/v$i.mp3); fade=$(python -c "print(max(0,float('$dur')-0.12))"); ffmpeg -y -i /tmp/v$i.mp3 -af "loudnorm=I=-16:TP=-1.5:LRA=7,afade=t=in:st=0:d=0.08,afade=t=out:st=$fade:d=0.12" -ar 48000 -ac 2 -c:a pcm_s16le public/media/voice-$i.wav; done
-      - run: npm install
-      - run: npx remotion browser ensure
-      - name: Render complete first four scenes
-        run: npx remotion render src/index.ts GTA6Scenes1to4 out/GTA6-ZINKO-Scenes-1-4-R2.mp4 --codec=h264 --crf=17
-      - name: Validate duration and audio
+          for i in 1 2 3 4; do
+            ffmpeg -y -i /tmp/v$i.mp3 -af "loudnorm=I=-16:TP=-1.5:LRA=7,aresample=48000" -ar 48000 -ac 2 -c:a pcm_s16le public/media/voice-$i.wav
+          done
+          gdown 'https://drive.google.com/uc?id=1oc6-YqmBRB8IUd7KOHCqBMAPAnVItTRr' -O public/media/source-01.mp4
+          gdown 'https://drive.google.com/uc?id=1siKgGbFWqKXH2xwm4mn8AAxB3CLzGim-' -O public/media/source-02.mp4
+          gdown 'https://drive.google.com/uc?id=1W66LxrTw1he1lkAsfxP6sux9wxBLYXt-' -O public/media/source-03.mp4
+          gdown 'https://drive.google.com/uc?id=1VeEa0Cmt1F4Vf38pt40CWBkiPNJ5NYoV' -O public/assets/Style-Key.jpg
+          gdown 'https://drive.google.com/uc?id=1TbX-srtQLaOojT-UKD4Qjb8kAFYEF7AQ' -O public/assets/Sala-Gamer.jpg
+          gdown 'https://drive.google.com/uc?id=1SdoozbJgN_8RQoRyyAx1vZIvNlvCZPr5' -O public/assets/Nico.jpg
+          gdown 'https://drive.google.com/uc?id=10m7MY2TBd43kP9yul3KhOhUt7TyxroHg' -O public/assets/Escenario-Datos.jpg
+          gdown 'https://drive.google.com/uc?id=16_OqDxawqJBkguET74JgLrAxhmyhD5KL' -O public/assets/Ciudad-Neon.jpg
+      - name: Create source footage contact sheet for editor review
         run: |
-          ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 out/GTA6-ZINKO-Scenes-1-4-R2.mp4
-          test $(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of csv=p=0 out/GTA6-ZINKO-Scenes-1-4-R2.mp4 | wc -l) -eq 1
+          for f in public/media/source-*.mp4; do
+            echo "SOURCE $(basename "$f") $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f")"
+            ffmpeg -y -loglevel error -i "$f" -vf "fps=1/2,scale=480:270,tile=3x3" -frames:v 1 "/tmp/$(basename "$f" .mp4).jpg"
+          done
+          for f in /tmp/source-*.jpg; do echo "SOURCE_SHEET_$(basename "$f")=$(base64 -w0 "$f")"; done
+      - name: Install Remotion
+        run: npm install
+      - run: npx remotion browser ensure
+      - name: Render 4 narrated scenes with live footage, Nico and animated cutouts
+        run: npx remotion render src/index.ts GTA6Scenes1to4 out/GTA6-ZINKO-Scenes-1-4-FINAL.mp4 --codec=h264 --crf=17
+      - name: Validate output and audio continuity
+        run: |
+          ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 out/GTA6-ZINKO-Scenes-1-4-FINAL.mp4
+          test "$(ffprobe -v error -select_streams a:0 -show_entries stream=codec_name -of csv=p=0 out/GTA6-ZINKO-Scenes-1-4-FINAL.mp4 | wc -l)" -eq 1
       - uses: actions/upload-artifact@v4
-        with: {name: GTA6-ZINKO-Scenes-1-4-R2, path: out/GTA6-ZINKO-Scenes-1-4-R2.mp4, retention-days: 14}
+        with: {name: GTA6-ZINKO-Scenes-1-4-FINAL, path: out/GTA6-ZINKO-Scenes-1-4-FINAL.mp4, retention-days: 14}
