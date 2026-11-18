@@ -2,6 +2,7 @@ import React from 'react';
 import {Composition} from 'remotion';
 import {CinematicShowreel} from './compositions/CinematicShowreel';
 import {GTA6R8Intro} from './compositions/GTA6R8Intro';
+import {GTA6R8Real} from './compositions/GTA6R8Real';
 
 export const RemotionRoot: React.FC = () => (
   <>
