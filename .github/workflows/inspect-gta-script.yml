@@ -1,0 +1,34 @@
+name: Inspect GTA VI script and production resources
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-gta-script.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Read latest GTA VI script and inspect resource inventory
+        run: |
+          pip install gdown python-docx
+          mkdir -p source
+          gdown 'https://drive.google.com/uc?id=1sHJdFnJQx-EdhILsEy33fJhKsGhA1diI' -O source/guion.docx
+          python - <<'PY'
+          from docx import Document
+          d=Document('source/guion.docx')
+          for p in d.paragraphs:
+            if p.text.strip(): print('SCRIPT:',p.text)
+          for ti,t in enumerate(d.tables):
+            print('TABLE',ti)
+            for row in t.rows:
+              print(' | '.join(c.text.replace('\n',' / ') for c in row.cells))
+          PY
+          echo '--- resources from user's Drive folder ---'
+          echo 'Voice files: 1.mp3, 2.mp3, 3.mp3, 4.mp3 in folder Voz'
+          echo 'Visual packs: meme packs, green screen, templates, backgrounds, SFX packs in RECURSOS'
+          echo 'Assets: Style-Key, Sala-Gamer, Nico, Escenario-Datos, Ciudad-Neon'
