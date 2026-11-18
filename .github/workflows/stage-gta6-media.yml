@@ -1,6 +1,9 @@
 name: Stage verified GTA VI source media
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/stage-gta6-media.yml']
 permissions:
   contents: read
 jobs:
