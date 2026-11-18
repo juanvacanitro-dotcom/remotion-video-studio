@@ -1,0 +1,32 @@
+name: Analyze editing references
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/analyze-editing-references.yml']
+permissions:
+  contents: read
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg python3
+          pip install gdown
+          mkdir -p refs
+          gdown 'https://drive.google.com/uc?id=1sv8Gw29HIhV4tFn1u1RzGZd5OAnYQyqq' -O refs/reference-1.mp4
+          gdown 'https://drive.google.com/uc?id=1d4ifxAOGsHrcLqVd0MmHJRbxJU-JXP8T' -O refs/reference-2.mp4
+      - name: Extract representative frames and technical metadata
+        run: |
+          for f in refs/*.mp4; do
+            echo "===== $f ====="
+            ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate,avg_frame_rate,bit_rate -of json "$f"
+            ffmpeg -y -i "$f" -vf "fps=1,scale=480:-1,tile=4x4" -frames:v 1 "${f%.mp4}-sheet.jpg"
+            ffmpeg -y -i "$f" -vn -filter_complex "showwavespic=s=1600x300:colors=white" -frames:v 1 "${f%.mp4}-wave.png"
+            ffmpeg -y -i "$f" -vn -af volumedetect -f null - 2>&1 | tail -n 8
+          done
+      - run: zip -q refs-analysis.zip refs/*
+      - uses: actions/upload-artifact@v4
+        with: {name: editing-references-analysis, path: refs-analysis.zip, retention-days: 7}
