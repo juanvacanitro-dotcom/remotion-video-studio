@@ -1,0 +1,29 @@
+name: Test direct Rockstar extended-look stream
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/test-rockstar-stream.yml']
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe and extract a short official stream segment
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          URL='https://media-rockstargames-com.akamaized.net/VI/downloads/videos/GTAVI_An_Extended_Look/GTAVI_An_Extended_Look.mp4'
+          HDR=$'Referer: https://www.rockstargames.com/\r\nOrigin: https://www.rockstargames.com\r\n'
+          ffprobe -v error -headers "$HDR" -show_entries format=duration,size,bit_rate -of json "$URL"
+          ffmpeg -y -ss 90 -headers "$HDR" -i "$URL" -t 12 -vf "scale=960:540" -an -c:v libx264 -preset ultrafast -crf 28 /tmp/gtavi-sample.mp4
+          ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 /tmp/gtavi-sample.mp4
+          ffmpeg -y -loglevel error -i /tmp/gtavi-sample.mp4 -vf "fps=1,scale=480:270,tile=4x3" -frames:v 1 /tmp/sample.jpg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Rockstar-stream-test
+          path: |
+            /tmp/gtavi-sample.mp4
+            /tmp/sample.jpg
