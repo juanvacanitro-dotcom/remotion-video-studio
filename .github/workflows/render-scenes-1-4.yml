@@ -1,0 +1,53 @@
+name: Render GTA VI scenes 1-4
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'src/compositions/GTA6Scenes1to4.tsx'
+      - 'src/Root.tsx'
+      - '.github/workflows/render-scenes-1-4.yml'
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install download and render tools
+        run: |
+          pip install gdown
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      - name: Download voice and visual assets from Drive
+        run: |
+          mkdir -p public/media
+          gdown 'https://drive.google.com/uc?id=1tRiOV8LjqZmHMqjcM5zwZ79q9bxjSyNv' -O public/media/1.mp3
+          gdown 'https://drive.google.com/uc?id=15Muh9JO_rZQNnbKz03rRuhmEHNeCFyFk' -O public/media/2.mp3
+          gdown 'https://drive.google.com/uc?id=19BKQcWl5u-JQ-RdVMS5XUe5Lz9LkMMN3' -O public/media/3.mp3
+          gdown 'https://drive.google.com/uc?id=1NZT8FXrTAByLRcbrdYeHAWP1GfxCP78D' -O public/media/4.mp3
+          gdown 'https://drive.google.com/uc?id=1TbX-srtQLaOojT-UKD4Qjb8kAFYEF7AQ' -O public/media/Sala-Gamer.jpg
+          gdown 'https://drive.google.com/uc?id=1SdoozbJgN_8RQoRyyAx1vZIvNlvCZPr5' -O public/media/Nico.jpg
+          gdown 'https://drive.google.com/uc?id=16_OqDxawqJBkguET74JgLrAxhmyhD5KL' -O public/media/Ciudad-Neon.jpg
+          gdown 'https://drive.google.com/uc?id=10m7MY2TBd43kP9yul3KhOhUt7TyxroHg' -O public/media/Escenario-Datos.jpg
+          gdown 'https://drive.google.com/uc?id=1VeEa0Cmt1F4Vf38pt40CWBkiPNJ5NYoV' -O public/media/Style-Key.jpg
+      - name: Check audio lengths
+        run: |
+          for f in public/media/*.mp3; do echo "$f"; ffprobe -v error -show_entries format=duration -of csv=p=0 "$f"; done
+      - name: Install Remotion dependencies
+        run: npm install
+      - name: Ensure browser
+        run: npx remotion browser ensure
+      - name: Render four-scene preview
+        run: npx remotion render src/index.ts GTA6Scenes1to4 out/GTA6-Scenes-1-4.mp4 --codec=h264 --crf=18
+      - name: Verify MP4
+        run: ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 out/GTA6-Scenes-1-4.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-Scenes-1-4
+          path: out/GTA6-Scenes-1-4.mp4
+          retention-days: 14
