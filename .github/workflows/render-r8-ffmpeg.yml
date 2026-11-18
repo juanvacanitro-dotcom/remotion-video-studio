@@ -1,0 +1,73 @@
+name: Render GTA VI R8 with FFmpeg (no Remotion)
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/render_r8_ffmpeg.py'
+      - '.github/workflows/render-r8-ffmpeg.yml'
+permissions:
+  contents: read
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install FFmpeg, fonts and editing tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core unzip
+          pip install --upgrade gdown pillow numpy faster-whisper yt-dlp
+      - name: Download the user's narration, assets, original clips and sound effects
+        run: |
+          mkdir -p work/media work/assets work/lineart work/clips work/rockstar/clips work/sfx work/out
+          gdown 'https://drive.google.com/uc?id=1tRiOV8LjqZmHMqjcM5zwZ79q9bxjSyNv' -O work/media/voice-1.mp3
+          gdown 'https://drive.google.com/uc?id=15Muh9JO_rZQNnbKz03rRuhmEHNeCFyFk' -O work/media/voice-2.mp3
+          gdown 'https://drive.google.com/uc?id=19BKQcWl5u-JQ-RdVMS5XUe5Lz9LkMMN3' -O work/media/voice-3.mp3
+          gdown 'https://drive.google.com/uc?id=1NZT8FXrTAByLRcbrdYeHAWP1GfxCP78D' -O work/media/voice-4.mp3
+          gdown 'https://drive.google.com/uc?id=1SdoozbJgN_8RQoRyyAx1vZIvNlvCZPr5' -O work/assets/Nico.jpg
+          gdown 'https://drive.google.com/uc?id=1VeEa0Cmt1F4Vf38pt40CWBkiPNJ5NYoV' -O work/assets/Style-Key.jpg
+          gdown 'https://drive.google.com/uc?id=1TbX-srtQLaOojT-UKD4Qjb8kAFYEF7AQ' -O work/assets/Sala-Gamer.jpg
+          gdown 'https://drive.google.com/uc?id=10m7MY2TBd43kP9yul3KhOhUt7TyxroHg' -O work/assets/Escenario-Datos.jpg
+          gdown 'https://drive.google.com/uc?id=16_OqDxawqJBkguET74JgLrAxhmyhD5KL' -O work/assets/Ciudad-Neon.jpg
+          gdown 'https://drive.google.com/uc?id=1ZVOrfJfAk2QLbnWrbgKdPg807ptgj8HU' -O work/lineart/Clip03.mp4
+          gdown 'https://drive.google.com/uc?id=1fdKJ6mN7h53uInnI4Mq_YesZT6tTZbWe' -O work/lineart/Clip01.mp4
+          gdown 'https://drive.google.com/uc?id=1DaOf8AFjlfAXVhLBnW1M8NoupRoQAFz4' -O work/lineart/Clip02.mp4
+          gdown 'https://drive.google.com/uc?id=1E0md2g-jjzUIrULRTnLPAbY2QDDwDaYy' -O work/clips/02.mp4
+          gdown 'https://drive.google.com/uc?id=1lw4mD2WU1LrB-rBV2hr7qQ1JMiHmfPFL' -O work/clips/13.mp4
+          gdown 'https://drive.google.com/uc?id=1-CY58uo9K0Pu7dlK4VA84SeUTi1SfjES' -O work/clips/18.mp4
+          gdown 'https://drive.google.com/uc?id=1Uun4egaerhq8fLHisGzeHLU-4fp-Jkl5' -O work/clips/22.mp4
+          gdown 'https://drive.google.com/uc?id=1VbOzbT2IQL6WNGOLowSK7CJhb6BBUyOr' -O work/clips/24.mp4
+          gdown 'https://drive.google.com/uc?id=1cRrpEKrZKybLa22BJZAAkrKhslvYbOMI' -O work/sfx-pack.zip
+          unzip -oq work/sfx-pack.zip -d work/sfx
+      - name: Download official Rockstar game footage
+        run: |
+          set +e
+          yt-dlp --no-warnings --no-progress --no-playlist --extractor-args 'youtube:player_client=android' -f 'bv*[height<=1080][ext=mp4]/b[height<=1080]' --merge-output-format mp4 -o 'work/media/gta6_trailer2.%(ext)s' 'https://www.youtube.com/watch?v=VQRLujxTm3c'
+          yt-dlp --no-warnings --no-progress --no-playlist --extractor-args 'youtube:player_client=android' -f 'bv*[height<=1080][ext=mp4]/b[height<=1080]' --merge-output-format mp4 -o 'work/media/gta5_trailer.%(ext)s' 'https://www.youtube.com/watch?v=hvoD7ehZPcM'
+          set -e
+          curl -fL --retry 3 --retry-delay 2 'https://media-rockstargames-com.akamaized.net/VI/downloads/videos/GTAVI_Videos.zip' -o work/media/GTAVI_Videos.zip
+          unzip -oq work/media/GTAVI_Videos.zip -d work/rockstar/clips
+          echo '--- FOOTAGE SOURCES ---'
+          find work/media work/rockstar/clips -maxdepth 2 -type f | sort
+          for f in work/media/gta6_trailer2.* work/media/gta5_trailer.*; do
+            [ -f "$f" ] && ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 "$f"
+          done
+      - name: Render first four scenes with direct FFmpeg editing
+        run: python scripts/render_r8_ffmpeg.py
+      - name: Validate MP4 and create review sheet
+        run: |
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 work/out/GTA6-ZINKO-R8-Scenes-1-4-FFmpeg.mp4
+          test -s work/out/GTA6-ZINKO-R8-Scenes-1-4-FFmpeg.mp4
+          ffmpeg -y -loglevel error -i work/out/GTA6-ZINKO-R8-Scenes-1-4-FFmpeg.mp4 -vf "fps=1,scale=480:270,tile=4x3" -frames:v 1 work/out/contact-sheet.jpg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-ZINKO-R8-Scenes-1-4-FFmpeg
+          path: |
+            work/out/GTA6-ZINKO-R8-Scenes-1-4-FFmpeg.mp4
+            work/out/contact-sheet.jpg
+          retention-days: 14
