@@ -21,7 +21,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-dejavu-core unzip
-          pip install --upgrade gdown pillow numpy faster-whisper
+          pip install --upgrade gdown pillow numpy faster-whisper av
       - name: Download the user's narration, assets, original clips and sound effects
         run: |
           mkdir -p work/media work/assets work/stills work/lineart work/clips work/rockstar/clips work/sfx work/out
@@ -70,6 +70,7 @@ jobs:
           ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 work/out/GTA6-ZINKO-R8-Scenes-1-4-FFmpeg.mp4
           test -s work/out/GTA6-ZINKO-R8-Scenes-1-4-FFmpeg.mp4
           ffmpeg -y -loglevel error -i work/out/GTA6-ZINKO-R8-Scenes-1-4-FFmpeg.mp4 -vf "fps=1,scale=480:270,tile=4x3" -frames:v 1 work/out/contact-sheet.jpg
+          echo "CONTACT_SHEET=$(base64 -w0 work/out/contact-sheet.jpg)"
       - uses: actions/upload-artifact@v4
         with:
           name: GTA6-ZINKO-R8-Scenes-1-4-FFmpeg
