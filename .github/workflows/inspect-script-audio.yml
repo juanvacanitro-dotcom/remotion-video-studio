@@ -1,0 +1,34 @@
+name: Inspect narration and script timing
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/inspect-script-audio.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install gdown python-docx
+      - name: Download script and four narration files
+        run: |
+          mkdir -p inspect
+          gdown 'https://drive.google.com/uc?id=1DNkXxdHc1KJl7l2AKFELSlieFaS2CySo' -O inspect/script.docx
+          gdown 'https://drive.google.com/uc?id=1tRiOV8LjqZmHMqjcM5zwZ79q9bxjSyNv' -O inspect/1.mp3
+          gdown 'https://drive.google.com/uc?id=15Muh9JO_rZQNnbKz03rRuhmEHNeCFyFk' -O inspect/2.mp3
+          gdown 'https://drive.google.com/uc?id=19BKQcWl5u-JQ-RdVMS5XUe5Lz9LkMMN3' -O inspect/3.mp3
+          gdown 'https://drive.google.com/uc?id=1NZT8FXrTAByLRcbrdYeHAWP1GfxCP78D' -O inspect/4.mp3
+      - name: Print script text and audio metadata
+        run: |
+          python - <<'PY'
+          from docx import Document
+          d=Document('inspect/script.docx')
+          for p in d.paragraphs:
+              if p.text.strip(): print('SCRIPT:',p.text)
+          PY
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          for f in inspect/*.mp3; do echo "AUDIO $f"; ffprobe -v error -show_entries format=duration -of csv=p=0 "$f"; done
