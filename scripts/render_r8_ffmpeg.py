@@ -200,12 +200,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         return True
     except Exception as e:
         print("WHISPER_FALLBACK",repr(e),flush=True)
+        (ROOT/"subtitles.ass").write_text("[Script Info]\nScriptType: v4.00+\nPlayResX: 1920\nPlayResY: 1080\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Default,DejaVu Sans,58,&H0000D8FF,&H00FFFFFF,&H00000000,&H96000000,-1,0,0,0,100,100,1,0,1,6,3,2,80,80,70,1\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n",encoding="utf-8")
         return False
 def make_cut(src,start,dur,out,nico=False,logo=False,zoomdir=1):
     src=Path(src); start=max(0,float(start)); dur=max(.12,float(dur))
     if not src.exists(): raise FileNotFoundError(src)
     sd=probe(src)
-    if sd>0 and start+dur>sd-.03: start=max(0,sd-dur-.04)
+    if sd>0 and start+dur>sd-.03:
+        start=(start % max(.1,sd-dur-.04))
     base_vf="scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,eq=contrast=1.10:saturation=1.18:gamma=0.98,unsharp=5:5:0.55,zoompan=z='min(zoom+0.0012,1.075)':x='iw/2-(iw/zoom/2)+sin(on/11)*13':y='ih/2-(ih/zoom/2)+cos(on/15)*9':d=1:s=1920x1080:fps=30,setsar=1"
     if nico:
         filt=f"[0:v]{base_vf}[bg];[1:v]scale=430:-1,format=rgba[st];[bg][st]overlay=x='W-w-90+18*sin(t*4)':y='H-h-35+10*sin(t*5)':enable='between(t,0.08,{max(.1,dur-.05):.3f})':shortest=1,format=yuv420p[v]"
