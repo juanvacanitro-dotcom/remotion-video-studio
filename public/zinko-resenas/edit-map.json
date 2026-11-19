@@ -1,0 +1,80 @@
+{
+  "duration": 26.9,
+  "frames": 807,
+  "segments": [
+    {
+      "clip": 1,
+      "in": 0.14,
+      "out": 3.2,
+      "timeline": 0,
+      "end": 3.06,
+      "text": "Un juego acaba de igualar un récord de veintiocho años."
+    },
+    {
+      "clip": 1,
+      "in": 3.36,
+      "out": 7.16,
+      "timeline": 3.18,
+      "end": 6.98,
+      "text": "Es GTA seis, y las reseñas son históricas."
+    },
+    {
+      "clip": 1,
+      "in": 7.32,
+      "out": 9.32,
+      "timeline": 7.12,
+      "end": 9.12,
+      "text": "Pero tiene pegas que casi nadie cuenta."
+    },
+    {
+      "clip": 2,
+      "in": 1.28,
+      "out": 3.8,
+      "timeline": 9.28,
+      "end": 11.8,
+      "text": "Bienvenido a Zinko, el canal de la curiosidad."
+    },
+    {
+      "clip": 2,
+      "in": 4.06,
+      "out": 7.3,
+      "timeline": 11.94,
+      "end": 15.18,
+      "text": "Hoy veremos qué aman, qué critican y si valió la espera."
+    },
+    {
+      "clip": 2,
+      "in": 7.78,
+      "out": 9.44,
+      "timeline": 15.33,
+      "end": 16.99,
+      "text": "Y al final, mi veredicto."
+    },
+    {
+      "clip": 3,
+      "in": 0.14,
+      "out": 3.4,
+      "timeline": 17.15,
+      "end": 20.41,
+      "text": "Las reseñas salieron con una nota casi perfecta."
+    },
+    {
+      "clip": 3,
+      "in": 3.76,
+      "out": 6.47,
+      "timeline": 20.55,
+      "end": 23.26,
+      "text": "Noventa y nueve sobre cien en Metacritic."
+    },
+    {
+      "clip": 3,
+      "in": 6.58,
+      "out": 9.75,
+      "timeline": 23.4,
+      "end": 26.57,
+      "text": "Más de ciento cuarenta críticos lo puntuaron."
+    }
+  ],
+  "music_added": false,
+  "voice_generated": false
+}
