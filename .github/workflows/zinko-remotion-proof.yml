@@ -1,0 +1,30 @@
+name: Render Zinko Remotion proof
+on:
+  push:
+    branches: [codex/zinko-remotion-proof]
+    paths: ['src/zinko-proof/**', 'public/zinko-proof/**', '.github/workflows/zinko-remotion-proof.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: zinko-remotion-proof
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npx remotion browser ensure
+      - run: npx remotion render src/zinko-proof/index.tsx ZinkoRemotionProof out/GTA6-prueba-Remotion.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-prueba-Remotion
+          path: out/GTA6-prueba-Remotion.mp4
+          if-no-files-found: error
+          retention-days: 14
