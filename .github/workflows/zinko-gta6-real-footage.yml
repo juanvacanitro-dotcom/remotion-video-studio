@@ -27,12 +27,9 @@ jobs:
           curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Ambrosia_04.0.2cefoguu-tt.jpg?akim=1&imdensity=1&imwidth=1920' -o out/rockstar/stills/ambrosia_04.jpg
           curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Leonida_Keys_06.0eapr3hbeyewx.jpg?akim=1&imdensity=1&imwidth=1920' -o out/rockstar/stills/leonida_keys_06.jpg
           curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_24.0r9tor5-x.p75.jpg?akim=1&imdensity=1&imwidth=1920' -o out/rockstar/stills/vice_city_24.jpg
-          echo '--- video files ---'
-          find out/rockstar/videos -type f -maxdepth 4 -printf '%p %s bytes\n'
-          echo '--- video metadata ---'
-          find out/rockstar/videos -type f \( -iname '*.mp4' -o -iname '*.mov' -o -iname '*.webm' \) -print0 | while IFS= read -r -d '' f; do ffprobe -v error -show_entries format=duration:stream=width,height -of csv=p=0 "$f" | sed "s#^#$f #"; done
-          echo '--- screenshot files ---'
-          file out/rockstar/stills/*
+          echo '--- downloaded official Rockstar media ---'
+          find out/rockstar -type f -printf '%p %s bytes\n'
+          du -sh out/rockstar
       - uses: actions/upload-artifact@v4
         with:
           name: ZINKO-ROCKSTAR-OFFICIAL-MEDIA
