@@ -27,6 +27,8 @@ jobs:
           curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Ambrosia_04.0.2cefoguu-tt.jpg?akim=1&imdensity=1&imwidth=1920' -o out/rockstar/stills/ambrosia_04.jpg
           curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Leonida_Keys_06.0eapr3hbeyewx.jpg?akim=1&imdensity=1&imwidth=1920' -o out/rockstar/stills/leonida_keys_06.jpg
           curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_24.0r9tor5-x.p75.jpg?akim=1&imdensity=1&imwidth=1920' -o out/rockstar/stills/vice_city_24.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_05.0ypw_.fz.~4k0.jpg?akim=1&imdensity=1&imwidth=1920' -o out/rockstar/stills/jason_and_lucia_05.jpg
+          curl -fL --retry 3 'https://www.rockstargames.com/VI/_next/static/media/Port_Gellhorn_06.13ghhmb440r6e.jpg?akim=1&imdensity=1&imwidth=1920' -o out/rockstar/stills/port_gellhorn_06.jpg
           echo '--- downloaded official Rockstar media ---'
           find out/rockstar -type f -printf '%p %s bytes\n'
           du -sh out/rockstar
