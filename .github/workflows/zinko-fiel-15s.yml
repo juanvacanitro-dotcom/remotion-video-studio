@@ -1,0 +1,31 @@
+name: ZINKO preview faithful 15s
+on:
+  push:
+    branches: [codex/zinko-gta6-fiel-15s]
+    paths: ['src/zinko-fiel-15s/**', '.github/workflows/zinko-fiel-15s.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: zinko-fiel-15s
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npx tsc --noEmit
+      - run: npx remotion browser ensure
+      - run: npx remotion render src/zinko-fiel-15s/index.tsx ZinkoFiel15s out/ZINKO-FIEL-15S-SIN-VOZ.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZINKO-FIEL-15S-SIN-VOZ
+          path: out/ZINKO-FIEL-15S-SIN-VOZ.mp4
+          if-no-files-found: error
+          retention-days: 7
