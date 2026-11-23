@@ -501,16 +501,17 @@ function Subtitle({frame}: {frame: number}) {
         style={{
           maxWidth: 1540,
           padding: '13px 28px 15px',
-          background: 'rgba(22,22,24,.88)',
+          background: 'transparent',
           color: YELLOW,
           fontFamily: 'CaptionLocal, sans-serif',
-          fontSize: 31,
+          fontSize: 34,
           fontWeight: 900,
           letterSpacing: 0.1,
           textAlign: 'center',
           lineHeight: 1.1,
-          borderRadius: 5,
-          boxShadow: '0 8px 18px rgba(30,24,18,.16)',
+          WebkitTextStroke: '3px #17171a',
+          paintOrder: 'stroke fill',
+          textShadow: '0 4px 0 rgba(0,0,0,.16)',
         }}
       >
         {cue.text}
@@ -597,7 +598,7 @@ function RefinedIntro() {
           rotate={1.3}
           zoom={1.13}
           objectPosition="center 64%"
-          cropTop={28}
+          cropTop={46}
           tapeSide="right"
         />
       </Sequence>
@@ -679,7 +680,7 @@ function RefinedIntro() {
           rotate={-1.4}
           zoom={1.1}
           objectPosition="center 60%"
-          cropTop={24}
+          cropTop={38}
           tapeSide="left"
         />
       </Sequence>
