@@ -52,6 +52,7 @@ function GameShot({
   panX = 0,
   panY = 0,
   tint = 'none',
+  impact = false,
 }: {
   name: string;
   source?: 'proof' | 'full';
@@ -61,6 +62,7 @@ function GameShot({
   panX?: number;
   panY?: number;
   tint?: 'warm' | 'cool' | 'none';
+  impact?: boolean;
 }) {
   const f = useCurrentFrame();
   const scale = interpolate(f, [0, 150], [zoom, zoomTo], {
@@ -69,6 +71,9 @@ function GameShot({
   });
   const driftX = panX * Math.sin(f * 0.018);
   const driftY = panY * Math.sin(f * 0.015);
+  const hit = impact ? Math.max(0, 1 - f / 10) : 0;
+  const shakeX = Math.sin(f * 3.1) * hit * 18;
+  const shakeY = Math.cos(f * 4.2) * hit * 10;
   const src = source === 'full' ? full(name) : proof(name);
   const color = tint === 'warm'
     ? 'saturate(1.18) contrast(1.08) sepia(.12)'
@@ -86,7 +91,7 @@ function GameShot({
           height: '100%',
           objectFit: 'cover',
           objectPosition: 'center 50%',
-          transform: 'scale(' + scale + ') translate(' + driftX + 'px,' + driftY + 'px)',
+          transform: 'scale(' + (scale + hit * 0.035) + ') translate(' + (driftX + shakeX) + 'px,' + (driftY + shakeY) + 'px) rotate(' + (Math.sin(f * 2.6) * hit * 0.6) + 'deg)',
           filter: color,
         }}
       />
@@ -403,15 +408,121 @@ function SlashWipe({color = TEAL}: {color?: string}) {
   );
 }
 
+
+function FlashHit({color = WHITE, strength = 0.42}: {color?: string; strength?: number}) {
+  const f = useCurrentFrame();
+  const opacity = interpolate(f, [0, 1, 3, 8], [0, strength, strength * 0.14, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  return <AbsoluteFill style={{background: color, opacity, pointerEvents: 'none'}} />;
+}
+
+function ImpactBurst({color = YELLOW}: {color?: string}) {
+  const f = useCurrentFrame();
+  const scale = interpolate(f, [0, 18], [0.42, 1.42], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const opacity = interpolate(f, [0, 3, 14, 25], [0, 0.78, 0.28, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  return (
+    <AbsoluteFill style={{pointerEvents: 'none', opacity, overflow: 'hidden'}}>
+      <div style={{
+        position: 'absolute', left: 315, top: 445, width: 580, height: 580,
+        border: '7px solid ' + color, borderRadius: '50%',
+        boxShadow: '0 0 28px ' + color + '88, inset 0 0 28px ' + color + '44',
+        transform: 'translate(-50%,-50%) scale(' + scale + ')',
+      }} />
+      <div style={{
+        position: 'absolute', left: 315, top: 445, width: 760, height: 760,
+        border: '2px solid rgba(255,255,255,.8)', borderRadius: '50%',
+        transform: 'translate(-50%,-50%) scale(' + (scale * 0.82) + ')',
+      }} />
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'repeating-linear-gradient(112deg, transparent 0 95px, ' + color + '30 96px 101px, transparent 102px 180px)',
+        mixBlendMode: 'screen',
+      }} />
+    </AbsoluteFill>
+  );
+}
+
+function ReactionCard({
+  name,
+  label,
+  x,
+  y,
+  width,
+  angle = 2,
+}: {
+  name: string;
+  label: string;
+  x: number;
+  y: number;
+  width: number;
+  angle?: number;
+}) {
+  const f = useCurrentFrame();
+  const p = pop(f, 0, 10);
+  const shake = Math.sin(f * 1.9) * Math.max(0, 1 - f / 12) * 9;
+  return (
+    <div style={{
+      position: 'absolute',
+      left: x,
+      top: y,
+      width,
+      aspectRatio: '16 / 9',
+      overflow: 'hidden',
+      border: '7px solid ' + WHITE,
+      borderRadius: 18,
+      background: INK,
+      boxShadow: '0 18px 45px rgba(0,0,0,.58), 0 0 28px rgba(255,67,137,.38)',
+      opacity: interpolate(f, [0, 4], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}),
+      transform: 'translateY(' + ((1 - p) * 100 + shake) + 'px) rotate(' + (angle + shake * 0.12) + 'deg) scale(' + (0.78 + p * 0.22) + ')',
+    }}>
+      <OffthreadVideo
+        src={full(name)}
+        muted
+        startFrom={0}
+        style={{width: '100%', height: '100%', objectFit: 'cover'}}
+      />
+      <AbsoluteFill style={{background: 'linear-gradient(0deg, rgba(5,6,13,.88), transparent 58%)'}} />
+      <div style={{
+        position: 'absolute', left: 15, top: 13, padding: '6px 10px',
+        background: PINK, color: WHITE, fontFamily: 'CaptionLocal, Arial, sans-serif',
+        fontSize: 17, fontWeight: 900, letterSpacing: 2, transform: 'skewX(-8deg)',
+      }}>REACCIÓN</div>
+      <div style={{
+        position: 'absolute', left: 18, bottom: 14, color: YELLOW,
+        fontFamily: 'ImpactLocal, Impact, sans-serif', fontSize: 44,
+        lineHeight: 0.9, textShadow: '3px 4px 0 ' + INK,
+        WebkitTextStroke: '1px ' + INK,
+      }}>{label}</div>
+    </div>
+  );
+}
+
 function SceneOne() {
   const f = useCurrentFrame();
   return (
-    <FadeScene duration={165}>
+    <FadeScene duration={150}>
       <Sequence from={0} durationInFrames={82}>
         <GameShot name="opening.mp4" zoom={1.025} zoomTo={1.12} panX={10} tint="warm" />
       </Sequence>
-      <Sequence from={82} durationInFrames={83}>
+      <Sequence from={32} durationInFrames={16}>
+        <GameShot name="rockstar.mp4" source="full" startFrom={24} zoom={1.06} zoomTo={1.16} panX={-12} tint="warm" impact />
+      </Sequence>
+      <Sequence from={62} durationInFrames={15}>
+        <GameShot name="action.mp4" source="full" startFrom={55} zoom={1.05} zoomTo={1.17} panX={10} tint="cool" impact />
+      </Sequence>
+      <Sequence from={82} durationInFrames={68}>
         <GameShot name="crowd.mp4" zoom={1.035} zoomTo={1.15} panX={-8} tint="warm" />
+      </Sequence>
+      <Sequence from={0} durationInFrames={26}>
+        <ImpactBurst color={YELLOW} />
       </Sequence>
       <Eyebrow text="UN JUEGO ACABA DE IGUALAR" x={155} y={250} color={WHITE} delay={4} />
       <HeroText text="28" x={135} y={315} size={310} color={YELLOW} delay={3} width={500} angle={-5} depth={10} />
@@ -458,11 +569,14 @@ function SceneOne() {
 function SceneTwo() {
   const f = useCurrentFrame();
   return (
-    <FadeScene duration={160}>
+    <FadeScene duration={153}>
       <Sequence from={0} durationInFrames={78}>
         <GameShot name="lowrider.mp4" zoom={1.035} zoomTo={1.14} panX={9} tint="cool" />
       </Sequence>
-      <Sequence from={78} durationInFrames={82}>
+      <Sequence from={24} durationInFrames={15}>
+        <GameShot name="coast.mp4" source="full" startFrom={30} zoom={1.055} zoomTo={1.18} panX={-13} tint="warm" impact />
+      </Sequence>
+      <Sequence from={78} durationInFrames={75}>
         <GameShot name="action.mp4" source="full" zoom={1.025} zoomTo={1.13} panX={-10} tint="warm" />
       </Sequence>
       <Sequence from={0} durationInFrames={84}>
@@ -484,7 +598,10 @@ function SceneTwo() {
         <Eyebrow text="Y LAS RESEÑAS SON HISTÓRICAS" x={160} y={760} color={YELLOW} delay={25} />
       </Sequence>
       <NicoCutout pose="question" x={1580} y={675} width={390} delay={38} tilt={-2} />
-      <Sequence from={88} durationInFrames={72}>
+      <Sequence from={92} durationInFrames={38}>
+        <ReactionCard name="shock.mp4" label="¿EN SERIO?" x={1480} y={170} width={360} angle={3} />
+      </Sequence>
+      <Sequence from={88} durationInFrames={65}>
         <HeroText text={'PERO HAY\nPEGAS'} x={145} y={350} size={124} color={PINK} delay={0} width={900} angle={-3} depth={9} />
         <AccentLine x={155} y={665} width={520} color={TEAL} delay={8} />
       </Sequence>
@@ -495,7 +612,7 @@ function SceneTwo() {
 function SceneThree() {
   const f = useCurrentFrame();
   return (
-    <FadeScene duration={160}>
+    <FadeScene duration={100}>
       <NeonStage />
       <div
         style={{
@@ -535,17 +652,25 @@ function SceneThree() {
 function SceneFour() {
   const f = useCurrentFrame();
   return (
-    <FadeScene duration={160}>
-      <Sequence from={0} durationInFrames={90}>
+    <FadeScene duration={210}>
+      <Sequence from={0} durationInFrames={75}>
         <SplitScreen />
         <HeroText text="QUÉ AMAN" x={105} y={160} size={93} color={YELLOW} delay={10} width={700} angle={-4} depth={8} />
         <HeroText text="QUÉ CRITICAN" x={1070} y={160} size={84} color={PINK} delay={19} width={760} angle={4} depth={8} />
       </Sequence>
-      <Sequence from={90} durationInFrames={70}>
+      <Sequence from={30} durationInFrames={34}>
+        <ReactionCard name="success.mp4" label="¡ESO!" x={1490} y={700} width={320} angle={-2} />
+      </Sequence>
+      <Sequence from={75} durationInFrames={135}>
         <GameShot name="coast.mp4" source="full" zoom={1.025} zoomTo={1.13} panX={-9} tint="warm" />
         <HeroText text={'¿VALIÓ LA\nESPERA?'} x={145} y={320} size={150} color={YELLOW} delay={3} width={820} angle={-4} depth={10} />
         <Eyebrow text="Y AL FINAL, MI VEREDICTO" x={160} y={665} color={WHITE} delay={20} />
         <NicoCutout pose="question" x={1510} y={660} width={430} delay={18} tilt={-2} />
+      </Sequence>
+      <Sequence from={145} durationInFrames={65}>
+        <HeroText text="MI VEREDICTO" x={150} y={395} size={125} color={TEAL} delay={0} width={1030} angle={-3} depth={11} />
+        <AccentLine x={160} y={555} width={660} color={PINK} delay={7} />
+        <NicoCutout x={1515} y={650} width={410} delay={9} tilt={3} />
       </Sequence>
     </FadeScene>
   );
@@ -621,18 +746,44 @@ function V5Intro() {
 
   return (
     <AbsoluteFill style={{background: INK, overflow: 'hidden'}}>
-      <Sequence from={0} durationInFrames={165}><SceneOne /></Sequence>
-      <Sequence from={150} durationInFrames={160}><SceneTwo /></Sequence>
-      <Sequence from={295} durationInFrames={160}><SceneThree /></Sequence>
-      <Sequence from={440} durationInFrames={160}><SceneFour /></Sequence>
-      <Sequence from={147} durationInFrames={14}><SlashWipe color={TEAL} /></Sequence>
-      <Sequence from={292} durationInFrames={14}><SlashWipe color={PINK} /></Sequence>
-      <Sequence from={437} durationInFrames={14}><SlashWipe color={YELLOW} /></Sequence>
+      <Sequence from={0} durationInFrames={150}><SceneOne /></Sequence>
+      <Sequence from={145} durationInFrames={153}><SceneTwo /></Sequence>
+      <Sequence from={298} durationInFrames={100}><SceneThree /></Sequence>
+      <Sequence from={390} durationInFrames={210}><SceneFour /></Sequence>
+      <Sequence from={142} durationInFrames={14}><SlashWipe color={TEAL} /></Sequence>
+      <Sequence from={295} durationInFrames={14}><SlashWipe color={PINK} /></Sequence>
+      <Sequence from={387} durationInFrames={14}><SlashWipe color={YELLOW} /></Sequence>
+      <Sequence from={0} durationInFrames={8}><FlashHit color={WHITE} strength={0.5} /></Sequence>
+      <Sequence from={145} durationInFrames={8}><FlashHit color={TEAL} strength={0.34} /></Sequence>
+      <Sequence from={220} durationInFrames={8}><FlashHit color={PINK} strength={0.38} /></Sequence>
+      <Sequence from={298} durationInFrames={8}><FlashHit color={TEAL} strength={0.28} /></Sequence>
+      <Sequence from={390} durationInFrames={8}><FlashHit color={YELLOW} strength={0.32} /></Sequence>
+      <Sequence from={465} durationInFrames={8}><FlashHit color={WHITE} strength={0.22} /></Sequence>
       <Captions />
       <Audio src={local('voice/intro-clean.wav')} volume={1} />
-      <Audio src={local('sfx/13_golpe_bajo.wav')} volume={0.065} />
-      <Sequence from={150} durationInFrames={45}>
-        <Audio src={local('sfx/11_swoosh.wav')} volume={0.045} />
+      <Sequence from={0} durationInFrames={42}>
+        <Audio src={local('sfx/vine-boom.wav')} volume={0.16} />
+      </Sequence>
+      <Sequence from={32} durationInFrames={28}>
+        <Audio src={local('sfx/whoosh.wav')} volume={0.11} />
+      </Sequence>
+      <Sequence from={142} durationInFrames={30}>
+        <Audio src={local('sfx/whoosh.wav')} volume={0.13} />
+      </Sequence>
+      <Sequence from={235} durationInFrames={34}>
+        <Audio src={local('sfx/bruh.wav')} volume={0.15} />
+      </Sequence>
+      <Sequence from={295} durationInFrames={28}>
+        <Audio src={local('sfx/whoosh.wav')} volume={0.12} />
+      </Sequence>
+      <Sequence from={387} durationInFrames={28}>
+        <Audio src={local('sfx/whoosh.wav')} volume={0.13} />
+      </Sequence>
+      <Sequence from={465} durationInFrames={40}>
+        <Audio src={local('sfx/vine-boom.wav')} volume={0.10} />
+      </Sequence>
+      <Sequence from={535} durationInFrames={55}>
+        <Audio src={local('sfx/dramatic-boomer.wav')} volume={0.12} />
       </Sequence>
     </AbsoluteFill>
   );
@@ -640,7 +791,7 @@ function V5Intro() {
 
 const Root = () => (
   <Composition
-    id="ZinkoGTA6V5"
+    id="ZinkoGTA6V53"
     component={V5Intro}
     durationInFrames={FRAMES}
     fps={FPS}

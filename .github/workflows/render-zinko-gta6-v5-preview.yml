@@ -1,4 +1,4 @@
-name: Render ZINKO GTA VI mixed-media 20-second intro V5
+name: Render ZINKO GTA VI mixed-media 20-second intro V5.3
 
 on:
   push:
@@ -35,41 +35,43 @@ jobs:
           if ! command -v ffmpeg >/dev/null 2>&1; then
             sudo apt-get update
             sudo apt-get install -y ffmpeg
-          else
-            echo "FFmpeg is already available on the runner"
           fi
           pip install --upgrade gdown
 
-      - name: Download narration and two selected sound accents
+      - name: Download narration
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/zinko-voice /tmp/zinko-sfx
+          mkdir -p /tmp/zinko-voice
           gdown "https://drive.google.com/uc?id=1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj" -O /tmp/zinko-voice.zip
-          gdown "https://drive.google.com/uc?id=1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74" -O /tmp/zinko-sfx.zip
           unzip -oq /tmp/zinko-voice.zip -d /tmp/zinko-voice
-          unzip -oq /tmp/zinko-sfx.zip -d /tmp/zinko-sfx
 
-      - name: Prepare a natural voice mix
+      - name: Clean the 12 kHz whistle and prepare punchier sound design
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p public/zinko-v5-preview/voice public/zinko-v5-preview/sfx
-          # Mild spectral cleanup: keep the voice natural and avoid the metallic
-          # artifacts caused by aggressive denoising. No music bed is added.
+          # The V5.2 mix contains a narrow, persistent 12 kHz whistle.
+          # A precise notch removes it while preserving the speech band.
           ffmpeg -hide_banner -loglevel error -y \
             -i /tmp/zinko-voice/1.mp3 \
             -i /tmp/zinko-voice/2.mp3 \
-            -filter_complex "[0:a]highpass=f=75,lowpass=f=12000,afftdn=nr=6:nf=-48:tn=1:gs=6[a0];[1:a]highpass=f=75,lowpass=f=12000,afftdn=nr=6:nf=-48:tn=1:gs=6[a1];[a0][a1]concat=n=2:v=0:a=1,acompressor=threshold=-21dB:ratio=1.5:attack=18:release=180:makeup=1.15,loudnorm=I=-16:TP=-1.5:LRA=8[out]" \
+            -filter_complex "[0:a]highpass=f=75,afftdn=nr=4:nf=-50:tn=1:gs=6,equalizer=f=12000:t=q:w=6:g=-30,lowpass=f=10500:p=2[a0];[1:a]highpass=f=75,afftdn=nr=4:nf=-50:tn=1:gs=6,equalizer=f=12000:t=q:w=6:g=-30,lowpass=f=10500:p=2[a1];[a0][a1]concat=n=2:v=0:a=1,acompressor=threshold=-21dB:ratio=1.5:attack=18:release=180:makeup=1.15,loudnorm=I=-16:TP=-1.5:LRA=8[out]" \
             -map "[out]" -ar 48000 -ac 2 -c:a pcm_s16le \
             public/zinko-v5-preview/voice/intro-clean.wav
-          cp /tmp/zinko-sfx/03_Efectos_Sonido/13_golpe_bajo.wav public/zinko-v5-preview/sfx/
-          cp /tmp/zinko-sfx/03_Efectos_Sonido/11_swoosh.wav public/zinko-v5-preview/sfx/
+
+          # Purpose-selected low-end impacts and transitions; no piercing beeps or scratch effects.
+          curl -fL --retry 3 https://remotion.media/vine-boom.wav -o public/zinko-v5-preview/sfx/vine-boom.wav
+          curl -fL --retry 3 https://remotion.media/whoosh.wav -o public/zinko-v5-preview/sfx/whoosh.wav
+          curl -fL --retry 3 https://remotion.media/bruh.wav -o public/zinko-v5-preview/sfx/bruh.wav
+          curl -fL --retry 3 https://remotion.media/dramatic-boomer.wav -o public/zinko-v5-preview/sfx/dramatic-boomer.wav
 
           for f in \
             public/zinko-v5-preview/voice/intro-clean.wav \
-            public/zinko-v5-preview/sfx/13_golpe_bajo.wav \
-            public/zinko-v5-preview/sfx/11_swoosh.wav \
+            public/zinko-v5-preview/sfx/vine-boom.wav \
+            public/zinko-v5-preview/sfx/whoosh.wav \
+            public/zinko-v5-preview/sfx/bruh.wav \
+            public/zinko-v5-preview/sfx/dramatic-boomer.wav \
             public/zinko-proof/Caption.ttf \
             public/zinko-proof/Impact.ttf \
             public/zinko-proof/nico-happy.webp \
@@ -79,7 +81,10 @@ jobs:
             public/zinko-proof/crowd.mp4 \
             public/zinko-proof/lowrider.mp4 \
             public/zinko-full/coast.mp4 \
-            public/zinko-full/rockstar.mp4; do
+            public/zinko-full/rockstar.mp4 \
+            public/zinko-full/action.mp4 \
+            public/zinko-full/shock.mp4 \
+            public/zinko-full/success.mp4; do
             test -s "$f"
             echo "$f | $(stat -c%s "$f") bytes"
           done
@@ -93,24 +98,24 @@ jobs:
       - name: Ensure Remotion browser
         run: npx remotion browser ensure
 
-      - name: Render V5 mixed-media intro
+      - name: Render V5.3 mixed-media intro
         run: |
           mkdir -p out
-          npx remotion render src/zinko-v5-preview/index.tsx ZinkoGTA6V5 out/GTA6-ZINKO-INTRO-20s-v5.2.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+          npx remotion render src/zinko-v5-preview/index.tsx ZinkoGTA6V53 out/GTA6-ZINKO-INTRO-20s-v5.3.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
 
       - name: Verify render and create contact sheet
         run: |
           set -euo pipefail
-          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 out/GTA6-ZINKO-INTRO-20s-v5.2.mp4
-          test -s out/GTA6-ZINKO-INTRO-20s-v5.2.mp4
-          ffmpeg -y -loglevel error -i out/GTA6-ZINKO-INTRO-20s-v5.2.mp4 -vf "fps=1,scale=480:270,tile=5x4" -frames:v 1 out/GTA6-ZINKO-INTRO-20s-v5.2-contact.jpg
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 out/GTA6-ZINKO-INTRO-20s-v5.3.mp4
+          test -s out/GTA6-ZINKO-INTRO-20s-v5.3.mp4
+          ffmpeg -y -loglevel error -i out/GTA6-ZINKO-INTRO-20s-v5.3.mp4 -vf "fps=1,scale=480:270,tile=5x4" -frames:v 1 out/GTA6-ZINKO-INTRO-20s-v5.3-contact.jpg
 
-      - name: Upload V5 for review
+      - name: Upload V5.3 for review
         uses: actions/upload-artifact@v4
         with:
-          name: GTA6-ZINKO-INTRO-20s-v5.2
+          name: GTA6-ZINKO-INTRO-20s-v5.3
           path: |
-            out/GTA6-ZINKO-INTRO-20s-v5.2.mp4
-            out/GTA6-ZINKO-INTRO-20s-v5.2-contact.jpg
+            out/GTA6-ZINKO-INTRO-20s-v5.3.mp4
+            out/GTA6-ZINKO-INTRO-20s-v5.3-contact.jpg
           if-no-files-found: error
           retention-days: 14
