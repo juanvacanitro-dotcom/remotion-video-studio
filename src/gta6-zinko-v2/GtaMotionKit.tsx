@@ -19,7 +19,7 @@ export function punchMotion(frame:number,startFrame:number){
 }
 
 export const KineticCaption:React.FC<{text:string;emphasis?:string;accent?:string;frame:number;startFrame:number}> = ({text,emphasis,accent=YELLOW,frame,startFrame})=>{
-  const tokens=[...text.matchAll(/\\S+/g)];
+  const tokens=[...text.matchAll(/\S+/g)];
   const lower=text.toLowerCase();
   const hiStart=emphasis?lower.indexOf(emphasis.toLowerCase()):-1;
   const hiEnd=hiStart>=0?hiStart+emphasis!.length:-1;
@@ -35,7 +35,7 @@ export const KineticCaption:React.FC<{text:string;emphasis?:string;accent?:strin
         const local=frame-startFrame-i*3;
         const p=spring({frame:Math.max(0,local),fps:30,config:{mass:.55,damping:12,stiffness:210}});
         const visible=local>=0;
-        return <span key={i} style={{display:'inline-block',whiteSpace:'pre',opacity:visible?1:0,transform:'translateY('+(visible?(1-p)*22:22)+'px) scale('+(visible?.88+.12*p:.88)+') rotateX('+(visible?(1-p)*18:18)+'deg)',transformOrigin:'50% 100%',color:hot?WHITE:accent,textShadow:hot?'0 0 16px '+accent+',2px 5px 0 '+INK+',0 8px 18px #0009':'2px 5px 0 '+INK+',0 8px 18px #0009'}}>{word}</span>;
+        return <span key={i} style={{display:'inline-block',whiteSpace:'pre',opacity:visible?1:0,transform:'translateY('+(visible?(1-p)*22:22)+'px) scale('+(visible ? .88+.12*p : .88)+') rotateX('+(visible?(1-p)*18:18)+'deg)',transformOrigin:'50% 100%',color:hot?WHITE:accent,textShadow:hot?'0 0 16px '+accent+',2px 5px 0 '+INK+',0 8px 18px #0009':'2px 5px 0 '+INK+',0 8px 18px #0009'}}>{word}</span>;
       })}
     </div>
   </div>;
