@@ -1,0 +1,44 @@
+name: Render GTA 6 Valio la espera
+on:
+  push:
+    branches: [feat/gta6-valio-espera-full]
+    paths:
+      - 'src/zinko-espera/**'
+      - 'public/valio-espera/**'
+      - '.github/workflows/render-gta6-valio-espera.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gta6-valio-espera
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Prepare narration and sound effects
+        run: |
+          mkdir -p public/valio-espera
+          curl -fL --retry 3 'https://assets.vidiq.com/voiceovers/62292359-f267-4aa4-91f2-cbf9b0ceacc1/5687f522-4309-4255-ac9c-75b6cc19bec6.mp3' -o public/valio-espera/voice.mp3
+          ffmpeg -y -f lavfi -i "anoisesrc=color=white:duration=0.7:amplitude=0.22" -af "highpass=f=700,lowpass=f=8000,afade=t=in:st=0:d=0.08,afade=t=out:st=0.35:d=0.35,volume=0.55" public/valio-espera/sfx-scratch.wav
+          ffmpeg -y -f lavfi -i "anoisesrc=color=white:duration=0.9:amplitude=0.3" -af "lowpass=f=1200,afade=t=in:st=0:d=0.12,afade=t=out:st=0.35:d=0.5,volume=0.55" public/valio-espera/sfx-whoosh.wav
+          ffmpeg -y -f lavfi -i "sine=frequency=880:duration=0.35" -af "afade=t=in:st=0:d=0.02,afade=t=out:st=0.08:d=0.27,volume=0.22" public/valio-espera/sfx-ping.wav
+      - name: Type-check
+        run: npx tsc --noEmit
+      - name: Install Chromium for Remotion
+        run: npx remotion browser ensure
+      - name: Render 1080p MP4
+        run: npx remotion render src/zinko-espera/index.tsx ZinkoGTA6Espera out/GTA6-Valio-la-espera-ZINKO.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-Valio-la-espera-ZINKO
+          path: out/GTA6-Valio-la-espera-ZINKO.mp4
+          if-no-files-found: error
+          retention-days: 14
