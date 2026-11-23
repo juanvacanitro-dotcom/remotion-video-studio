@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {DeskCutaway} from './DeskCutaway';
 import {
   AbsoluteFill, Audio, Composition, OffthreadVideo, Sequence,
   cancelRender, continueRender, delayRender, registerRoot, spring, staticFile,
@@ -346,15 +347,29 @@ function Transition({index,f}:{index:number;f:number}){
  return <div style={{position:'absolute',inset:0,background:'radial-gradient(circle at 50% 50%,transparent '+(p*90)+'%,rgba(255,60,145,'+((1-p)*.9)+') '+(p*90+2)+'%,transparent '+(p*100+8)+'%)'}}/>;
 }
 
+const deskCuts:Record<number,{from:number;duration:number;mode:string;label:string;value:string;note:string;accent:string}> = {
+ 0:{from:0,duration:42,mode:'trophy',label:'EL RÉCORD',value:'28 AÑOS',note:'UNA MARCA HISTÓRICA',accent:ORANGE},
+ 2:{from:3.7,duration:54,mode:'score',label:'PUNTUACIÓN',value:'99 / 100',note:'MÁS DE 140 CRÍTICOS',accent:ORANGE},
+ 5:{from:3.4,duration:60,mode:'map',label:'EXPLORACIÓN',value:'MUNDO ABIERTO',note:'DETALLES POR TODAS PARTES',accent:TEAL},
+ 9:{from:2.8,duration:60,mode:'controller',label:'RENDIMIENTO',value:'30 FPS',note:'SIN MODO DE 60',accent:PINK},
+ 12:{from:3.2,duration:54,mode:'car',label:'REALISMO',value:'MÁS GESTIÓN',note:'COCHES · GASTOS · RUTINAS',accent:ORANGE},
+ 13:{from:3.3,duration:54,mode:'coins',label:'PREVENTAS',value:'17M+',note:'ESTIMACIÓN DE TERCEROS',accent:ORANGE},
+ 14:{from:3.3,duration:54,mode:'bars',label:'COMPARATIVA',value:'11M vs 17M',note:'VENTAS · PREVENTAS',accent:ORANGE},
+ 15:{from:3.4,duration:48,mode:'split',label:'OPINIONES',value:'SÍ / MATICES',note:'CRÍTICOS · JUGADORES',accent:TEAL},
+ 16:{from:4.2,duration:48,mode:'verdict',label:'VEREDICTO',value:'HISTÓRICO',note:'NO ES PERFECTO',accent:TEAL}
+};
+
 function Scene({index}:{index:number}){
  const f=useCurrentFrame();
  const scene=scenes[index];
+ const desk=deskCuts[index];
  const driftX=Math.sin((f+index*17)*.035)*7;
  const driftY=Math.cos((f+index*11)*.028)*5;
  const zoom=1.025+.012*Math.sin(f*.035+index);
  return <AbsoluteFill style={{background:INK,overflow:'hidden',fontFamily:'CaptionLocal'}}>
   <OffthreadVideo src={file('clips/'+scene.file)} muted style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+zoom+') translate('+driftX+'px,'+driftY+'px)',filter:'saturate(1.07) contrast(1.04)'}}/>
   <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(5,5,16,.22),transparent 20%,transparent 62%,rgba(5,5,16,.38))'}}/>
+  {desk&&<Sequence from={Math.round(desk.from*FPS)} durationInFrames={desk.duration}><DeskCutaway mode={desk.mode} label={desk.label} value={desk.value} note={desk.note} accent={desk.accent}/></Sequence>}
   <UIOverlay type={scene.type} accent={scene.accent} f={f}/>
   <SceneHeader index={index} accent={scene.accent} f={f}/>
   <Subtitle scene={scene} f={f}/>
