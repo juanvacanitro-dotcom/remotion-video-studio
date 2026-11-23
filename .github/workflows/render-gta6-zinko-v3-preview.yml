@@ -1,0 +1,65 @@
+name: GTA 6 ZINKO Motion V3 — No Footage Preview
+on:
+  push:
+    branches: [feat/gta6-zinko-editorial-v2]
+    paths:
+      - 'src/gta6-zinko-v2/Composition.tsx'
+      - 'src/gta6-zinko-v2/GtaMotionKit.tsx'
+      - 'src/gta6-zinko-v2/index.tsx'
+      - 'src/gta6-zinko-v2/RENDER-V3-PREVIEW.txt'
+      - '.github/workflows/render-gta6-zinko-v3-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gta6-zinko-v3-preview
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Install media download helper
+        run: python3 -m pip install --quiet gdown
+      - name: Download only narration and sound effects (no video clips)
+        run: |
+          mkdir -p /tmp/gta-voice /tmp/gta-sfx public/gta6-zinko-v2/voice public/gta6-zinko-v2/sfx
+          gdown '1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj' -O /tmp/voz.zip
+          gdown '1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74' -O /tmp/sfx.zip
+          unzip -q -o /tmp/voz.zip -d /tmp/gta-voice
+          unzip -q -o /tmp/sfx.zip -d /tmp/gta-sfx
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, shutil
+          voice_root=Path('/tmp/gta-voice')
+          sfx_root=Path('/tmp/gta-sfx')
+          out=Path('public/gta6-zinko-v2')
+          voices=list(voice_root.rglob('*.mp3'))
+          for n in range(1,19):
+              src=next((p for p in voices if re.match(r'^'+str(n)+r'(?:\\s|$|\\()',p.stem)),None)
+              if src is None: raise SystemExit('Missing narration track '+str(n))
+              shutil.copy2(src,out/'voice'/('{:02d}.mp3'.format(n)))
+          sounds=list(sfx_root.rglob('*.wav'))
+          if not sounds: raise SystemExit('No WAV sound effects found')
+          for p in sounds:
+              shutil.copy2(p,out/'sfx'/p.name)
+          print('Staged',len(voices),'voice files and',len(sounds),'SFX files. No user video clips were downloaded.')
+          PY
+      - name: Type-check
+        run: npx tsc --noEmit
+      - name: Install Chromium for Remotion
+        run: npx remotion browser ensure
+      - name: Render 30-second no-footage preview
+        run: npx remotion render src/gta6-zinko-v2/index.tsx GTA6ZinkoMotionV3 out/GTA6-ZINKO-MOTION-V3-PREVIEW.mp4 --frames=0-899 --concurrency=2 --crf=19 --pixel-format=yuv420p --audio-bitrate=256k
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-ZINKO-MOTION-V3-PREVIEW
+          path: out/GTA6-ZINKO-MOTION-V3-PREVIEW.mp4
+          if-no-files-found: error
+          retention-days: 14
