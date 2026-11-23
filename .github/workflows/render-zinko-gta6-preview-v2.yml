@@ -1,0 +1,103 @@
+name: Render ZINKO GTA VI 15-second preview v2
+
+on:
+  push:
+    branches:
+      - codex/zinko-gta6-15s-preview-v2
+    paths:
+      - 'src/zinko-user-preview/**'
+      - '.github/workflows/render-zinko-gta6-preview-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout Remotion project
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install media tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          pip install --upgrade gdown pillow
+
+      - name: Download creator footage, voice and sound effects
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zinko-source /tmp/zinko-voice /tmp/zinko-sfx
+          gdown "https://drive.google.com/uc?id=1X5yEmhkcxY5Dsq0KbYD2-ank0Q6iQW0A" -O /tmp/zinko-clips.zip
+          gdown "https://drive.google.com/uc?id=1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj" -O /tmp/zinko-voice.zip
+          gdown "https://drive.google.com/uc?id=1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74" -O /tmp/zinko-sfx.zip
+          unzip -oq /tmp/zinko-clips.zip -d /tmp/zinko-source
+          unzip -oq /tmp/zinko-voice.zip -d /tmp/zinko-voice
+          unzip -oq /tmp/zinko-sfx.zip -d /tmp/zinko-sfx
+
+      - name: Stage only the assets used by the 15-second cut
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/zinko-user-preview/clips public/zinko-user-preview/voice public/zinko-user-preview/sfx
+          cp "/tmp/zinko-source/clips 1-18/1_44986412.mp4" public/zinko-user-preview/clips/scene-01.mp4
+          cp "/tmp/zinko-source/clips 1-18/2_e2320d8c.mp4" public/zinko-user-preview/clips/scene-02.mp4
+          cp /tmp/zinko-voice/1.mp3 public/zinko-user-preview/voice/1.mp3
+          cp /tmp/zinko-voice/2.mp3 public/zinko-user-preview/voice/2.mp3
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/05_whoosh_largo.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/13_golpe_bajo.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/04_whoosh.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/06_ding.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/11_swoosh.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/01_pop.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/07_ding_doble.wav public/zinko-user-preview/sfx/
+          echo "--- INPUT VALIDATION ---"
+          for f in public/zinko-user-preview/clips/*.mp4 public/zinko-user-preview/voice/*.mp3; do
+            echo "$(basename "$f") | $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f") sec"
+            test -s "$f"
+          done
+          find public/zinko-user-preview -type f -printf '%p %s bytes\n' | sort
+
+      - name: Install locked Remotion dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Validate TypeScript
+        run: npx tsc --noEmit
+
+      - name: Ensure Remotion browser
+        run: npx remotion browser ensure
+
+      - name: Render the 15-second preview
+        run: |
+          mkdir -p out
+          npx remotion render src/zinko-user-preview/index.tsx ZinkoGTA6Preview15s out/GTA6-ZINKO-AVANCE-15s.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+
+      - name: Verify render and build review contact sheet
+        run: |
+          set -euo pipefail
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 out/GTA6-ZINKO-AVANCE-15s.mp4
+          test -s out/GTA6-ZINKO-AVANCE-15s.mp4
+          ffmpeg -y -loglevel error -i out/GTA6-ZINKO-AVANCE-15s.mp4 -vf "fps=1,scale=480:270,tile=5x3" -frames:v 1 out/GTA6-ZINKO-AVANCE-15s-contact.jpg
+
+      - name: Upload preview for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-ZINKO-AVANCE-15s
+          path: |
+            out/GTA6-ZINKO-AVANCE-15s.mp4
+            out/GTA6-ZINKO-AVANCE-15s-contact.jpg
+          if-no-files-found: error
+          retention-days: 14
