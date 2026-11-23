@@ -1,1 +1,1 @@
-Render a 30-second preview of GTA6ZinkoMotionV3. Use the creator's character assets, original Spanish narration and the provided SFX pack. Build all visuals in Remotion from scratch; do not download or use any user video clips.
+Preview revision 2: include distinct animated scene-specific motifs (trophy, score ring, timeline, charts, map, controller, car, coins, verdict scale) in the no-footage Remotion build. No user video clips.
