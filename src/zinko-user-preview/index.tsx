@@ -512,6 +512,36 @@ function Flash({frame}: {frame: number}) {
   );
 }
 
+
+function NeonWipe() {
+  const f = useCurrentFrame();
+  const x = interpolate(f, [0, 17], [-2200, 2200], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const opacity = interpolate(f, [0, 4, 12, 17], [0, 0.95, 0.72, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  return (
+    <AbsoluteFill
+      style={{
+        pointerEvents: 'none',
+        opacity,
+        background:
+          'linear-gradient(105deg, transparent 0%, ' +
+          PINK +
+          ' 46%, #fff 50%, ' +
+          TEAL +
+          ' 54%, transparent 100%)',
+        transform: 'translateX(' + x + 'px) skewX(-12deg)',
+        filter: 'blur(8px)',
+        mixBlendMode: 'screen',
+      }}
+    />
+  );
+}
+
 function Sound({name, from, volume = 0.22}: {name: string; from: number; volume?: number}) {
   return (
     <Sequence from={from}>
@@ -548,17 +578,17 @@ function Preview() {
       <Sequence from={72} durationInFrames={36}>
         <GameCutaway name="opening.mp4" label="VICE CITY // LEONIDA" startFrom={24} accent={TEAL} duration={36} />
       </Sequence>
-      <Sequence from={119} durationInFrames={32}>
+      <Sequence from={145} durationInFrames={32}>
         <GameCutaway name="crowd.mp4" label="UN MUNDO VIVO" startFrom={42} accent={PINK} duration={32} />
       </Sequence>
-      <Sequence from={166} durationInFrames={34}>
+      <Sequence from={178} durationInFrames={34}>
         <GameCutaway name="lowrider.mp4" label="GTA VI // GAMEPLAY" startFrom={65} accent={TEAL} duration={34} />
       </Sequence>
       <Sequence from={236} durationInFrames={30}>
         <GameCutaway name="opening.mp4" label="PERO NO TODO ES PERFECTO" startFrom={112} accent={PINK} duration={30} />
       </Sequence>
 
-      <Sequence from={104} durationInFrames={44}>
+      <Sequence from={104} durationInFrames={34}>
         <LogoBurst />
       </Sequence>
       <Sequence from={300} durationInFrames={150}>
@@ -573,22 +603,7 @@ function Preview() {
       </Sequence>
 
       <Sequence from={294} durationInFrames={18}>
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background:
-              'linear-gradient(105deg, transparent 0%, ' +
-              PINK +
-              ' 46%, #fff 50%, ' +
-              TEAL +
-              ' 54%, transparent 100%)',
-            transform: 'translateX(' + interpolate(useCurrentFrame(), [0, 17], [-2200, 2200]) + 'px) skewX(-12deg)',
-            filter: 'blur(8px)',
-            opacity: interpolate(useCurrentFrame(), [0, 5, 12, 17], [0, 0.95, 0.75, 0]),
-            mixBlendMode: 'screen',
-          }}
-        />
+        <NeonWipe />
       </Sequence>
 
       <Caption frame={frame} />
@@ -606,8 +621,8 @@ function Preview() {
       <Sound name="05_whoosh_largo.wav" from={46} volume={0.17} />
       <Sound name="04_whoosh.wav" from={70} volume={0.23} />
       <Sound name="02_pop_agudo.wav" from={104} volume={0.2} />
-      <Sound name="11_swoosh.wav" from={118} volume={0.2} />
-      <Sound name="16_laser.wav" from={165} volume={0.14} />
+      <Sound name="11_swoosh.wav" from={144} volume={0.2} />
+      <Sound name="16_laser.wav" from={177} volume={0.14} />
       <Sound name="03_pop_grave.wav" from={198} volume={0.2} />
       <Sound name="12_sorpresa.wav" from={232} volume={0.16} />
       <Sound name="05_whoosh_largo.wav" from={294} volume={0.2} />
