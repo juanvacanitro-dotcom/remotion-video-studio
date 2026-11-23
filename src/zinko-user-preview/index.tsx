@@ -100,7 +100,7 @@ function GameCutaway({
   const enter = ease(f / 9);
   const shake = pulseAt(f, [0, 8], 5);
   return (
-    <AbsoluteFill style={{overflow: 'hidden', background: INK, opacity: exit}}>
+    <AbsoluteFill style={{overflow: 'hidden', background: 'transparent', opacity: exit}}>
       <AbsoluteFill
         style={{
           clipPath: 'polygon(0 0, ' + reveal + '% 0, ' + Math.max(0, reveal - 9) + '% 100%, 0 100%)',
@@ -186,7 +186,7 @@ function GameCutaway({
 function LogoBurst() {
   const f = useCurrentFrame();
   const enter = pop(f, 12);
-  const exit = interpolate(f, [34, 44], [1, 0], {
+  const exit = interpolate(f, [26, 34], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -594,7 +594,7 @@ function Preview() {
       <Sequence from={300} durationInFrames={150}>
         <ZinkoTag />
       </Sequence>
-      <Sequence from={310} durationInFrames={82}>
+      <Sequence from={310} durationInFrames={34}>
         <NicoCutout delay={4} x={1510} y={448} />
       </Sequence>
       <Sequence from={410} durationInFrames={40}>
