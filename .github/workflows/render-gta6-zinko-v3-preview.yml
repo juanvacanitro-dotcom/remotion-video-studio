@@ -1,86 +1,91 @@
-name: GTA 6 ZINKO Motion V3 — No Footage Preview
+name: GTA 6 ZINKO Motion V4 — Full Visual Edit
 on:
   push:
     branches: [feat/gta6-zinko-editorial-v2]
     paths:
-      - 'src/gta6-zinko-v2/Composition.tsx'
-      - 'src/gta6-zinko-v2/GtaMotionKit.tsx'
+      - 'src/gta6-zinko-v2/CompositionV4.tsx'
       - 'src/gta6-zinko-v2/index.tsx'
-      - 'src/gta6-zinko-v2/RENDER-V3-PREVIEW.txt'
+      - 'src/gta6-zinko-v2/RENDER-V4-FULL.txt'
       - '.github/workflows/render-gta6-zinko-v3-preview.yml'
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
-  group: gta6-zinko-v3-preview
+  group: gta6-zinko-v4-full
   cancel-in-progress: true
 jobs:
   render:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --no-audit --no-fund
-      - name: Install media download helper
-        run: python3 -m pip install --quiet gdown
-      - name: Download only narration and sound effects (no video clips)
+      - name: Install render and download tools
         run: |
-          mkdir -p /tmp/gta-voice /tmp/gta-sfx public/gta6-zinko-v2/voice public/gta6-zinko-v2/sfx
-          gdown '1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj' -O /tmp/voz.zip
-          gdown '1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74' -O /tmp/sfx.zip
-          unzip -q -o /tmp/voz.zip -d /tmp/gta-voice
-          unzip -q -o /tmp/sfx.zip -d /tmp/gta-sfx
+          npm ci --no-audit --no-fund
+          python3 -m pip install --quiet --upgrade gdown yt-dlp
+          curl -fsSL https://deno.land/install.sh | sh
+          echo "$HOME/.deno/bin" >> "$GITHUB_PATH"
+      - name: Download official Rockstar trailer footage
+        run: |
+          mkdir -p public/gta6-zinko-v4/media
+          yt-dlp --no-warnings --no-playlist --retries 5 --fragment-retries 5 --js-runtimes deno -f "bv*[height<=1080]+ba/b[height<=1080]" --merge-output-format mp4 -o 'public/gta6-zinko-v4/media/launch.%(ext)s' 'https://www.youtube.com/watch?v=rz1B4B2yBZY'
+          yt-dlp --no-warnings --no-playlist --retries 5 --fragment-retries 5 --js-runtimes deno -f "bv*[height<=1080]+ba/b[height<=1080]" --merge-output-format mp4 -o 'public/gta6-zinko-v4/media/trailer2.%(ext)s' 'https://www.youtube.com/watch?v=VQRLujxTm3c'
+          yt-dlp --no-warnings --no-playlist --retries 5 --fragment-retries 5 --js-runtimes deno -f "bv*[height<=1080]+ba/b[height<=1080]" --merge-output-format mp4 -o 'public/gta6-zinko-v4/media/trailer1.%(ext)s' 'https://www.youtube.com/watch?v=QdBZY2fkU-0'
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          folder=Path('public/gta6-zinko-v4/media')
+          for name in ['launch.mp4','trailer2.mp4','trailer1.mp4']:
+              p=folder/name
+              if not p.exists() or p.stat().st_size < 5_000_000:
+                  raise SystemExit('Official trailer missing or incomplete: '+name)
+              duration=float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=noprint_wrappers=1:nokey=1',str(p)]).decode().strip())
+              if duration < 88: raise SystemExit('Trailer duration is unexpectedly short: '+name+' '+str(duration))
+              print(name, round(duration,2),'seconds',p.stat().st_size,'bytes')
+          PY
+      - name: Stage Nico, fonts, original voice and sound effects
+        run: |
+          mkdir -p public/gta6-zinko-v4/voice public/gta6-zinko-v4/sfx public/gta6-zinko-v4/fonts public/gta6-zinko-v4/nico /tmp/gta-v4-voice /tmp/gta-v4-sfx
+          cp public/zinko-proof/Caption.ttf public/gta6-zinko-v4/fonts/Caption.ttf
+          cp public/zinko-proof/Impact.ttf public/gta6-zinko-v4/fonts/Impact.ttf
+          cp public/zinko-proof/nico-happy.webp public/gta6-zinko-v4/nico/nico-happy.webp
+          cp public/zinko-proof/nico-question.webp public/gta6-zinko-v4/nico/nico-question.webp
+          gdown '1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj' -O /tmp/gta-v4-voice.zip
+          gdown '1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74' -O /tmp/gta-v4-sfx.zip
+          unzip -q -o /tmp/gta-v4-voice.zip -d /tmp/gta-v4-voice
+          unzip -q -o /tmp/gta-v4-sfx.zip -d /tmp/gta-v4-sfx
           python3 - <<'PY'
           from pathlib import Path
           import re, shutil
-          voice_root=Path('/tmp/gta-voice')
-          sfx_root=Path('/tmp/gta-sfx')
-          out=Path('public/gta6-zinko-v2')
-          voices=list(voice_root.rglob('*.mp3'))
+          voices=list(Path('/tmp/gta-v4-voice').rglob('*.mp3'))
           for n in range(1,19):
-              src=next((p for p in voices if (p.stem == str(n) or p.stem.startswith(str(n)+' '))),None)
-              if src is None: raise SystemExit('Missing narration track '+str(n))
-              shutil.copy2(src,out/'voice'/('{:02d}.mp3'.format(n)))
-          sounds=list(sfx_root.rglob('*.wav'))
-          if not sounds: raise SystemExit('No WAV sound effects found')
-          for p in sounds:
-              shutil.copy2(p,out/'sfx'/p.name)
-          print('Staged',len(voices),'voice files and',len(sounds),'SFX files. No user video clips were downloaded.')
+              candidates=[p for p in voices if p.stem==str(n) or p.stem==f'{n:02d}' or p.stem.startswith(str(n)+' ') or p.stem.startswith(f'{n:02d} ')]
+              if not candidates: raise SystemExit('Missing original narration track '+str(n))
+              shutil.copy2(candidates[0],Path('public/gta6-zinko-v4/voice')/f'{n:02d}.mp3')
+          sounds=list(Path('/tmp/gta-v4-sfx').rglob('*.wav'))
+          if not sounds: raise SystemExit('Sound effects archive contains no WAV files')
+          patterns={'hit':r'(hit|impact|golpe|punch|bass)','whoosh':r'(whoosh|swoosh|barrido|swipe)','pop':r'(pop|click|bubble|burbuja|tap)'}
+          for name,pattern in patterns.items():
+              match=next((p for p in sounds if re.search(pattern,p.stem,re.I)),sounds[0])
+              shutil.copy2(match,Path('public/gta6-zinko-v4/sfx')/(name+'.wav'))
+              print(name,'<-',match.name)
+          print('Staged 18 original narration tracks and 3 SFX.')
           PY
-      - name: Download official Rockstar screenshot B-roll
-        run: |
-          mkdir -p public/gta6-zinko-v2/screenshots
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_13.0iq8ff474tsdx.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/vice-city-13.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_14.10e7v.06pcm_t.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/jason-lucia-14.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_15.0m-_zb~mcy2zr.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/jason-lucia-15.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_16.05-d133mx68ku.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/jason-lucia-16.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_02.0c5.7qx17u9kl.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/vice-city-02.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Port_Gellhorn_07.053ldlg0m.2r..jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/port-gellhorn-07.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Grassrivers_07.0txitddjiq5o1.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/grassrivers-07.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Leonida_Keys_01.0zgz7tveur6y8.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/leonida-keys-01.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_GROTTI_CHEETAH_01.0a.wy3s_ogjey.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/grotti-cheetah-01.jpg'
-          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_SAFEHOUSE_VEHICLES_01.0wv6pw3t-mky3.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/safehouse-vehicles-01.jpg'
-          python3 - <<'PY'
-          from pathlib import Path
-          folder=Path('public/gta6-zinko-v2/screenshots')
-          for p in folder.glob('*.jpg'):
-              if p.stat().st_size < 12000: raise SystemExit('Screenshot download looks incomplete: '+p.name)
-          if len(list(folder.glob('*.jpg'))) < 8: raise SystemExit('Not enough official screenshots downloaded')
-          print('Downloaded official Rockstar screenshot B-roll:', len(list(folder.glob('*.jpg'))))
-          PY
-      - name: Type-check
+      - name: Type-check V4
         run: npx tsc --noEmit
-      - name: Install Chromium for Remotion
-        run: npx remotion browser ensure
-      - name: Render 30-second no-footage preview
-        run: npx remotion render src/gta6-zinko-v2/index.tsx GTA6ZinkoMotionV3 out/GTA6-ZINKO-MOTION-V3-PREVIEW.mp4 --frames=0-599 --concurrency=4 --crf=19 --pixel-format=yuv420p --audio-bitrate=256k
+      - name: Render full 3-minute video
+        run: |
+          mkdir -p out
+          npx remotion render src/gta6-zinko-v2/index.tsx GTA6ZinkoMotionV4 out/GTA6-ZINKO-MOTION-V4-FULL.mp4 --codec=h264 --crf=18 --audio-bitrate=256k --concurrency=4
+          ffprobe -v error -show_entries format=duration,size -of json out/GTA6-ZINKO-MOTION-V4-FULL.mp4
       - uses: actions/upload-artifact@v4
         with:
-          name: GTA6-ZINKO-MOTION-V3-PREVIEW
-          path: out/GTA6-ZINKO-MOTION-V3-PREVIEW.mp4
+          name: GTA6-ZINKO-MOTION-V4-FULL
+          path: out/GTA6-ZINKO-MOTION-V4-FULL.mp4
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 7
