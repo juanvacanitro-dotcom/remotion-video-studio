@@ -739,13 +739,12 @@ function RefinedIntro() {
 
       <Subtitle frame={frame} />
 
-      {/* Solo tres acentos sonoros; la voz permanece siempre al frente */}
+      {/* Solo dos acentos sonoros; la voz permanece siempre al frente */}
       <Sequence from={0} durationInFrames={FRAMES}>
         <Audio src={user('voice/intro-clean.wav')} volume={1} />
       </Sequence>
-      <Sound name="13_golpe_bajo.wav" from={62} volume={0.11} />
-      <Sound name="05_whoosh_largo.wav" from={102} volume={0.075} />
-      <Sound name="11_swoosh.wav" from={298} volume={0.075} />
+      <Sound name="13_golpe_bajo.wav" from={76} volume={0.085} />
+      <Sound name="11_swoosh.wav" from={298} volume={0.05} />
     </AbsoluteFill>
   );
 }
