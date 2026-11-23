@@ -17,7 +17,7 @@ import {
 } from 'remotion';
 
 const FPS = 30;
-const FRAMES = 600;
+const FRAMES = 600; // Two complete 10-second intro scenes
 const PAPER = '#f3eddf';
 const INK = '#17171a';
 const PINK = '#e84b83';
