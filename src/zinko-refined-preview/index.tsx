@@ -471,7 +471,8 @@ function Subtitle({frame}: {frame: number}) {
     {start: 78, end: 147, text: 'Es GTA seis, y las reseñas son históricas.'},
     {start: 147, end: 300, text: 'Pero tiene pegas que casi nadie cuenta.'},
     {start: 300, end: 390, text: 'Bienvenido a Zinko, el canal de la curiosidad.'},
-    {start: 390, end: 485, text: 'Hoy veremos qué aman, qué critican y si valió la espera.'},
+    {start: 390, end: 465, text: 'Hoy veremos qué aman y qué critican.'},
+    {start: 465, end: 540, text: 'Y si valió la espera.'},
     {start: 485, end: 600, text: 'Y al final, mi veredicto.'},
   ];
   const cue = cues.find((c) => frame >= c.start && frame < c.end);
@@ -518,7 +519,7 @@ function Subtitle({frame}: {frame: number}) {
 
 function PaperSwipe() {
   const f = useCurrentFrame();
-  const x = interpolate(f, [0, 26], [-1150, 1920], {
+  const x = interpolate(f, [0, 28], [-2350, 1920], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -529,7 +530,7 @@ function PaperSwipe() {
           position: 'absolute',
           left: x,
           top: -90,
-          width: 950,
+          width: 2350,
           height: 1260,
           background: '#f7f0e2',
           boxShadow: '24px 0 30px rgba(48,38,24,.18)',
@@ -570,7 +571,7 @@ function RefinedIntro() {
       <PaperBackground />
 
       {/* ESCENA 1 — gancho: una idea protagonista por plano */}
-      <Sequence from={0} durationInFrames={300}>
+      <Sequence from={0} durationInFrames={96}>
         <Headline
           text={'RÉCORD DE'}
           eyebrow="UN JUEGO ACABA DE IGUALAR UN"
@@ -622,10 +623,12 @@ function RefinedIntro() {
           objectPosition="center 52%"
           tapeSide="left"
         />
-        <GtaLogoSticker />
+        <Sequence from={26} durationInFrames={55}>
+          <GtaLogoSticker />
+        </Sequence>
       </Sequence>
 
-      <Sequence from={204} durationInFrames={96}>
+      <Sequence from={204} durationInFrames={46}>
         <Headline
           text={'RESEÑAS\\nHISTÓRICAS'}
           left={185}
@@ -653,7 +656,7 @@ function RefinedIntro() {
       </Sequence>
 
       {/* ESCENA 2 — bienvenida y promesa del vídeo */}
-      <Sequence from={300} durationInFrames={300}>
+      <Sequence from={300} durationInFrames={82}>
         <Headline
           text={'BIENVENIDO\\nA ZINKO'}
           eyebrow="EL CANAL DE LA CURIOSIDAD"
@@ -723,6 +726,9 @@ function RefinedIntro() {
       </Sequence>
 
       {/* Transición de página: limpia y física, sin destellos ni flashes */}
+      <Sequence from={86} durationInFrames={28}>
+        <PaperSwipe />
+      </Sequence>
       <Sequence from={286} durationInFrames={28}>
         <PaperSwipe />
       </Sequence>
