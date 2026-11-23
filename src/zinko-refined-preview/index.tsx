@@ -120,6 +120,8 @@ function PhotoCard({
   const p = entrance(f - 2, 19);
   const y = interpolate(p, [0, 1], [42, 0]);
   const scale = interpolate(p, [0, 1], [0.965, 1]);
+  const videoZoom = zoom + 0.025 * smooth(f / 65);
+  const videoPan = interpolate(f, [0, 75], [5, -5], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const srcUrl = source === 'user' ? user('clips/' + src) : proof(src);
   return (
     <div
@@ -173,7 +175,7 @@ function PhotoCard({
             objectFit: 'cover',
             objectPosition,
             transform:
-              'scale(' + zoom + ')' +
+              'scale(' + videoZoom + ') translateY(' + videoPan + 'px)' +
               (cropTop > 0 ? ' translateY(-' + cropTop / 2 + '%)' : ''),
             filter: 'saturate(1.05) contrast(1.035)',
           }}
@@ -519,7 +521,7 @@ function Subtitle({frame}: {frame: number}) {
 
 function PaperSwipe() {
   const f = useCurrentFrame();
-  const x = interpolate(f, [0, 28], [-2350, 1920], {
+  const x = interpolate(f, [0, 18], [-2350, 1920], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -595,7 +597,7 @@ function RefinedIntro() {
           rotate={1.3}
           zoom={1.13}
           objectPosition="center 64%"
-          cropTop={12}
+          cropTop={28}
           tapeSide="right"
         />
       </Sequence>
@@ -676,7 +678,8 @@ function RefinedIntro() {
           height={510}
           rotate={-1.4}
           zoom={1.1}
-          objectPosition="center 52%"
+          objectPosition="center 60%"
+          cropTop={24}
           tapeSide="left"
         />
       </Sequence>
@@ -726,10 +729,10 @@ function RefinedIntro() {
       </Sequence>
 
       {/* Transición de página: limpia y física, sin destellos ni flashes */}
-      <Sequence from={86} durationInFrames={28}>
+      <Sequence from={86} durationInFrames={18}>
         <PaperSwipe />
       </Sequence>
-      <Sequence from={286} durationInFrames={28}>
+      <Sequence from={286} durationInFrames={18}>
         <PaperSwipe />
       </Sequence>
 
