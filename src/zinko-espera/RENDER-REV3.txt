@@ -1,0 +1,1 @@
+Revision 3: fixed TSX parser error in the Bars component. Re-run cloud render.
