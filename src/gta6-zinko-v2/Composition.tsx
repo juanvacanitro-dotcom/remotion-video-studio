@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {DeskCutaway} from './DeskCutaway';
+import {AvatarSticker, ImpactTransition, KineticCaption, TitleSting, punchMotion} from './GtaMotionKit';
 import {
   AbsoluteFill, Audio, Composition, OffthreadVideo, Sequence,
   cancelRender, continueRender, delayRender, registerRoot, spring, staticFile,
@@ -145,17 +146,7 @@ function Subtitle({scene,f}:{scene:SceneData;f:number}){
  const t=f/FPS;
  const cue=scene.cues.find(c=>t>=c.from&&t<c.to);
  if(!cue)return null;
- const p=pop(f-Math.round(cue.from*FPS),0,18);
- const lower=cue.text.toLowerCase();
- const idx=cue.emphasis?lower.indexOf(cue.emphasis.toLowerCase()):-1;
- const before=idx>=0?cue.text.slice(0,idx):cue.text;
- const hi=idx>=0?cue.text.slice(idx,idx+cue.emphasis!.length):'';
- const after=idx>=0?cue.text.slice(idx+cue.emphasis!.length):'';
- return <div style={{position:'absolute',left:100,right:100,bottom:48,display:'flex',justifyContent:'center',opacity:Math.min(1,p),transform:'translateY('+(1-p)*24+'px) scale('+(0.96+.04*p)+')'}}>
-  <div style={{maxWidth:1580,textAlign:'center',fontFamily:'CaptionLocal',fontSize:52,lineHeight:1.1,fontWeight:900,color:YELLOW,WebkitTextStroke:'3px '+INK,paintOrder:'stroke fill',textShadow:'2px 5px 0 '+INK+',0 8px 18px #0008'}}>
-   {before}<span style={{color:WHITE}}>{hi}</span>{after}
-  </div>
- </div>;
+ return <KineticCaption text={cue.text} emphasis={cue.emphasis} accent={scene.accent} frame={f} startFrame={Math.round(cue.from*FPS)}/>;
 }
 
 function ScoreRing({f,x,y}:{f:number;x:number;y:number}){
@@ -338,15 +329,6 @@ function UIOverlay({type,accent,f}:{type:string;accent:string;f:number}){
  return null;
 }
 
-function Transition({index,f}:{index:number;f:number}){
- if(index===0||f>=10)return null;
- const p=ease(f/10);
- if(index%4===0)return <div style={{position:'absolute',top:0,bottom:0,left:(1-p)*-650,width:650,background:'linear-gradient(90deg,transparent,'+YELLOW+',transparent)',filter:'blur(5px)',opacity:1-p*.3}}/>;
- if(index%4===1)return <div style={{position:'absolute',inset:0,background:'linear-gradient(125deg,transparent 36%,rgba(36,242,220,.85) 48%,transparent 60%)',transform:'translateX('+(1-p)*1500+'px)',opacity:1-p}}/>;
- if(index%4===2)return <div style={{position:'absolute',inset:0,background:WHITE,opacity:(1-p)*.22}}/>;
- return <div style={{position:'absolute',inset:0,background:'radial-gradient(circle at 50% 50%,transparent '+(p*90)+'%,rgba(255,60,145,'+((1-p)*.9)+') '+(p*90+2)+'%,transparent '+(p*100+8)+'%)'}}/>;
-}
-
 const deskCuts:Record<number,{from:number;duration:number;mode:string;label:string;value:string;note:string;accent:string}> = {
  0:{from:0,duration:42,mode:'trophy',label:'EL RÉCORD',value:'28 AÑOS',note:'UNA MARCA HISTÓRICA',accent:ORANGE},
  2:{from:3.7,duration:54,mode:'score',label:'PUNTUACIÓN',value:'99 / 100',note:'MÁS DE 140 CRÍTICOS',accent:ORANGE},
@@ -367,14 +349,18 @@ function Scene({index}:{index:number}){
  const driftX=Math.sin((f+index*17)*.035)*7;
  const driftY=Math.cos((f+index*11)*.028)*5;
  const zoom=1.025+.012*Math.sin(f*.035+index);
+ const activeCue=scene.cues.find(c=>f/FPS>=c.from&&f/FPS<c.to);
+ const punch=activeCue?punchMotion(f,Math.round(activeCue.from*FPS)):{scale:1,shake:0};
  return <AbsoluteFill style={{background:INK,overflow:'hidden',fontFamily:'CaptionLocal'}}>
-  <OffthreadVideo src={file('clips/'+scene.file)} startFrom={12} playbackRate={0.95} muted style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+zoom+') translate('+driftX+'px,'+driftY+'px)',filter:'saturate(1.07) contrast(1.04)'}}/>
+  <OffthreadVideo src={file('clips/'+scene.file)} startFrom={12} playbackRate={0.95} muted style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+(zoom*punch.scale)+') translate('+(driftX+punch.shake)+'px,'+driftY+'px)',filter:'saturate(1.07) contrast(1.04)'}}/>
   <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(5,5,16,.22),transparent 20%,transparent 62%,rgba(5,5,16,.38))'}}/>
   {desk&&<Sequence from={Math.round(desk.from*FPS)} durationInFrames={desk.duration}><DeskCutaway mode={desk.mode} label={desk.label} value={desk.value} note={desk.note} accent={desk.accent}/></Sequence>}
   {!deskActive&&<UIOverlay type={scene.type} accent={scene.accent} f={f}/>} 
   <SceneHeader index={index} accent={scene.accent} f={f}/>
+  {index===0&&<TitleSting frame={f}/>}
+  {!deskActive&&<AvatarSticker index={index} frame={f}/>}
   <Subtitle scene={scene} f={f}/>
-  <Transition index={index} f={f}/>
+  <ImpactTransition index={index} frame={f}/>
   <Audio src={file('voice/'+String(index+1).padStart(2,'0')+'.mp3')} volume={1}/>
   {scene.sfx.map((s,i)=><Sequence key={i} from={Math.round(s.at*FPS)} durationInFrames={Math.min(75,300-Math.round(s.at*FPS))}><Audio src={file('sfx/'+s.file)} volume={s.volume}/></Sequence>)}
  </AbsoluteFill>;
