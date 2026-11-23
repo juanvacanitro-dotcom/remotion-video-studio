@@ -64,6 +64,13 @@ jobs:
           cp /tmp/zinko-sfx/03_Efectos_Sonido/11_swoosh.wav public/zinko-user-preview/sfx/
           cp /tmp/zinko-sfx/03_Efectos_Sonido/01_pop.wav public/zinko-user-preview/sfx/
           cp /tmp/zinko-sfx/03_Efectos_Sonido/07_ding_doble.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/02_pop_agudo.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/03_pop_grave.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/10_tic_tac.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/12_sorpresa.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/16_laser.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/18_explosion.wav public/zinko-user-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/40_final_epico.wav public/zinko-user-preview/sfx/
           echo "--- INPUT VALIDATION ---"
           for f in public/zinko-user-preview/clips/*.mp4 public/zinko-user-preview/voice/*.mp3; do
             echo "$(basename "$f") | $(ffprobe -v error -show_entries format=duration -of csv=p=0 "$f") sec"
@@ -83,21 +90,21 @@ jobs:
       - name: Render the 15-second preview
         run: |
           mkdir -p out
-          npx remotion render src/zinko-user-preview/index.tsx ZinkoGTA6Preview15s out/GTA6-ZINKO-AVANCE-15s.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+          npx remotion render src/zinko-user-preview/index.tsx ZinkoGTA6Preview15s out/GTA6-ZINKO-AVANCE-15s-v3.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
 
       - name: Verify render and build review contact sheet
         run: |
           set -euo pipefail
-          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 out/GTA6-ZINKO-AVANCE-15s.mp4
-          test -s out/GTA6-ZINKO-AVANCE-15s.mp4
-          ffmpeg -y -loglevel error -i out/GTA6-ZINKO-AVANCE-15s.mp4 -vf "fps=1,scale=480:270,tile=5x3" -frames:v 1 out/GTA6-ZINKO-AVANCE-15s-contact.jpg
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 out/GTA6-ZINKO-AVANCE-15s-v3.mp4
+          test -s out/GTA6-ZINKO-AVANCE-15s-v3.mp4
+          ffmpeg -y -loglevel error -i out/GTA6-ZINKO-AVANCE-15s-v3.mp4 -vf "fps=1,scale=480:270,tile=5x3" -frames:v 1 out/GTA6-ZINKO-AVANCE-15s-v3-contact.jpg
 
       - name: Upload preview for review
         uses: actions/upload-artifact@v4
         with:
-          name: GTA6-ZINKO-AVANCE-15s
+          name: GTA6-ZINKO-AVANCE-15s-v3
           path: |
-            out/GTA6-ZINKO-AVANCE-15s.mp4
-            out/GTA6-ZINKO-AVANCE-15s-contact.jpg
+            out/GTA6-ZINKO-AVANCE-15s-v3.mp4
+            out/GTA6-ZINKO-AVANCE-15s-v3-contact.jpg
           if-no-files-found: error
           retention-days: 14
