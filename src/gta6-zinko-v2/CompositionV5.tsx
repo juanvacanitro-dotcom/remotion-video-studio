@@ -165,7 +165,6 @@ function Graphic({scene,frame,index}:{scene:Story;frame:number;index:number}){
 function MotionHUD({frame,index,accent}:{frame:number;index:number;accent:string}){
  const sweep=(frame*19)%2100;
  const pulse=.55+.25*Math.sin(frame*.16);
- const corners=[{left:26,top:26},{right:26,top:26},{left:26,bottom:26},{right:26,bottom:26}];
  return <AbsoluteFill style={{pointerEvents:'none',overflow:'hidden'}}>
   <div style={{position:'absolute',left:26,top:26,width:92,height:42,borderTop:'2px solid '+accent,borderLeft:'2px solid '+accent,opacity:.62}}/>
   <div style={{position:'absolute',right:26,top:26,width:92,height:42,borderTop:'2px solid '+accent,borderRight:'2px solid '+accent,opacity:.62}}/>
@@ -218,7 +217,7 @@ function SceneView({index}:{index:number}){
   <Graphic scene={scene} frame={frame} index={index}/>
   <MotionHUD frame={frame} index={index} accent={scene.accent}/>
   <SceneImpact frame={frame} index={index} accent={scene.accent}/>
-  {showNico&&<Nico index={index} frame={frame} accent={scene.accent}/>
+  {showNico&&<Nico index={index} frame={frame} accent={scene.accent}/>}
   <Caption cue={cue} frame={frame} accent={scene.accent}/>
   <BeatFlash frame={frame} index={index}/>
   {index===0&&frame<22&&<div style={{position:'absolute',inset:0,background:WHITE,opacity:Math.max(0,1-frame/22)*.7}}/>}
