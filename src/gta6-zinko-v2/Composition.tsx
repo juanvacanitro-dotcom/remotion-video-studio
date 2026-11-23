@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-  AbsoluteFill, Audio, Composition, Img, Loop, OffthreadVideo, Sequence,
+  AbsoluteFill, Audio, Composition, OffthreadVideo, Sequence,
   cancelRender, continueRender, delayRender, registerRoot, spring, staticFile,
   useCurrentFrame, useVideoConfig
 } from 'remotion';
@@ -16,73 +16,64 @@ const MUTED = '#bdb8ca';
 
 type Cue = {from:number; to:number; text:string; emphasis?:string};
 type SoundCue = {at:number; file:string; volume:number};
-type CutawayCue = {from:number; duration:number; file:string; label:string};
-type SceneData = {file:string; type:string; accent:string; cues:Cue[]; sfx:SoundCue[]; cutaways?:CutawayCue[]};
+type SceneData = {file:string; type:string; accent:string; cues:Cue[]; sfx:SoundCue[]};
 
 const scenes:SceneData[] = [
  {file:'01.mp4',type:'hook',accent:ORANGE,cues:[
   {from:0.1,to:3.1,text:'Un juego acaba de igualar un récord de 28 años.',emphasis:'récord'},
   {from:3.1,to:6.3,text:'Es GTA 6 y las reseñas son históricas.',emphasis:'históricas'},
   {from:6.3,to:9.8,text:'Pero tiene pegas que casi nadie cuenta.',emphasis:'pegas'}
- ],sfx:[{at:0.1,file:'13_golpe_bajo.wav',volume:.22},{at:4.1,file:'04_whoosh.wav',volume:.18},{at:7.2,file:'08_error.wav',volume:.16}],cutaways:[
-  {from:0,duration:42,file:'action.mp4',label:'GTA VI · TRÁILER OFICIAL'}
- ]},
+ ],sfx:[{at:0.1,file:'13_golpe_bajo.wav',volume:.22},{at:4.1,file:'04_whoosh.wav',volume:.18},{at:7.2,file:'08_error.wav',volume:.16}]},
  {file:'02.mp4',type:'welcome',accent:TEAL,cues:[
   {from:0.1,to:3.2,text:'Bienvenido a Zinko, el canal de la curiosidad.',emphasis:'Zinko'},
   {from:3.2,to:7.1,text:'Hoy veremos qué aman, qué critican y si valió la espera.',emphasis:'valió la espera'},
   {from:7.1,to:9.8,text:'Y al final, mi veredicto.',emphasis:'veredicto'}
- ],sfx:[{at:1.0,file:'20_click.wav',volume:.18},{at:4.1,file:'06_ding.wav',volume:.14},{at:7.4,file:'03_pop_grave.wav',volume:.18}]},
+ ],sfx:[{at:1.0,file:'20_click.wav',volume:.18},{at:4.1,file:'21_burbuja.wav',volume:.14},{at:7.4,file:'03_pop_grave.wav',volume:.18}]},
  {file:'03.mp4',type:'score',accent:ORANGE,cues:[
   {from:0.1,to:3.2,text:'Las reseñas salieron con una nota casi perfecta.',emphasis:'casi perfecta'},
   {from:3.2,to:6.2,text:'99 sobre 100 en Metacritic.',emphasis:'99 sobre 100'},
   {from:6.2,to:9.8,text:'Más de 140 críticos lo puntuaron.',emphasis:'140 críticos'}
- ],sfx:[{at:2.2,file:'05_whoosh_largo.wav',volume:.18},{at:5.0,file:'06_ding.wav',volume:.22},{at:7.2,file:'01_pop.wav',volume:.16}]},
+ ],sfx:[{at:2.2,file:'05_whoosh_largo.wav',volume:.18},{at:5.0,file:'21_burbuja.wav',volume:.22},{at:7.2,file:'01_pop.wav',volume:.16}]},
  {file:'04.mp4',type:'timeline',accent:TEAL,cues:[
   {from:0.1,to:3.2,text:'Solo un juego había llegado a 99.',emphasis:'un juego'},
   {from:3.2,to:6.3,text:'Ocarina of Time, de 1998.',emphasis:'Ocarina of Time'},
   {from:6.3,to:9.8,text:'28 años después, GTA 6 lo alcanza.',emphasis:'28 años'}
- ],sfx:[{at:2.0,file:'10_tic_tac.wav',volume:.16},{at:5.3,file:'04_whoosh.wav',volume:.15},{at:7.4,file:'06_ding.wav',volume:.18}]},
+ ],sfx:[{at:2.0,file:'10_tic_tac.wav',volume:.16},{at:5.3,file:'04_whoosh.wav',volume:.15},{at:7.4,file:'21_burbuja.wav',volume:.18}]},
  {file:'05.mp4',type:'ranking',accent:TEAL,cues:[
   {from:0.1,to:3.1,text:'En la saga, GTA 4 tiene 98.',emphasis:'98'},
   {from:3.1,to:6.1,text:'GTA 5, 97.',emphasis:'97'},
   {from:6.1,to:9.8,text:'Y al inicio no había ni una reseña negativa.',emphasis:'cero negativas'}
- ],sfx:[{at:2.0,file:'01_pop.wav',volume:.17},{at:5.1,file:'01_pop.wav',volume:.17},{at:7.1,file:'09_exito.wav',volume:.17}]},
+ ],sfx:[{at:2.0,file:'01_pop.wav',volume:.17},{at:5.1,file:'01_pop.wav',volume:.17},{at:7.1,file:'01_pop.wav',volume:.17}]},
  {file:'06.mp4',type:'world',accent:TEAL,cues:[
   {from:0.1,to:3.1,text:'Lo primero que alaban es el mundo abierto.',emphasis:'mundo abierto'},
   {from:3.1,to:6.3,text:'Enorme, vivo y lleno de detalles.',emphasis:'vivo'},
   {from:6.3,to:9.8,text:'Dicen que te hace sentir dentro de él.',emphasis:'dentro de él'}
- ],sfx:[{at:1.8,file:'04_whoosh.wav',volume:.15},{at:5.1,file:'06_ding.wav',volume:.15}],cutaways:[
-  {from:3.35,duration:68,file:'coast.mp4',label:'TRÁILER OFICIAL · ROCKSTAR GAMES'}
- ]},
+ ],sfx:[{at:1.8,file:'04_whoosh.wav',volume:.15},{at:5.1,file:'21_burbuja.wav',volume:.15}]},
  {file:'07.mp4',type:'duo',accent:PINK,cues:[
   {from:0.1,to:3.3,text:'Los dos protagonistas son lo más elogiado de la historia.',emphasis:'dos protagonistas'},
   {from:3.3,to:6.5,text:'Una pareja que se siente creíble.',emphasis:'creíble'},
   {from:6.5,to:9.8,text:'Y tú ayudas a moldearla con tus decisiones.',emphasis:'tus decisiones'}
- ],sfx:[{at:2.2,file:'02_pop_agudo.wav',volume:.16},{at:5.2,file:'06_ding_doble.wav',volume:.15},{at:7.2,file:'15_boing.wav',volume:.14}],cutaways:[
-  {from:4.2,duration:55,file:'action.mp4',label:'TRÁILER OFICIAL · ROCKSTAR GAMES'}
- ]},
+ ],sfx:[{at:2.2,file:'02_pop_agudo.wav',volume:.16},{at:5.2,file:'02_pop_agudo.wav',volume:.15},{at:7.2,file:'15_boing.wav',volume:.14}]},
  {file:'08.mp4',type:'hours',accent:ORANGE,cues:[
   {from:0.1,to:3.3,text:'La historia principal dura unas 60 horas.',emphasis:'60 horas'},
   {from:3.3,to:6.4,text:'Y con todo lo demás, pasa de 100.',emphasis:'pasa de 100'},
   {from:6.4,to:9.8,text:'Es muchísimo juego por lo que cuesta.',emphasis:'muchísimo juego'}
- ],sfx:[{at:1.1,file:'10_tic_tac.wav',volume:.15},{at:5.4,file:'06_ding.wav',volume:.16}]},
+ ],sfx:[{at:1.1,file:'10_tic_tac.wav',volume:.15},{at:5.4,file:'21_burbuja.wav',volume:.16}]},
  {file:'09.mp4',type:'reviews',accent:ORANGE,cues:[
   {from:0.1,to:3.3,text:'IGN, GameSpot y Eurogamer le dieron la nota máxima.',emphasis:'nota máxima'},
   {from:3.3,to:6.5,text:'Uno lo llamó el juego de la generación.',emphasis:'juego de la generación'},
   {from:6.5,to:9.8,text:'Las notas más bajas rondan el 80.',emphasis:'80'}
- ],sfx:[{at:1.6,file:'06_ding_doble.wav',volume:.17},{at:5.0,file:'09_exito.wav',volume:.15}]},
+ ],sfx:[{at:1.6,file:'02_pop_agudo.wav',volume:.17},{at:5.0,file:'01_pop.wav',volume:.15}]},
  {file:'10.mp4',type:'fps',accent:PINK,cues:[
   {from:0.1,to:2.6,text:'Ahora, las pegas.',emphasis:'pegas'},
   {from:2.6,to:6.3,text:'La más repetida: 30 fotogramas por segundo.',emphasis:'30 fotogramas'},
   {from:6.3,to:9.8,text:'Y sin un modo de 60, incluso en PS5 Pro.',emphasis:'sin un modo de 60'}
- ],sfx:[{at:0.2,file:'13_golpe_bajo.wav',volume:.22},{at:3.2,file:'27_alarma.wav',volume:.15},{at:7.2,file:'08_error.wav',volume:.18}],cutaways:[
-  {from:3.0,duration:72,file:'action.mp4',label:'SECUENCIA DE TRÁILER · ROCKSTAR GAMES'}
- ]},
+ ],sfx:[{at:0.2,file:'13_golpe_bajo.wav',volume:.22},{at:3.2,file:'27_alarma.wav',volume:.15},{at:7.2,file:'08_error.wav',volume:.18}]},
  {file:'11.mp4',type:'performance',accent:PINK,cues:[
   {from:0.1,to:3.2,text:'Varias reseñas notan caídas de rendimiento.',emphasis:'caídas de rendimiento'},
   {from:3.2,to:6.4,text:'Sobre todo en zonas muy llenas y en tiroteos.',emphasis:'zonas muy llenas'},
   {from:6.4,to:9.8,text:'Aunque otros críticos lo ven fluido y estable.',emphasis:'fluido y estable'}
- ],sfx:[{at:2.3,file:'08_error.wav',volume:.16},{at:5.2,file:'27_alarma.wav',volume:.13},{at:7.4,file:'06_ding.wav',volume:.12}]},
+ ],sfx:[{at:2.3,file:'08_error.wav',volume:.16},{at:5.2,file:'27_alarma.wav',volume:.13},{at:7.4,file:'21_burbuja.wav',volume:.12}]},
  {file:'12.mp4',type:'pacing',accent:PINK,cues:[
   {from:0.1,to:3.3,text:'También critican un ritmo desigual en la historia.',emphasis:'ritmo desigual'},
   {from:3.3,to:6.4,text:'Un inicio lento y misiones muy guiadas.',emphasis:'inicio lento'},
@@ -97,37 +88,32 @@ const scenes:SceneData[] = [
   {from:0.1,to:3.3,text:'Las preventas superaron lo esperado, dice Take-Two.',emphasis:'preventas'},
   {from:3.3,to:6.5,text:'Sensor Tower calcula más de 17 millones.',emphasis:'17 millones'},
   {from:6.5,to:9.8,text:'A casi 80 o casi 100 dólares cada una.',emphasis:'80 o 100 dólares'}
- ],sfx:[{at:3.3,file:'17_moneda.wav',volume:.18},{at:6.6,file:'06_ding.wav',volume:.16}]},
+ ],sfx:[{at:3.3,file:'17_moneda.wav',volume:.18},{at:6.6,file:'21_burbuja.wav',volume:.16}]},
  {file:'15.mp4',type:'comparison',accent:ORANGE,cues:[
   {from:0.1,to:3.3,text:'Para comparar: GTA 5 vendió 11 millones el primer día.',emphasis:'11 millones'},
   {from:3.3,to:6.5,text:'Según esa estimación, las preventas ya lo superan.',emphasis:'ya lo superan'},
   {from:6.5,to:9.8,text:'Faltan las cifras oficiales.',emphasis:'cifras oficiales'}
- ],sfx:[{at:2.4,file:'13_golpe_bajo.wav',volume:.16},{at:5.4,file:'17_moneda.wav',volume:.14},{at:7.5,file:'08_error.wav',volume:.12}],cutaways:[
-  {from:4.0,duration:58,file:'rockstar.mp4',label:'MATERIAL PROMOCIONAL · ROCKSTAR GAMES'}
- ]},
+ ],sfx:[{at:2.4,file:'13_golpe_bajo.wav',volume:.16},{at:5.4,file:'17_moneda.wav',volume:.14},{at:7.5,file:'08_error.wav',volume:.12}]},
  {file:'16.mp4',type:'split',accent:TEAL,cues:[
   {from:0.1,to:3.3,text:'¿Superó las expectativas? Para los críticos, sí.',emphasis:'sí'},
   {from:3.3,to:6.5,text:'Para algunos jugadores hay matices.',emphasis:'matices'},
   {from:6.5,to:9.8,text:'Y aun así, el aplauso es casi unánime.',emphasis:'casi unánime'}
- ],sfx:[{at:2.2,file:'06_ding.wav',volume:.15},{at:5.1,file:'08_error.wav',volume:.13},{at:7.6,file:'14_aplauso.wav',volume:.15}]},
+ ],sfx:[{at:2.2,file:'21_burbuja.wav',volume:.15},{at:5.1,file:'08_error.wav',volume:.13},{at:7.6,file:'12_sorpresa.wav',volume:.15}]},
  {file:'17.mp4',type:'verdict',accent:TEAL,cues:[
   {from:0.1,to:3.3,text:'Mi veredicto: no es perfecto, pero es histórico.',emphasis:'histórico'},
   {from:3.3,to:6.5,text:'Las pegas son técnicas y de ritmo, no de ambición.',emphasis:'no de ambición'},
   {from:6.5,to:9.8,text:'Y la última palabra la tienes tú, jugándolo.',emphasis:'la tienes tú'}
- ],sfx:[{at:1.4,file:'28_victoria.wav',volume:.17},{at:7.1,file:'40_final_epico.wav',volume:.14}],cutaways:[
-  {from:5.0,duration:54,file:'coast.mp4',label:'TRÁILER OFICIAL · ROCKSTAR GAMES'}
- ]},
+ ],sfx:[{at:1.4,file:'13_golpe_bajo.wav',volume:.17},{at:7.1,file:'05_whoosh_largo.wav',volume:.14}]},
  {file:'18.mp4',type:'outro',accent:PINK,cues:[
   {from:0.1,to:3.3,text:'¿Qué nota le pondrías tú a GTA 6?',emphasis:'qué nota'},
   {from:3.3,to:6.5,text:'Suscríbete a Zinko para más curiosidad.',emphasis:'Suscríbete'},
   {from:6.5,to:9.8,text:'Y mira el siguiente vídeo, está justo aquí.',emphasis:'siguiente vídeo'}
- ],sfx:[{at:0.8,file:'01_pop.wav',volume:.14},{at:4.5,file:'06_ding.wav',volume:.14},{at:7.5,file:'40_final_epico.wav',volume:.16}]}
+ ],sfx:[{at:0.8,file:'01_pop.wav',volume:.14},{at:4.5,file:'21_burbuja.wav',volume:.14},{at:7.5,file:'05_whoosh_largo.wav',volume:.16}]}
 ];
 
 const ease=(v:number)=>{const x=Math.max(0,Math.min(1,v));return x*x*(3-2*x)};
 const pop=(f:number,delay=0,damping=14)=>spring({frame:Math.max(0,f-delay),fps:FPS,config:{mass:.72,damping,stiffness:170}});
 const file=(name:string)=>staticFile('gta6-zinko-v2/'+name);
-const fullFile=(name:string)=>staticFile('zinko-full/'+name);
 const proofFile=(name:string)=>staticFile('zinko-proof/'+name);
 
 function GlassCard({f,x,y,w,accent,label,value,note,delay=0,angle=0,valueSize=68}:{f:number;x:number;y:number;w:number;accent:string;label:string;value:string;note?:string;delay?:number;angle?:number;valueSize?:number}){
@@ -148,14 +134,12 @@ function Pill({f,x,y,text,accent,delay=0,angle=0}:{f:number;x:number;y:number;te
 function SceneHeader({index,accent,f}:{index:number;accent:string;f:number}){
  const p=ease(f/12);
  return <div style={{position:'absolute',left:52,top:34,display:'flex',alignItems:'center',gap:18,opacity:.96,transform:'translateY('+(1-p)*-20+'px)'}}>
-  <div style={{fontFamily:'ImpactLocal',fontSize:22,letterSpacing:4,color:WHITE,textShadow:'0 2px 4px #000'}}>ZINKO <span style={{color:accent}}>/</span> ANÁLISIS</div>
+  <div style={{fontFamily:'ImpactLocal',fontSize:22,letterSpacing:4,color:WHITE,textShadow:'0 2px 4px #000'}}>ZINKO</div>
   <div style={{display:'flex',gap:5,alignItems:'center'}}>
    {scenes.map((s,i)=><div key={i} style={{width:i===index?25:9,height:8,borderRadius:99,background:i===index?accent:'#ffffff55',boxShadow:i===index?'0 0 12px '+accent:'none'}}/>)}
   </div>
-  <div style={{fontFamily:'ImpactLocal',fontSize:19,color:'#ffffffcc',letterSpacing:2}}>{String(index+1).padStart(2,'0')} / 18</div>
  </div>;
 }
-
 function Subtitle({scene,f}:{scene:SceneData;f:number}){
  const t=f/FPS;
  const cue=scene.cues.find(c=>t>=c.from&&t<c.to);
@@ -256,32 +240,6 @@ function SplitPanel({f}:{f:number}){
  </div>;
 }
 
-function BrollFrame({fileName,label}:{fileName:string;label:string}){
- const f=useCurrentFrame();
- const p=pop(f,0,16);
- return <AbsoluteFill style={{background:'#05050c',overflow:'hidden',transform:'scale('+(1.01+.012*p)+')'}}>
-  <OffthreadVideo src={fullFile(fileName)} muted style={{width:'100%',height:'100%',objectFit:'cover',filter:'saturate(1.12) contrast(1.06)'}}/>
-  <AbsoluteFill style={{background:'linear-gradient(90deg,rgba(5,5,15,.55),transparent 42%,rgba(5,5,15,.28))'}}/>
-  <div style={{position:'absolute',left:60,top:52,padding:'12px 20px',background:'rgba(5,5,15,.78)',border:'1px solid #ffffffaa',borderRadius:12,fontFamily:'ImpactLocal',fontSize:20,letterSpacing:2,color:WHITE,boxShadow:'0 8px 20px #0008',transform:'translateY('+(1-p)*-30+'px)'}}>{label}</div>
-  <div style={{position:'absolute',right:54,bottom:38,fontFamily:'CaptionLocal',fontSize:16,color:'#ffffffcc',textShadow:'0 2px 5px #000'}}>Fuente: Rockstar Games · material promocional</div>
- </AbsoluteFill>;
-}
-
-function Cutaway({cue}:{cue:CutawayCue}){
- return <Sequence from={Math.round(cue.from*FPS)} durationInFrames={cue.duration}>
-  <BrollFrame fileName={cue.file} label={cue.label}/>
- </Sequence>;
-}
-
-function OutroUI({f}:{f:number}){
- const p=ease((f-8)/20);
- return <div style={{position:'absolute',inset:0,pointerEvents:'none'}}>
-  <div style={{position:'absolute',left:190,top:230,width:690,height:400,border:'4px solid '+TEAL,borderRadius:30,boxShadow:'0 0 28px '+TEAL+'77',transform:'perspective(1000px) rotateY(9deg) rotateZ(-2deg) scale('+p+')',opacity:p}}/>
-  <div style={{position:'absolute',right:250,top:190,width:300,height:300,border:'4px solid '+PINK,borderRadius:'50%',boxShadow:'0 0 28px '+PINK+'77',transform:'scale('+p+')',opacity:p}}/>
-  <div style={{position:'absolute',left:960,top:160,transform:'translateX(-50%)',fontFamily:'ImpactLocal',fontSize:66,color:YELLOW,WebkitTextStroke:'2px '+INK,paintOrder:'stroke fill',textShadow:'0 5px 0 '+INK,opacity:p}}>¿QUÉ NOTA LE DAS?</div>
-  <Img src={proofFile('nico-happy.webp')} style={{position:'absolute',left:960,top:760,width:245,transform:'translate(-50%,-50%) rotate('+(2*Math.sin(f*.08))+'deg) scale('+p+')',filter:'drop-shadow(3px 0 0 white) drop-shadow(-3px 0 0 white) drop-shadow(0 12px 12px #0008)'}}/>
- </div>;
-}
 
 function UIOverlay({type,accent,f}:{type:string;accent:string;f:number}){
  if(type==='hook')return <>
@@ -331,9 +289,13 @@ function UIOverlay({type,accent,f}:{type:string;accent:string;f:number}){
  </>;
  if(type==='fps')return <>
   <FPSPanel f={f}/>
-  <div style={{position:'absolute',right:90,bottom:100,display:'flex',gap:26,alignItems:'end',transform:'scale('+pop(f,32)+')'}}>
-   <Img src={fullFile('ps5.webp')} style={{width:110,filter:'drop-shadow(0 10px 14px #0009)'}}/>
-   <Img src={fullFile('xbox.webp')} style={{width:105,filter:'drop-shadow(0 10px 14px #0009)'}}/>
+  <div style={{position:'absolute',right:125,bottom:88,transform:'rotate(-7deg) scale('+pop(f,32)+')',filter:'drop-shadow(0 12px 18px #0009)'}}>
+   <svg viewBox="0 0 300 150" width="260" height="130">
+    <path d="M55 48 Q70 22 105 28 L195 28 Q230 22 245 48 L278 100 Q284 124 260 129 L230 132 Q214 130 201 107 L99 107 Q86 130 70 132 L40 129 Q16 124 22 100 Z" fill="#11101d" stroke={WHITE} strokeWidth="7"/>
+    <path d="M76 65 L76 96 M60 80 L92 80" stroke={TEAL} strokeWidth="8" strokeLinecap="round"/>
+    <circle cx="215" cy="69" r="8" fill={PINK}/><circle cx="239" cy="87" r="8" fill={ORANGE}/>
+    <circle cx="189" cy="92" r="6" fill={TEAL}/><circle cx="215" cy="105" r="6" fill={WHITE}/>
+   </svg>
   </div>
   <Pill f={f} x={1390} y={685} text="SIN MODO DE 60" accent={PINK} delay={50}/>
  </>;
@@ -371,7 +333,7 @@ function UIOverlay({type,accent,f}:{type:string;accent:string;f:number}){
   <GlassCard f={f} x={1270} y={205} w={460} accent={TEAL} label="VEREDICTO ZINKO" value="HISTÓRICO" note="NO ES PERFECTO · SÍ AMBICIOSO" delay={8} angle={-3} valueSize={67}/>
   <Pill f={f} x={1380} y={565} text="TÚ TIENES LA ÚLTIMA PALABRA" accent={YELLOW} delay={42} angle={2}/>
  </>;
- if(type==='outro')return <OutroUI f={f}/>;
+ if(type==='outro')return null;
  return null;
 }
 
@@ -393,7 +355,6 @@ function Scene({index}:{index:number}){
  return <AbsoluteFill style={{background:INK,overflow:'hidden',fontFamily:'CaptionLocal'}}>
   <OffthreadVideo src={file('clips/'+scene.file)} muted style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+zoom+') translate('+driftX+'px,'+driftY+'px)',filter:'saturate(1.07) contrast(1.04)'}}/>
   <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(5,5,16,.22),transparent 20%,transparent 62%,rgba(5,5,16,.38))'}}/>
-  {scene.cutaways?.map((cue,i)=><Cutaway key={i} cue={cue}/>)}
   <UIOverlay type={scene.type} accent={scene.accent} f={f}/>
   <SceneHeader index={index} accent={scene.accent} f={f}/>
   <Subtitle scene={scene} f={f}/>
