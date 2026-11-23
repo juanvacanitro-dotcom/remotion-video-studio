@@ -363,14 +363,15 @@ function Scene({index}:{index:number}){
  const f=useCurrentFrame();
  const scene=scenes[index];
  const desk=deskCuts[index];
+ const deskActive=!!desk && f>=Math.round(desk.from*FPS) && f<Math.round(desk.from*FPS)+desk.duration;
  const driftX=Math.sin((f+index*17)*.035)*7;
  const driftY=Math.cos((f+index*11)*.028)*5;
  const zoom=1.025+.012*Math.sin(f*.035+index);
  return <AbsoluteFill style={{background:INK,overflow:'hidden',fontFamily:'CaptionLocal'}}>
-  <OffthreadVideo src={file('clips/'+scene.file)} muted style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+zoom+') translate('+driftX+'px,'+driftY+'px)',filter:'saturate(1.07) contrast(1.04)'}}/>
+  <OffthreadVideo src={file('clips/'+scene.file)} startFrom={12} playbackRate={0.95} muted style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+zoom+') translate('+driftX+'px,'+driftY+'px)',filter:'saturate(1.07) contrast(1.04)'}}/>
   <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(5,5,16,.22),transparent 20%,transparent 62%,rgba(5,5,16,.38))'}}/>
   {desk&&<Sequence from={Math.round(desk.from*FPS)} durationInFrames={desk.duration}><DeskCutaway mode={desk.mode} label={desk.label} value={desk.value} note={desk.note} accent={desk.accent}/></Sequence>}
-  <UIOverlay type={scene.type} accent={scene.accent} f={f}/>
+  {!deskActive&&<UIOverlay type={scene.type} accent={scene.accent} f={f}/>} 
   <SceneHeader index={index} accent={scene.accent} f={f}/>
   <Subtitle scene={scene} f={f}/>
   <Transition index={index} f={f}/>
