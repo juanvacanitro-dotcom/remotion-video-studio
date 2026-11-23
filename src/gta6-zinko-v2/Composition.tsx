@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {DeskCutaway} from './DeskCutaway';
-import {AvatarSticker, ImpactTransition, KineticCaption, TitleSting, punchMotion} from './GtaMotionKit';
+import {AvatarSticker, ImpactTransition, KineticCaption, SceneBackdrop, TitleSting, punchMotion} from './GtaMotionKit';
 import {
   AbsoluteFill, Audio, Composition, OffthreadVideo, Sequence,
   cancelRender, continueRender, delayRender, registerRoot, spring, staticFile,
@@ -365,6 +365,46 @@ function Scene({index}:{index:number}){
   {scene.sfx.map((s,i)=><Sequence key={i} from={Math.round(s.at*FPS)} durationInFrames={Math.min(75,300-Math.round(s.at*FPS))}><Audio src={file('sfx/'+s.file)} volume={s.volume}/></Sequence>)}
  </AbsoluteFill>;
 }
+
+function VisualScene({index}:{index:number}){
+ const f=useCurrentFrame();
+ const scene=scenes[index];
+ const desk=deskCuts[index];
+ const deskActive=!!desk && f>=Math.round(desk.from*FPS) && f<Math.round(desk.from*FPS)+desk.duration;
+ const activeCue=scene.cues.find(c=>f/FPS>=c.from&&f/FPS<c.to);
+ const punch=activeCue?punchMotion(f,Math.round(activeCue.from*FPS)):{scale:1,shake:0};
+ return <AbsoluteFill style={{background:INK,overflow:'hidden',fontFamily:'CaptionLocal'}}>
+  <div style={{position:'absolute',inset:-20,transform:'scale('+punch.scale+') translateX('+punch.shake+'px)'}}>
+   <SceneBackdrop type={scene.type} accent={scene.accent} frame={f}/>
+  </div>
+  <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(5,5,16,.10),transparent 20%,transparent 62%,rgba(5,5,16,.34))'}}/>
+  {desk&&<Sequence from={Math.round(desk.from*FPS)} durationInFrames={desk.duration}><DeskCutaway mode={desk.mode} label={desk.label} value={desk.value} note={desk.note} accent={desk.accent}/></Sequence>}
+  {!deskActive&&<UIOverlay type={scene.type} accent={scene.accent} f={f}/>}
+  <SceneHeader index={index} accent={scene.accent} f={f}/>
+  {index===0&&<TitleSting frame={f}/>}
+  {!deskActive&&<AvatarSticker index={index} frame={f}/>}
+  <Subtitle scene={scene} f={f}/>
+  <ImpactTransition index={index} frame={f}/>
+  <Audio src={file('voice/'+String(index+1).padStart(2,'0')+'.mp3')} volume={1}/>
+  {scene.sfx.map((s,i)=><Sequence key={i} from={Math.round(s.at*FPS)} durationInFrames={Math.min(75,300-Math.round(s.at*FPS))}><Audio src={file('sfx/'+s.file)} volume={s.volume}/></Sequence>)}
+ </AbsoluteFill>;
+}
+
+function VisualVideo(){
+ const [handle]=useState(()=>delayRender('Cargando tipografías ZINKO Motion V3'));
+ useEffect(()=>{
+  const fonts=[
+   new FontFace('CaptionLocal','url('+proofFile('Caption.ttf')+')'),
+   new FontFace('ImpactLocal','url('+proofFile('Impact.ttf')+')')
+  ];
+  Promise.all(fonts.map(f=>f.load())).then(loaded=>{loaded.forEach(f=>document.fonts.add(f));continueRender(handle)}).catch(cancelRender);
+ },[handle]);
+ return <AbsoluteFill style={{background:INK,overflow:'hidden'}}>
+  {scenes.map((s,i)=><Sequence key={i} from={i*300} durationInFrames={300} premountFor={FPS}><VisualScene index={i}/></Sequence>)}
+ </AbsoluteFill>;
+}
+
+export const GTA6ZinkoMotionV3:React.FC=()=> <VisualVideo/>;
 
 function Video(){
  const [handle]=useState(()=>delayRender('Cargando tipografías ZINKO'));
