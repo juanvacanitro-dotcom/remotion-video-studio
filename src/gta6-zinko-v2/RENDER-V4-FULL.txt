@@ -1,1 +1,2 @@
 Render the complete 18-scene, 180-second V4 edit. Use full-frame official Rockstar screenshots with motion, original GTA trailer cutaway clips, Nico reactions, original narration and sound effects. No background music.
+Retry final MP4 validation and upload after installing ffmpeg.
