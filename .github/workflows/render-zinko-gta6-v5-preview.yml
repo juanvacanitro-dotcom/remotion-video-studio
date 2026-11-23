@@ -1,0 +1,116 @@
+name: Render ZINKO GTA VI mixed-media 20-second intro V5
+
+on:
+  push:
+    branches:
+      - codex/zinko-gta6-15s-preview-v2
+    paths:
+      - 'src/zinko-v5-preview/**'
+      - '.github/workflows/render-zinko-gta6-v5-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Remotion project
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install media tools
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          else
+            echo "FFmpeg is already available on the runner"
+          fi
+          pip install --upgrade gdown
+
+      - name: Download narration and two selected sound accents
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/zinko-voice /tmp/zinko-sfx
+          gdown "https://drive.google.com/uc?id=1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj" -O /tmp/zinko-voice.zip
+          gdown "https://drive.google.com/uc?id=1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74" -O /tmp/zinko-sfx.zip
+          unzip -oq /tmp/zinko-voice.zip -d /tmp/zinko-voice
+          unzip -oq /tmp/zinko-sfx.zip -d /tmp/zinko-sfx
+
+      - name: Prepare a natural voice mix
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/zinko-v5-preview/voice public/zinko-v5-preview/sfx
+          # Mild spectral cleanup: keep the voice natural and avoid the metallic
+          # artifacts caused by aggressive denoising. No music bed is added.
+          ffmpeg -hide_banner -loglevel error -y \
+            -i /tmp/zinko-voice/1.mp3 \
+            -i /tmp/zinko-voice/2.mp3 \
+            -filter_complex "[0:a]highpass=f=75,lowpass=f=12000,afftdn=nr=6:nf=-48:tn=1:gs=6[a0];[1:a]highpass=f=75,lowpass=f=12000,afftdn=nr=6:nf=-48:tn=1:gs=6[a1];[a0][a1]concat=n=2:v=0:a=1,acompressor=threshold=-21dB:ratio=1.5:attack=18:release=180:makeup=1.15,loudnorm=I=-16:TP=-1.5:LRA=8[out]" \
+            -map "[out]" -ar 48000 -ac 2 -c:a pcm_s16le \
+            public/zinko-v5-preview/voice/intro-clean.wav
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/13_golpe_bajo.wav public/zinko-v5-preview/sfx/
+          cp /tmp/zinko-sfx/03_Efectos_Sonido/11_swoosh.wav public/zinko-v5-preview/sfx/
+
+          for f in \
+            public/zinko-v5-preview/voice/intro-clean.wav \
+            public/zinko-v5-preview/sfx/13_golpe_bajo.wav \
+            public/zinko-v5-preview/sfx/11_swoosh.wav \
+            public/zinko-proof/Caption.ttf \
+            public/zinko-proof/Impact.ttf \
+            public/zinko-proof/nico-happy.webp \
+            public/zinko-proof/nico-question.webp \
+            public/zinko-proof/gta-logo.webp \
+            public/zinko-proof/opening.mp4 \
+            public/zinko-proof/crowd.mp4 \
+            public/zinko-proof/lowrider.mp4 \
+            public/zinko-full/coast.mp4 \
+            public/zinko-full/rockstar.mp4; do
+            test -s "$f"
+            echo "$f | $(stat -c%s "$f") bytes"
+          done
+
+      - name: Install locked Remotion dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Validate TypeScript
+        run: npx tsc --noEmit
+
+      - name: Ensure Remotion browser
+        run: npx remotion browser ensure
+
+      - name: Render V5 mixed-media intro
+        run: |
+          mkdir -p out
+          npx remotion render src/zinko-v5-preview/index.tsx ZinkoGTA6V5 out/GTA6-ZINKO-INTRO-20s-v5.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+
+      - name: Verify render and create contact sheet
+        run: |
+          set -euo pipefail
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 out/GTA6-ZINKO-INTRO-20s-v5.mp4
+          test -s out/GTA6-ZINKO-INTRO-20s-v5.mp4
+          ffmpeg -y -loglevel error -i out/GTA6-ZINKO-INTRO-20s-v5.mp4 -vf "fps=1,scale=480:270,tile=5x4" -frames:v 1 out/GTA6-ZINKO-INTRO-20s-v5-contact.jpg
+
+      - name: Upload V5 for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-ZINKO-INTRO-20s-v5
+          path: |
+            out/GTA6-ZINKO-INTRO-20s-v5.mp4
+            out/GTA6-ZINKO-INTRO-20s-v5-contact.jpg
+          if-no-files-found: error
+          retention-days: 14
