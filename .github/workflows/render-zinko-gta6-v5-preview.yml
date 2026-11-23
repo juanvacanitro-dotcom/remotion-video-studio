@@ -32,7 +32,9 @@ jobs:
 
       - name: Install media tools
         run: |
-          command -v ffmpeg
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get install -y ffmpeg || { sudo apt-get update -qq && sudo apt-get install -y ffmpeg; }
+          fi
           python -m pip install --disable-pip-version-check --no-cache-dir --retries 3 --timeout 30 gdown
 
       - name: Download narration
