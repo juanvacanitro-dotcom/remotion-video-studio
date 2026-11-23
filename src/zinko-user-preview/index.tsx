@@ -68,7 +68,7 @@ function MainCaption({frame}: {frame: number}) {
     {start: 199, end: 297, text: 'PERO HAY PEGAS QUE CASI NADIE CUENTA'},
     {start: 300, end: 344, text: 'BIENVENIDO A ZINKO'},
     {start: 344, end: 404, text: 'EL CANAL DE LA CURIOSIDAD'},
-    {start: 404, end: 450, text: '¿QUÉ AMAN Y QUÉ CRITICAN?'},
+    {start: 404, end: 450, text: 'HOY VEREMOS QUÉ AMAN…'},
   ];
   const cue = cues.find((c) => frame >= c.start && frame < c.end);
   if (!cue) return null;
@@ -114,6 +114,10 @@ function GameCard({
   height = 392,
   startFrom = 24,
   accent = TEAL,
+  x = 1195,
+  y = 555,
+  exitStart = 58,
+  exitEnd = 78,
 }: {
   name: string;
   label: string;
@@ -122,21 +126,25 @@ function GameCard({
   height?: number;
   startFrom?: number;
   accent?: string;
+  x?: number;
+  y?: number;
+  exitStart?: number;
+  exitEnd?: number;
 }) {
   const f = useCurrentFrame();
   const enter = pop(f, 14);
-  const out = interpolate(f, [58, 78], [1, 0], {
+  const out = interpolate(f, [exitStart, exitEnd], [1, 0], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const x = 1195 + 16 * Math.sin(f * 0.045);
-  const y = 555 + 8 * Math.sin(f * 0.06);
+  const driftX = x + 16 * Math.sin(f * 0.045);
+  const driftY = y + 8 * Math.sin(f * 0.06);
   return (
     <div
       style={{
         position: 'absolute',
-        left: x,
-        top: y,
+        left: driftX,
+        top: driftY,
         width,
         height: height + 58,
         transform:
@@ -441,10 +449,10 @@ function Preview() {
       </Sequence>
 
       <Sequence from={104} durationInFrames={82}>
-        <GameCard name="opening.mp4" label="VICE CITY · LEONIDA" width={720} height={405} angle={-7} startFrom={38} />
+        <GameCard name="opening.mp4" label="GTA VI · METRAJE OFICIAL" width={720} height={405} angle={-7} startFrom={38} x={1195} y={555} />
       </Sequence>
       <Sequence from={138} durationInFrames={55}>
-        <GameCard name="lowrider.mp4" label="METRAJE IN-GAME" width={500} height={282} angle={5} startFrom={22} accent={PINK} />
+        <GameCard name="lowrider.mp4" label="GAMEPLAY · ROCKSTAR" width={430} height={242} angle={6} startFrom={22} accent={PINK} x={1540} y={790} exitStart={32} exitEnd={49} />
       </Sequence>
       <Sequence from={112} durationInFrames={86}>
         <GTAStamp />
