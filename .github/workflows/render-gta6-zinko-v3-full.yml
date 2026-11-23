@@ -47,6 +47,28 @@ jobs:
               shutil.copy2(p,out/'sfx'/p.name)
           print('Staged',len(voices),'voice files and',len(sounds),'SFX files. No user video clips were downloaded.')
           PY
+      - name: Download official Rockstar screenshot B-roll
+        run: |
+          mkdir -p public/gta6-zinko-v2/screenshots
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_13.0iq8ff474tsdx.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/vice-city-13.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_14.10e7v.06pcm_t.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/jason-lucia-14.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_15.0m-_zb~mcy2zr.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/jason-lucia-15.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_16.05-d133mx68ku.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/jason-lucia-16.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_02.0c5.7qx17u9kl.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/vice-city-02.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Port_Gellhorn_07.053ldlg0m.2r..jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/port-gellhorn-07.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Grassrivers_07.0txitddjiq5o1.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/grassrivers-07.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/Leonida_Keys_01.0zgz7tveur6y8.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/leonida-keys-01.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_GROTTI_CHEETAH_01.0a.wy3s_ogjey.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/grotti-cheetah-01.jpg'
+          curl -fL --retry 3 --retry-delay 2 'https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_SAFEHOUSE_VEHICLES_01.0wv6pw3t-mky3.jpg?akim=1&imdensity=1&imwidth=1920' -o 'public/gta6-zinko-v2/screenshots/safehouse-vehicles-01.jpg'
+          python3 - <<'PY'
+          from pathlib import Path
+          folder=Path('public/gta6-zinko-v2/screenshots')
+          files=list(folder.glob('*.jpg'))
+          for p in files:
+              if p.stat().st_size < 12000: raise SystemExit('Screenshot download looks incomplete: '+p.name)
+          if len(files) < 10: raise SystemExit('Not enough official screenshots downloaded')
+          print('Downloaded official Rockstar screenshot B-roll:', len(files))
+          PY
       - name: Type-check
         run: npx tsc --noEmit
       - name: Install FFmpeg and Chromium
