@@ -27,9 +27,9 @@ jobs:
       - name: Download creator footage and voice
         run: |
           mkdir -p /tmp/gta-clips /tmp/gta-voice /tmp/gta-sfx public/gta6-zinko-v2/clips public/gta6-zinko-v2/voice public/gta6-zinko-v2/sfx
-          gdown --fuzzy 'https://drive.google.com/file/d/1X5yEmhkcxY5Dsq0KbYD2-ank0Q6iQW0A/view?usp=sharing' -O /tmp/clips-1-18.zip
-          gdown --fuzzy 'https://drive.google.com/file/d/1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj/view?usp=sharing' -O /tmp/voz.zip
-          gdown --fuzzy 'https://drive.google.com/file/d/1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74/view?usp=sharing' -O /tmp/sfx.zip
+          gdown '1X5yEmhkcxY5Dsq0KbYD2-ank0Q6iQW0A' -O /tmp/clips-1-18.zip
+          gdown '1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj' -O /tmp/voz.zip
+          gdown '1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74' -O /tmp/sfx.zip
           unzip -q -o /tmp/clips-1-18.zip -d /tmp/gta-clips
           unzip -q -o /tmp/voz.zip -d /tmp/gta-voice
           unzip -q -o /tmp/sfx.zip -d /tmp/gta-sfx
