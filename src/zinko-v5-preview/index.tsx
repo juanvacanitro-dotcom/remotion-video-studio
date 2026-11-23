@@ -463,40 +463,30 @@ function SceneTwo() {
         <GameShot name="lowrider.mp4" zoom={1.035} zoomTo={1.14} panX={9} tint="cool" />
       </Sequence>
       <Sequence from={78} durationInFrames={82}>
-        <GameShot name="rockstar.mp4" source="full" zoom={1.025} zoomTo={1.13} panX={-10} tint="warm" />
+        <GameShot name="action.mp4" source="full" zoom={1.025} zoomTo={1.13} panX={-10} tint="warm" />
       </Sequence>
-      <Img
-        src={proof('gta-logo.webp')}
-        style={{
-          position: 'absolute',
-          left: 145,
-          top: 150,
-          width: 360,
-          objectFit: 'contain',
-          filter: 'drop-shadow(9px 13px 9px rgba(0,0,0,.48))',
-          transform:
-            'perspective(1100px) rotateY(' + ((1 - ease(f / 18)) * -38) +
-            'deg) rotate(-5deg) scale(' + (0.72 + 0.28 * pop(f, 2, 12)) + ')',
-        }}
-      />
-      <HeroText text="ES GTA 6" x={150} y={565} size={148} color={WHITE} delay={12} width={760} angle={-4} depth={9} />
-      <Eyebrow text="Y LAS RESEÑAS SON HISTÓRICAS" x={160} y={760} color={YELLOW} delay={25} />
-      <NicoCutout pose="question" x={1580} y={675} width={400} delay={38} tilt={-2} />
-      <Sequence from={88} durationInFrames={72}>
-        <HeroText text="PERO HAY\nPEGAS" x={1050} y={315} size={106} color={PINK} delay={0} width={720} angle={4} depth={8} />
-        <div
+      <Sequence from={0} durationInFrames={84}>
+        <Img
+          src={proof('gta-logo.webp')}
           style={{
             position: 'absolute',
-            right: 235,
-            top: 675,
-            width: 94,
-            height: 94,
-            border: '8px solid ' + PINK,
-            borderRadius: 22,
-            transform: 'rotate(45deg) scale(' + (0.7 + 0.3 * pop(f - 88, 9, 12)) + ')',
-            opacity: ease((f - 88) / 10),
+            left: 145,
+            top: 150,
+            width: 360,
+            objectFit: 'contain',
+            filter: 'drop-shadow(9px 13px 9px rgba(0,0,0,.48))',
+            transform:
+              'perspective(1100px) rotateY(' + ((1 - ease(f / 18)) * -38) +
+              'deg) rotate(-5deg) scale(' + (0.72 + 0.28 * pop(f, 2, 12)) + ')',
           }}
         />
+        <HeroText text="ES GTA 6" x={150} y={565} size={148} color={WHITE} delay={12} width={760} angle={-4} depth={9} />
+        <Eyebrow text="Y LAS RESEÑAS SON HISTÓRICAS" x={160} y={760} color={YELLOW} delay={25} />
+      </Sequence>
+      <NicoCutout pose="question" x={1580} y={675} width={390} delay={38} tilt={-2} />
+      <Sequence from={88} durationInFrames={72}>
+        <HeroText text="PERO HAY\nPEGAS" x={145} y={350} size={124} color={PINK} delay={0} width={900} angle={-3} depth={9} />
+        <AccentLine x={155} y={665} width={520} color={TEAL} delay={8} />
       </Sequence>
     </FadeScene>
   );
