@@ -685,7 +685,7 @@ function RefinedIntro() {
         <PhotoCard
           src="crowd.mp4"
           source="proof"
-          startFrom={78}
+          startFrom={42}
           left={850}
           top={195}
           width={860}
@@ -701,7 +701,7 @@ function RefinedIntro() {
         <PhotoCard
           src="lowrider.mp4"
           source="proof"
-          startFrom={90}
+          startFrom={65}
           left={850}
           top={195}
           width={860}
