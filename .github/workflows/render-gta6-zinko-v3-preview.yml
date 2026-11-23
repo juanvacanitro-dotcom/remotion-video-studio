@@ -77,7 +77,7 @@ jobs:
       - name: Install Chromium for Remotion
         run: npx remotion browser ensure
       - name: Render 30-second no-footage preview
-        run: npx remotion render src/gta6-zinko-v2/index.tsx GTA6ZinkoMotionV3 out/GTA6-ZINKO-MOTION-V3-PREVIEW.mp4 --frames=0-899 --concurrency=2 --crf=19 --pixel-format=yuv420p --audio-bitrate=256k
+        run: npx remotion render src/gta6-zinko-v2/index.tsx GTA6ZinkoMotionV3 out/GTA6-ZINKO-MOTION-V3-PREVIEW.mp4 --frames=0-599 --concurrency=4 --crf=19 --pixel-format=yuv420p --audio-bitrate=256k
       - uses: actions/upload-artifact@v4
         with:
           name: GTA6-ZINKO-MOTION-V3-PREVIEW
