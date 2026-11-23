@@ -3,8 +3,9 @@ on:
   push:
     branches: [feat/gta6-zinko-editorial-v2]
     paths:
-      - 'src/gta6-zinko-v2/**'
-      - '.github/workflows/render-gta6-zinko-v2-preview.yml'
+      - 'src/gta6-zinko-v2/Composition.tsx'
+      - 'src/gta6-zinko-v2/index.tsx'
+      - 'src/gta6-zinko-v2/RENDER-PREVIEW*.txt'
   workflow_dispatch:
 permissions:
   contents: read
