@@ -42,7 +42,7 @@ jobs:
           out=Path('public/gta6-zinko-v2')
           voices=list(voice_root.rglob('*.mp3'))
           for n in range(1,19):
-              src=next((p for p in voices if re.match(r'^'+str(n)+r'(?:\\s|$|\\()',p.stem)),None)
+              src=next((p for p in voices if (p.stem == str(n) or p.stem.startswith(str(n)+' '))),None)
               if src is None: raise SystemExit('Missing narration track '+str(n))
               shutil.copy2(src,out/'voice'/('{:02d}.mp3'.format(n)))
           sounds=list(sfx_root.rglob('*.wav'))
