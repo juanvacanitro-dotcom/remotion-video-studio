@@ -14,6 +14,8 @@
 - Kinetic captions, punch-in movement, impact transitions, perspective panels and a metallic title sting.
 - No official GTA footage, official game logo, Rockstar marks or copied TikTok footage.
 
+- Official GTA VI screenshot B-roll is fetched at render time from Rockstar Games' official media gallery and used as brief, credited editorial cutaways. The screenshots remain Rockstar Games property; they are not redistributed as standalone assets.
+
 ## GTA Components research and adaptation
 The external `echris6/gta-components` repository contains 126 standalone HyperFrames projects using HTML, GSAP and Three.js. It is not a Remotion package and does not include gameplay footage. Its MIT-licensed code was reviewed; rather than adding a second renderer, selected motion patterns were adapted into `GtaMotionKit.tsx` as native Remotion components. See the root `THIRD-PARTY-NOTICES.md`.
 
