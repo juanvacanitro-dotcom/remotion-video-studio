@@ -472,8 +472,8 @@ function Subtitle({frame}: {frame: number}) {
     {start: 147, end: 300, text: 'Pero tiene pegas que casi nadie cuenta.'},
     {start: 300, end: 390, text: 'Bienvenido a Zinko, el canal de la curiosidad.'},
     {start: 390, end: 465, text: 'Hoy veremos qué aman y qué critican.'},
-    {start: 465, end: 540, text: 'Y si valió la espera.'},
-    {start: 485, end: 600, text: 'Y al final, mi veredicto.'},
+    {start: 465, end: 530, text: 'Y si valió la espera.'},
+    {start: 530, end: 600, text: 'Y al final, mi veredicto.'},
   ];
   const cue = cues.find((c) => frame >= c.start && frame < c.end);
   if (!cue) return null;
