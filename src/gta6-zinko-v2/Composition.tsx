@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {DeskCutaway} from './DeskCutaway';
-import {AvatarSticker, ImpactTransition, KineticCaption, SceneBackdrop, SceneEditorialOverlay, TitleSting, cameraMove, punchMotion} from './GtaMotionKit';
+import {AvatarSticker, ImpactTransition, KineticCaption, SceneBackdrop, SceneEditorialOverlay, SceneScreenshot, TitleSting, cameraMove, punchMotion} from './GtaMotionKit';
 import {
   AbsoluteFill, Audio, Composition, OffthreadVideo, Sequence,
   cancelRender, continueRender, delayRender, registerRoot, spring, staticFile,
@@ -378,6 +378,7 @@ function VisualScene({index}:{index:number}){
    <SceneBackdrop type={scene.type} accent={scene.accent} frame={f}/>
   </div>
   <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(5,5,16,.10),transparent 20%,transparent 62%,rgba(5,5,16,.34))'}}/>
+  <SceneScreenshot type={scene.type} frame={f} sceneIndex={index} accent={scene.accent}/>
   {desk&&<Sequence from={Math.round(desk.from*FPS)} durationInFrames={desk.duration}><DeskCutaway mode={desk.mode} label={desk.label} value={desk.value} note={desk.note} accent={desk.accent}/></Sequence>}
   {!deskActive&&<UIOverlay type={scene.type} accent={scene.accent} f={f}/>}
   {!deskActive&&<SceneEditorialOverlay type={scene.type} accent={scene.accent} frame={f} sceneIndex={index}/>}
