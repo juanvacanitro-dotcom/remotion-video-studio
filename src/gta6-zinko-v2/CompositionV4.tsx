@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
-  AbsoluteFill, Audio, Img, OffthreadVideo, Sequence, cancelRender,
+  AbsoluteFill, Audio, Img, Loop, OffthreadVideo, Sequence, cancelRender,
   continueRender, delayRender, spring, staticFile, useCurrentFrame
 } from 'remotion';
 
 const FPS=30, INK='#0b0b18', WHITE='#fffdf7', YELLOW='#ffeb1d', PINK='#ff3c91', TEAL='#24f2dc', ORANGE='#ff9b3d';
 type Cue={from:number;to:number;text:string;emphasis:string};
-type Cut={file:'launch.mp4'|'trailer2.mp4'|'trailer1.mp4';start:number;style:number};
+type Cut={file:string;start:number;style:number};
 type Story={title:string;accent:string;voice:string;cues:Cue[];cuts:[Cut,Cut,Cut];kind:string};
 const scenes:Story[]=[
 {title:'EL RÉCORD DE 28 AÑOS',accent:ORANGE,voice:'01.mp3',kind:'record',cuts:[{file:'launch.mp4',start:8,style:0},{file:'trailer2.mp4',start:28,style:2},{file:'trailer1.mp4',start:12,style:1}],cues:[{from:0,to:3.25,text:'Un juego acaba de igualar un récord de veintiocho años.',emphasis:'récord de veintiocho años'},{from:3.25,to:6.5,text:'Es GTA seis, y las reseñas son históricas.',emphasis:'reseñas son históricas'},{from:6.5,to:10,text:'Pero tiene pegas que casi nadie cuenta.',emphasis:'pegas'}]},
@@ -35,24 +35,49 @@ const pop=(f:number,d=0)=>spring({frame:Math.max(0,f-d),fps:FPS,config:{mass:.55
 const media=(s:string)=>staticFile('gta6-zinko-v4/'+s);
 
 const cutsAt=[0,100,200];
+const stills:Record<string,[string,string,string]> = {
+ record:['jason-lucia-17.jpg','vice-city-14.jpg','jason-lucia-03.jpg'],
+ welcome:['vice-city-14.jpg','vice-city-17.jpg','vice-city-20.jpg'],
+ score:['jason-duval-14.jpg','vice-city-17.jpg','vice-city-25.jpg'],
+ timeline:['jason-lucia-03.jpg','vice-city-01.jpg','vice-city-14.jpg'],
+ ranking:['vice-city-20.jpg','vice-city-25.jpg','jason-lucia-09.jpg'],
+ world:['grassrivers-07.jpg','leonida-keys-06.jpg','grassrivers-06.jpg'],
+ duo:['jason-lucia-05.jpg','jason-lucia-09.jpg','jason-lucia-17.jpg'],
+ hours:['vice-city-10.jpg','port-gellhorn-01.jpg','ambrosia-01.jpg'],
+ reviews:['vice-city-17.jpg','vice-city-20.jpg','vice-city-25.jpg'],
+ fps:['port-gellhorn-01.jpg','vice-city-10.jpg','grassrivers-01.jpg'],
+ performance:['grassrivers-06.jpg','ambrosia-01.jpg','port-gellhorn-01.jpg'],
+ pacing:['jason-duval-14.jpg','jason-lucia-03.jpg','vice-city-14.jpg'],
+ realism:['grotti-cheetah-01.jpg','leonida-keys-01.jpg','port-gellhorn-01.jpg'],
+ preorders:['vice-city-01.jpg','jason-lucia-17.jpg','vice-city-25.jpg'],
+ comparison:['vice-city-20.jpg','vice-city-17.jpg','vice-city-14.jpg'],
+ split:['jason-lucia-09.jpg','vice-city-10.jpg','grassrivers-07.jpg'],
+ verdict:['mount-kalaga-02.jpg','vice-city-13.jpg','jason-lucia-17.jpg'],
+ outro:['vice-city-14.jpg','jason-lucia-05.jpg','vice-city-01.jpg']
+};
+const videoInserts:Record<string,string>={world:'coast.mp4',duo:'rockstar.mp4',fps:'action.mp4',performance:'action.mp4',realism:'lowrider.mp4',welcome:'opening.mp4',verdict:'rockstar.mp4',outro:'crowd.mp4'};
 function Footage({scene,index}:{scene:Story;index:number}){
- const f=useCurrentFrame();
  return <AbsoluteFill>
-  {scene.cuts.map((c,i)=><Sequence key={i} from={cutsAt[i]} durationInFrames={i===2?100:100}>
-   <Shot cut={c} index={index} part={i}/>
+  {scene.cuts.map((c,i)=><Sequence key={i} from={cutsAt[i]} durationInFrames={100}>
+   <Shot cut={c} index={index} part={i} kind={scene.kind}/>
   </Sequence>)}
  </AbsoluteFill>;
 }
-function Shot({cut,index,part}:{cut:Cut;index:number;part:number}){
+function Shot({cut,index,part,kind}:{cut:Cut;index:number;part:number;kind:string}){
  const f=useCurrentFrame();
  const p=clamp(f/18);
- const zoom=1.035+0.035*Math.sin(f*.025+index*1.2+part);
+ const image=stills[kind]?.[part]||stills.world[part];
+ const zoom=1.08+0.045*Math.sin(f*.025+index*1.2+part);
  const panX=Math.sin(f*.021+index+part*2)*2.4;
  const panY=Math.cos(f*.018+index*.7+part)*1.5;
  const rot=[-.35,.25,-.2,.18,.4,-.3][(index+part)%6];
+ const video=part===1?videoInserts[kind]:undefined;
  return <AbsoluteFill style={{background:'#070710',overflow:'hidden'}}>
-  <OffthreadVideo src={media('media/'+cut.file)} startFrom={cut.start*FPS} muted playbackRate={1} style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+zoom+') translate('+panX+'%,'+panY+'%) rotate('+rot+'deg)',filter:'saturate(1.12) contrast(1.07) brightness(.88)'}}/>
-  <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(4,4,14,.32),transparent 23%,transparent 64%,rgba(4,4,14,.48))'}}/>
+  <Img src={media('stills/'+image)} style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+zoom+') translate('+panX+'%,'+panY+'%) rotate('+rot+'deg)',filter:'saturate(1.14) contrast(1.08) brightness(.88)'}}/>
+  {video&&<div style={{position:'absolute',inset:0,overflow:'hidden',clipPath:'polygon(0 0,100% 0,100% 100%,0 100%)'}}>
+   <Loop durationInFrames={100}><OffthreadVideo src={media('clips/'+video)} muted playbackRate={1} style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale(1.08)',filter:'saturate(1.18) contrast(1.08)'}}/></Loop>
+  </div>}
+  <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(4,4,14,.28),transparent 23%,transparent 64%,rgba(4,4,14,.46))'}}/>
   <div style={{position:'absolute',inset:0,border:'1px solid rgba(255,255,255,.09)',boxShadow:'inset 0 0 120px rgba(0,0,0,.22)'}}/>
  </AbsoluteFill>;
 }
