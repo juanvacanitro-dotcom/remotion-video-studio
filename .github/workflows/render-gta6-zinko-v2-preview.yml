@@ -1,0 +1,67 @@
+name: GTA 6 ZINKO Editorial V2 Preview
+on:
+  push:
+    branches: [feat/gta6-zinko-editorial-v2]
+    paths:
+      - 'src/gta6-zinko-v2/**'
+      - '.github/workflows/render-gta6-zinko-v2-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gta6-zinko-v2-preview
+  cancel-in-progress: true
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Install media download helper
+        run: python3 -m pip install --quiet gdown
+      - name: Download creator footage and voice
+        run: |
+          mkdir -p /tmp/gta-clips /tmp/gta-voice /tmp/gta-sfx public/gta6-zinko-v2/clips public/gta6-zinko-v2/voice public/gta6-zinko-v2/sfx
+          gdown --fuzzy 'https://drive.google.com/file/d/1X5yEmhkcxY5Dsq0KbYD2-ank0Q6iQW0A/view?usp=sharing' -O /tmp/clips-1-18.zip
+          gdown --fuzzy 'https://drive.google.com/file/d/1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj/view?usp=sharing' -O /tmp/voz.zip
+          gdown --fuzzy 'https://drive.google.com/file/d/1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74/view?usp=sharing' -O /tmp/sfx.zip
+          unzip -q -o /tmp/clips-1-18.zip -d /tmp/gta-clips
+          unzip -q -o /tmp/voz.zip -d /tmp/gta-voice
+          unzip -q -o /tmp/sfx.zip -d /tmp/gta-sfx
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, shutil
+          clip_root=Path('/tmp/gta-clips')
+          voice_root=Path('/tmp/gta-voice')
+          sfx_root=Path('/tmp/gta-sfx')
+          out=Path('public/gta6-zinko-v2')
+          clips=list(clip_root.rglob('*.mp4'))
+          voices=list(voice_root.rglob('*.mp3'))
+          for n in range(1,19):
+              src=next((p for p in clips if re.match(r'^'+str(n)+r'_',p.stem)),None)
+              if src is None: raise SystemExit('Missing source clip '+str(n))
+              shutil.copy2(src,out/'clips'/('{:02d}.mp4'.format(n)))
+              voice=next((p for p in voices if re.match(r'^'+str(n)+r'(?:\s|$|\()',p.stem)),None)
+              if voice is None: raise SystemExit('Missing voice track '+str(n))
+              shutil.copy2(voice,out/'voice'/('{:02d}.mp3'.format(n)))
+          for p in sfx_root.rglob('*.wav'):
+              shutil.copy2(p,out/'sfx'/p.name)
+          print('Staged',len(clips),'clips,',len(voices),'voice tracks and',len(list((out/'sfx').glob('*.wav'))),'sound effects')
+          PY
+      - name: Type-check
+        run: npx tsc --noEmit
+      - name: Install Chromium for Remotion
+        run: npx remotion browser ensure
+      - name: Render 30-second style preview
+        run: npx remotion render src/gta6-zinko-v2/index.tsx GTA6ZinkoEditorialV2 out/GTA6-ZINKO-V2-preview.mp4 --frames=0-899 --concurrency=2 --crf=19 --pixel-format=yuv420p --audio-bitrate=256k
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-ZINKO-V2-preview
+          path: out/GTA6-ZINKO-V2-preview.mp4
+          if-no-files-found: error
+          retention-days: 14
