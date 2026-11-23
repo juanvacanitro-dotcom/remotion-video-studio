@@ -96,21 +96,21 @@ jobs:
       - name: Render V5 mixed-media intro
         run: |
           mkdir -p out
-          npx remotion render src/zinko-v5-preview/index.tsx ZinkoGTA6V5 out/GTA6-ZINKO-INTRO-20s-v5.1.1.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+          npx remotion render src/zinko-v5-preview/index.tsx ZinkoGTA6V5 out/GTA6-ZINKO-INTRO-20s-v5.2.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
 
       - name: Verify render and create contact sheet
         run: |
           set -euo pipefail
-          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 out/GTA6-ZINKO-INTRO-20s-v5.1.1.mp4
-          test -s out/GTA6-ZINKO-INTRO-20s-v5.1.1.mp4
-          ffmpeg -y -loglevel error -i out/GTA6-ZINKO-INTRO-20s-v5.1.1.mp4 -vf "fps=1,scale=480:270,tile=5x4" -frames:v 1 out/GTA6-ZINKO-INTRO-20s-v5.1.1-contact.jpg
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,width,height,r_frame_rate -of default=noprint_wrappers=1 out/GTA6-ZINKO-INTRO-20s-v5.2.mp4
+          test -s out/GTA6-ZINKO-INTRO-20s-v5.2.mp4
+          ffmpeg -y -loglevel error -i out/GTA6-ZINKO-INTRO-20s-v5.2.mp4 -vf "fps=1,scale=480:270,tile=5x4" -frames:v 1 out/GTA6-ZINKO-INTRO-20s-v5.2-contact.jpg
 
       - name: Upload V5 for review
         uses: actions/upload-artifact@v4
         with:
-          name: GTA6-ZINKO-INTRO-20s-v5.1
+          name: GTA6-ZINKO-INTRO-20s-v5.2
           path: |
-            out/GTA6-ZINKO-INTRO-20s-v5.1.1.mp4
-            out/GTA6-ZINKO-INTRO-20s-v5.1.1-contact.jpg
+            out/GTA6-ZINKO-INTRO-20s-v5.2.mp4
+            out/GTA6-ZINKO-INTRO-20s-v5.2-contact.jpg
           if-no-files-found: error
           retention-days: 14
