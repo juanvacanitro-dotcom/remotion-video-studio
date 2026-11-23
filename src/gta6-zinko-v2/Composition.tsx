@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {DeskCutaway} from './DeskCutaway';
-import {AvatarSticker, ImpactTransition, KineticCaption, SceneBackdrop, TitleSting, punchMotion} from './GtaMotionKit';
+import {AvatarSticker, ImpactTransition, KineticCaption, SceneBackdrop, SceneEditorialOverlay, TitleSting, cameraMove, punchMotion} from './GtaMotionKit';
 import {
   AbsoluteFill, Audio, Composition, OffthreadVideo, Sequence,
   cancelRender, continueRender, delayRender, registerRoot, spring, staticFile,
@@ -374,12 +374,13 @@ function VisualScene({index}:{index:number}){
  const activeCue=scene.cues.find(c=>f/FPS>=c.from&&f/FPS<c.to);
  const punch=activeCue?punchMotion(f,Math.round(activeCue.from*FPS)):{scale:1,shake:0};
  return <AbsoluteFill style={{background:INK,overflow:'hidden',fontFamily:'CaptionLocal'}}>
-  <div style={{position:'absolute',inset:-20,transform:'scale('+punch.scale+') translateX('+punch.shake+'px)'}}>
+  <div style={{position:'absolute',inset:-28,...cameraMove(index,f),transform:cameraMove(index,f).transform+' scale('+punch.scale+') translateX('+punch.shake+'px)'}}>
    <SceneBackdrop type={scene.type} accent={scene.accent} frame={f}/>
   </div>
   <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(5,5,16,.10),transparent 20%,transparent 62%,rgba(5,5,16,.34))'}}/>
   {desk&&<Sequence from={Math.round(desk.from*FPS)} durationInFrames={desk.duration}><DeskCutaway mode={desk.mode} label={desk.label} value={desk.value} note={desk.note} accent={desk.accent}/></Sequence>}
   {!deskActive&&<UIOverlay type={scene.type} accent={scene.accent} f={f}/>}
+  {!deskActive&&<SceneEditorialOverlay type={scene.type} accent={scene.accent} frame={f} sceneIndex={index}/>}
   <SceneHeader index={index} accent={scene.accent} f={f}/>
   {index===0&&<TitleSting frame={f}/>}
   {!deskActive&&<AvatarSticker index={index} frame={f}/>}
