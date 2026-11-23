@@ -95,6 +95,124 @@ const glyphs:Record<string,string> = {
  preorders:'17M',comparison:'VS',split:'SÍ / PERO',verdict:'W',outro:'NEXT'
 };
 
+const SceneMotif:React.FC<{type:string;accent:string;frame:number}> = ({type,accent,frame})=>{
+ const bob=Math.sin(frame*.055)*12;
+ const turn=Math.sin(frame*.028)*5;
+ const stroke={fill:'none',stroke:accent,strokeWidth:12,strokeLinecap:'round' as const,strokeLinejoin:'round' as const};
+ let art:React.ReactNode=null;
+ if(type==='hook') art=<g>
+  <path d="M205 125 H395 L372 290 Q300 360 228 290 Z" fill={accent+'22'} stroke={accent} strokeWidth="14"/>
+  <path d="M205 160 Q85 105 112 220 Q132 286 245 284 M395 160 Q515 105 488 220 Q468 286 355 284" {...stroke}/>
+  <path d="M300 360 V430 M220 442 H380" stroke={WHITE} strokeWidth="16" strokeLinecap="round"/>
+  <path d="M300 25 L326 78 L384 86 L342 126 L352 184 L300 155 L248 184 L258 126 L216 86 L274 78 Z" fill={YELLOW}/>
+ </g>;
+ else if(type==='welcome') art=<g>
+  <rect x="80" y="115" width="180" height="270" rx="24" fill="#111323" stroke={TEAL} strokeWidth="10" transform="rotate(-10 170 250)"/>
+  <rect x="340" y="75" width="180" height="270" rx="24" fill="#111323" stroke={PINK} strokeWidth="10" transform="rotate(8 430 210)"/>
+  <path d="M145 200 H205 M175 170 V230 M390 175 L430 215 L390 255" stroke={WHITE} strokeWidth="13" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M280 80 L250 240 L320 210 L290 390" stroke={YELLOW} strokeWidth="14" fill="none" strokeLinejoin="round"/>
+ </g>;
+ else if(type==='score') art=<g>
+  <circle cx="300" cy="250" r="190" fill="#090915" stroke="#ffffff44" strokeWidth="22"/>
+  <circle cx="300" cy="250" r="190" fill="none" stroke={accent} strokeWidth="24" strokeDasharray="1194" strokeDashoffset={1194*(.12+.06*Math.sin(frame*.04))} transform="rotate(-90 300 250)"/>
+  <text x="300" y="285" textAnchor="middle" fontSize="132" fontFamily="ImpactLocal" fill={WHITE}>99</text>
+  <text x="300" y="342" textAnchor="middle" fontSize="32" fontFamily="ImpactLocal" fill={YELLOW}>/100</text>
+ </g>;
+ else if(type==='timeline') art=<g>
+  <path d="M80 270 H520" stroke={WHITE} strokeWidth="10" strokeLinecap="round"/>
+  <path d="M100 270 H500" stroke={accent} strokeWidth="6" strokeDasharray="14 15"/>
+  <circle cx="120" cy="270" r="38" fill="#111323" stroke={ORANGE} strokeWidth="12"/>
+  <circle cx="480" cy="270" r="38" fill="#111323" stroke={TEAL} strokeWidth="12"/>
+  <text x="120" y="180" textAnchor="middle" fontSize="48" fontFamily="ImpactLocal" fill={WHITE}>1998</text>
+  <text x="480" y="180" textAnchor="middle" fontSize="48" fontFamily="ImpactLocal" fill={WHITE}>2026</text>
+  <rect x="230" y="225" width="140" height="90" rx="16" fill={INK} stroke={YELLOW} strokeWidth="7"/>
+  <text x="300" y="283" textAnchor="middle" fontSize="34" fontFamily="ImpactLocal" fill={YELLOW}>28 AÑOS</text>
+ </g>;
+ else if(type==='ranking') art=<g>
+  {[98,97,99].map((v,i)=><g key={i}>
+   <rect x={95+i*145} y={400-v*2.3} width="92" height={v*2.3} rx="12" fill={i===2?YELLOW:accent} opacity=".9"/>
+   <text x={141+i*145} y={370-v*2.3} textAnchor="middle" fontSize="34" fontFamily="ImpactLocal" fill={WHITE}>{v}</text>
+   <text x={141+i*145} y="455" textAnchor="middle" fontSize="24" fontFamily="ImpactLocal" fill={WHITE}>{['IV','V','VI'][i]}</text>
+  </g>)}
+ </g>;
+ else if(type==='world') art=<g>
+  <path d="M75 145 L520 95 L470 405 L105 450 Z" fill="#111c2b" stroke={TEAL} strokeWidth="9"/>
+  <path d="M90 225 L500 350 M130 420 L450 125 M250 125 L300 430 M410 110 L360 420" stroke="#ffffff55" strokeWidth="15" fill="none"/>
+  <path d="M110 390 Q220 275 320 310 T490 145" fill="none" stroke={YELLOW} strokeWidth="12" strokeDasharray="18 12"/>
+  <circle cx="110" cy="390" r="20" fill={PINK}/><circle cx="490" cy="145" r="20" fill={TEAL}/>
+ </g>;
+ else if(type==='duo') art=<g>
+  <circle cx="190" cy="230" r="95" fill="#111323" stroke={PINK} strokeWidth="14"/>
+  <circle cx="410" cy="230" r="95" fill="#111323" stroke={TEAL} strokeWidth="14"/>
+  <path d="M285 230 H315" stroke={WHITE} strokeWidth="14" strokeLinecap="round"/>
+  <path d="M300 200 C260 155 220 220 300 280 C380 220 340 155 300 200" fill={PINK} opacity=".9"/>
+  <path d="M145 390 Q190 320 235 390 M365 390 Q410 320 455 390" stroke={WHITE} strokeWidth="12" fill="none" strokeLinecap="round"/>
+ </g>;
+ else if(type==='hours') art=<g>
+  <circle cx="300" cy="250" r="190" fill="#111323" stroke={accent} strokeWidth="14"/>
+  {[0,1,2,3,4,5,6,7,8,9,10,11].map(i=><path key={i} d="M300 82 V110" stroke={WHITE} strokeWidth="9" transform={'rotate('+i*30+' 300 250)'}/>)}
+  <path d={'M300 250 L300 '+(250-120)+' M300 250 L'+(300+105)+' '+(250+40)} stroke={YELLOW} strokeWidth="16" strokeLinecap="round" transform={'rotate('+frame*1.5+' 300 250)'}/>
+  <circle cx="300" cy="250" r="18" fill={WHITE}/>
+  <text x="300" y="450" textAnchor="middle" fontSize="44" fontFamily="ImpactLocal" fill={WHITE}>60 HORAS</text>
+ </g>;
+ else if(type==='reviews') art=<g>
+  {[0,1,2].map(i=><g key={i} transform={'translate('+(70+i*155)+' '+(140+(i%2)*35)+') rotate('+(-8+i*7)+' 70 130)'}>
+   <rect x="0" y="0" width="135" height="250" rx="16" fill="#111323" stroke={i===1?YELLOW:accent} strokeWidth="8"/>
+   <path d="M25 60 H110 M25 90 H95 M25 120 H105" stroke={WHITE} strokeWidth="8" strokeLinecap="round"/>
+   <text x="68" y="195" textAnchor="middle" fontSize="46" fontFamily="ImpactLocal" fill={i===1?YELLOW:WHITE}>100</text>
+  </g>)}
+ </g>;
+ else if(type==='fps') art=<g>
+  <path d="M85 210 Q105 115 200 125 H400 Q495 115 515 210 L560 360 Q570 415 510 420 H450 Q410 415 385 345 H215 Q190 415 150 420 H90 Q30 415 40 360 Z" fill="#111323" stroke={WHITE} strokeWidth="13"/>
+  <path d="M145 220 V300 M105 260 H185" stroke={TEAL} strokeWidth="18" strokeLinecap="round"/>
+  <circle cx="430" cy="215" r="18" fill={PINK}/><circle cx="470" cy="260" r="18" fill={YELLOW}/>
+  <text x="300" y="315" textAnchor="middle" fontSize="68" fontFamily="ImpactLocal" fill={WHITE}>30 FPS</text>
+ </g>;
+ else if(type==='performance') art=<g>
+  {[0,1,2,3,4].map(i=><line key={i} x1="65" y1={130+i*70} x2="540" y2={130+i*70} stroke="#ffffff33" strokeDasharray="8 10"/>)}
+  <path d="M65 320 L110 300 L155 325 L205 190 L250 340 L300 245 L350 300 L400 150 L445 335 L495 235 L540 285" stroke={PINK} strokeWidth="13" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+ </g>;
+ else if(type==='pacing') art=<g>
+  <circle cx="300" cy="250" r="180" fill="#111323" stroke={PINK} strokeWidth="12"/>
+  <path d="M300 250 L300 125 M300 250 L410 310" stroke={WHITE} strokeWidth="15" strokeLinecap="round"/>
+  <circle cx="300" cy="250" r="18" fill={YELLOW}/>
+  <path d="M185 65 L415 65 M210 40 L390 40" stroke={WHITE} strokeWidth="10" strokeLinecap="round"/>
+  <path d="M95 430 H220 M240 430 H400 M420 430 H520" stroke={accent} strokeWidth="14" strokeLinecap="round"/>
+ </g>;
+ else if(type==='realism') art=<g>
+  <path d="M55 310 L125 220 Q160 170 245 165 H420 Q490 170 535 235 L565 310 V370 H45 Z" fill="#111323" stroke={accent} strokeWidth="13"/>
+  <path d="M170 215 L235 145 H410 L485 230" stroke={WHITE} strokeWidth="10" fill="none"/>
+  <circle cx="160" cy="365" r="48" fill="#090915" stroke={WHITE} strokeWidth="12"/><circle cx="460" cy="365" r="48" fill="#090915" stroke={WHITE} strokeWidth="12"/>
+ </g>;
+ else if(type==='preorders') art=<g>
+  {[0,1,2].map(i=><g key={i} transform={'translate('+(130+i*145)+' '+(330-i*40)+')'}>
+   <ellipse cx="0" cy="0" rx="76" ry="25" fill="#ffd978" stroke={ORANGE} strokeWidth="9"/>
+   <path d="M-76 0 V54 Q0 95 76 54 V0" fill="#b97724" stroke={ORANGE} strokeWidth="9"/>
+   <ellipse cx="0" cy="0" rx="76" ry="25" fill="#ffd978" stroke={ORANGE} strokeWidth="9"/>
+   <text x="0" y="12" textAnchor="middle" fontSize="34" fontFamily="ImpactLocal" fill="#8a4b12">$</text>
+  </g>)}
+ </g>;
+ else if(type==='comparison'||type==='split') art=<g>
+  <rect x="60" y="120" width="220" height="290" rx="22" fill="#101a25" stroke={TEAL} strokeWidth="10"/>
+  <rect x="320" y="120" width="220" height="290" rx="22" fill="#20101d" stroke={PINK} strokeWidth="10"/>
+  <path d="M110 245 L160 300 L235 205" stroke={TEAL} strokeWidth="18" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+  <path d="M370 210 L490 330 M490 210 L370 330" stroke={PINK} strokeWidth="18" strokeLinecap="round"/>
+ </g>;
+ else if(type==='verdict') art=<g>
+  <path d="M300 95 V400 M160 160 H440 M200 160 L120 320 H280 Z M400 160 L320 320 H480 Z" stroke={TEAL} strokeWidth="14" fill="none" strokeLinejoin="round"/>
+  <circle cx="300" cy="90" r="22" fill={YELLOW}/>
+  <path d="M210 430 H390" stroke={WHITE} strokeWidth="15" strokeLinecap="round"/>
+ </g>;
+ else if(type==='outro') art=<g>
+  <rect x="70" y="110" width="250" height="300" rx="24" fill="#101323" stroke={TEAL} strokeWidth="10"/>
+  <rect x="350" y="160" width="190" height="250" rx="24" fill="#101323" stroke={PINK} strokeWidth="10"/>
+  <path d="M165 190 L165 330 L265 260 Z" fill={YELLOW}/>
+  <path d="M385 230 H500 M385 275 H480 M385 320 H500" stroke={WHITE} strokeWidth="10" strokeLinecap="round"/>
+ </g>;
+ return <svg viewBox="0 0 600 520" width="650" height="565" style={{position:'absolute',left:510,top:165,opacity:.55,filter:'drop-shadow(0 0 24px '+accent+'66)',transform:'translateY('+bob+'px) rotate('+turn+'deg)'}}>{art}</svg>;
+};
+
+
 export const SceneBackdrop:React.FC<{type:string;accent:string;frame:number}> = ({type,accent,frame})=>{
  const drift=Math.sin(frame*.018)*22;
  const pulse=.5+.5*Math.sin(frame*.045);
@@ -103,6 +221,7 @@ export const SceneBackdrop:React.FC<{type:string;accent:string;frame:number}> = 
   <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px)',backgroundSize:'72px 72px',opacity:.32,transform:'translate('+drift+'px,'+(-drift*.45)+'px)'}}/>
   <div style={{position:'absolute',left:-80,right:-80,bottom:-280,height:610,transform:'perspective(620px) rotateX(66deg)',transformOrigin:'center bottom',backgroundImage:'linear-gradient(rgba(36,242,220,.24) 1px,transparent 1px),linear-gradient(90deg,rgba(36,242,220,.24) 1px,transparent 1px)',backgroundSize:'92px 92px',opacity:.26,maskImage:'linear-gradient(to top,black,transparent 90%)'}}/>
   <div style={{position:'absolute',left:90,top:150,fontFamily:'ImpactLocal',fontSize:300,lineHeight:.9,letterSpacing:3,color:WHITE,opacity:.075,transform:'translateY('+drift+'px) rotate(-7deg)',whiteSpace:'nowrap',textShadow:'0 0 55px '+accent}}>{glyph}</div>
+  <SceneMotif type={type} accent={accent} frame={frame}/>
   <div style={{position:'absolute',right:140,top:110,width:520,height:520,border:'2px solid '+accent+'55',borderRadius:'50%',transform:'rotate('+frame*.22+'deg) scale('+(1+pulse*.035)+')',boxShadow:'0 0 55px '+accent+'22,inset 0 0 55px '+accent+'18'}}/>
   <div style={{position:'absolute',right:205,top:175,width:390,height:390,border:'1px dashed '+WHITE+'55',borderRadius:'50%',transform:'rotate('+(-frame*.16)+'deg)'}}/>
   <div style={{position:'absolute',right:0,top:0,width:760,height:'100%',background:'linear-gradient(90deg,transparent,'+accent+'0b)',transform:'skewX(-13deg) translateX('+(Math.sin(frame*.025)*45)+'px)'}}/>
