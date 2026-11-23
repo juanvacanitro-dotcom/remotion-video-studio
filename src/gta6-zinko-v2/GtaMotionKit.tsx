@@ -88,6 +88,33 @@ export const AvatarSticker:React.FC<{index:number;frame:number}> = ({index,frame
   </div>;
 };
 
+
+const glyphs:Record<string,string> = {
+ hook:'99',welcome:'ZINKO',score:'99',timeline:'28',ranking:'IV · V · VI',world:'WORLD',duo:'02',
+ hours:'60H',reviews:'100',fps:'30',performance:'FPS',pacing:'RHYTHM',realism:'DRIVE',
+ preorders:'17M',comparison:'VS',split:'SÍ / PERO',verdict:'W',outro:'NEXT'
+};
+
+export const SceneBackdrop:React.FC<{type:string;accent:string;frame:number}> = ({type,accent,frame})=>{
+ const drift=Math.sin(frame*.018)*22;
+ const pulse=.5+.5*Math.sin(frame*.045);
+ const glyph=glyphs[type]||'ZINKO';
+ return <div style={{position:'absolute',inset:0,overflow:'hidden',background:'radial-gradient(ellipse at '+(30+Math.sin(frame*.012)*8)+'% '+(42+Math.cos(frame*.015)*6)+'%, '+accent+'30 0%, transparent 44%),radial-gradient(ellipse at 82% 20%, '+PINK+'22 0%, transparent 34%),linear-gradient(135deg,#080914 0%,#151326 48%,#080912 100%)'}}>
+  <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(255,255,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px)',backgroundSize:'72px 72px',opacity:.32,transform:'translate('+drift+'px,'+(-drift*.45)+'px)'}}/>
+  <div style={{position:'absolute',left:-80,right:-80,bottom:-280,height:610,transform:'perspective(620px) rotateX(66deg)',transformOrigin:'center bottom',backgroundImage:'linear-gradient(rgba(36,242,220,.24) 1px,transparent 1px),linear-gradient(90deg,rgba(36,242,220,.24) 1px,transparent 1px)',backgroundSize:'92px 92px',opacity:.26,maskImage:'linear-gradient(to top,black,transparent 90%)'}}/>
+  <div style={{position:'absolute',left:90,top:150,fontFamily:'ImpactLocal',fontSize:300,lineHeight:.9,letterSpacing:3,color:WHITE,opacity:.075,transform:'translateY('+drift+'px) rotate(-7deg)',whiteSpace:'nowrap',textShadow:'0 0 55px '+accent}}>{glyph}</div>
+  <div style={{position:'absolute',right:140,top:110,width:520,height:520,border:'2px solid '+accent+'55',borderRadius:'50%',transform:'rotate('+frame*.22+'deg) scale('+(1+pulse*.035)+')',boxShadow:'0 0 55px '+accent+'22,inset 0 0 55px '+accent+'18'}}/>
+  <div style={{position:'absolute',right:205,top:175,width:390,height:390,border:'1px dashed '+WHITE+'55',borderRadius:'50%',transform:'rotate('+(-frame*.16)+'deg)'}}/>
+  <div style={{position:'absolute',right:0,top:0,width:760,height:'100%',background:'linear-gradient(90deg,transparent,'+accent+'0b)',transform:'skewX(-13deg) translateX('+(Math.sin(frame*.025)*45)+'px)'}}/>
+  <svg viewBox="0 0 1920 1080" width="100%" height="100%" style={{position:'absolute',inset:0,opacity:.52}}>
+   <path d={'M0 '+(790+Math.sin(frame*.025)*18)+' Q480 660 920 800 T1920 700'} fill="none" stroke={accent} strokeWidth="3" strokeDasharray="8 22"/>
+   <path d={'M0 '+(850+Math.cos(frame*.021)*22)+' L1920 '+(600+Math.sin(frame*.018)*30)} fill="none" stroke={WHITE} strokeWidth="1" opacity=".35"/>
+   {[0,1,2,3,4,5,6,7].map(i=><circle key={i} cx={180+i*220+Math.sin(frame*.02+i)*18} cy={190+(i%3)*210+Math.cos(frame*.024+i)*20} r={3+(i%3)} fill={i%2?accent:WHITE}/>)}
+  </svg>
+  <div style={{position:'absolute',left:60,right:60,top:95,height:2,background:'linear-gradient(90deg,transparent,'+accent+'88,transparent)',boxShadow:'0 0 22px '+accent,opacity:.55}}/>
+ </div>;
+};
+
 export const TitleSting:React.FC<{frame:number}> = ({frame})=>{
   if(frame>96) return null;
   const enter=spring({frame:Math.max(0,frame-4),fps:30,config:{mass:.65,damping:10,stiffness:160}});
