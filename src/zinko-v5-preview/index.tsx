@@ -661,13 +661,14 @@ function SceneFour() {
       <Sequence from={30} durationInFrames={34}>
         <ReactionCard name="success.mp4" label="¡ESO!" x={1490} y={700} width={320} angle={-2} />
       </Sequence>
-      <Sequence from={75} durationInFrames={135}>
-        <GameShot name="coast.mp4" source="full" zoom={1.025} zoomTo={1.13} panX={-9} tint="warm" />
-        <HeroText text={'¿VALIÓ LA\nESPERA?'} x={145} y={320} size={150} color={YELLOW} delay={3} width={820} angle={-4} depth={10} />
+      <Sequence from={75} durationInFrames={70}>
+        <GameShot name="coast.mp4" source="full" startFrom={50} zoom={1.025} zoomTo={1.13} panX={-9} tint="warm" />
+        <HeroText text={'¿VALIÓ LA\\nESPERA?'} x={145} y={320} size={150} color={YELLOW} delay={3} width={820} angle={-4} depth={10} />
         <Eyebrow text="Y AL FINAL, MI VEREDICTO" x={160} y={665} color={WHITE} delay={20} />
         <NicoCutout pose="question" x={1510} y={660} width={430} delay={18} tilt={-2} />
       </Sequence>
       <Sequence from={145} durationInFrames={65}>
+        <GameShot name="rockstar.mp4" source="full" startFrom={80} zoom={1.04} zoomTo={1.13} panX={-8} tint="cool" />
         <HeroText text="MI VEREDICTO" x={150} y={395} size={125} color={TEAL} delay={0} width={1030} angle={-3} depth={11} />
         <AccentLine x={160} y={555} width={660} color={PINK} delay={7} />
         <NicoCutout x={1515} y={650} width={410} delay={9} tilt={3} />
