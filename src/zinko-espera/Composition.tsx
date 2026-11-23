@@ -67,7 +67,6 @@ const Bars:React.FC<{f:number;values:number[]}> = ({f,values}) => <svg viewBox="
   {values.map((v,i)=>{const h=v*3.2*interpolate(f,[0,28],[0,1],clamp);return <g key={i}><rect x={60+i*180} y={370-h} width="105" height={h} rx="12" fill={i===2?C.orange:C.teal} opacity=".9" style={{filter:'drop-shadow(0 0 15px '+(i===2?C.orange:C.teal)+')'}}/><text x={112+i*180} y={410} fill={C.white} fontSize="32" textAnchor="middle" fontWeight="800">{values[i]}</text></g>})}
   <Line x1={25} y1={372} x2={590} y2={372} color={C.white} w={4}/>
  </svg>;
-};
 
 const Motif:React.FC<{kind:number;f:number;accent:string}> = ({kind,f,accent}) => {
  const pulse=1+.035*Math.sin(f/7);
