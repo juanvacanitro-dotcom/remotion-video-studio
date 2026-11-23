@@ -234,6 +234,79 @@ export const SceneBackdrop:React.FC<{type:string;accent:string;frame:number}> = 
  </div>;
 };
 
+
+const editorialCopy:Record<string,{kicker:string;headline:string;sub:string;tag:string;scribble:string}> = {
+ hook:{kicker:'EL DATO QUE CAMBIA TODO',headline:'28 AÑOS',sub:'Un récord que parecía intocable',tag:'¿CASUALIDAD?',scribble:'¡OJO!'},
+ welcome:{kicker:'EN ESTE VIDEO',headline:'AMOR VS CRÍTICAS',sub:'Lo que funciona y lo que divide',tag:'SIN SPOILERS',scribble:'vamos'},
+ score:{kicker:'PROMEDIO DE CRÍTICOS',headline:'99 / 100',sub:'La nota que encendió el debate',tag:'CASI PERFECTO',scribble:'¿99?!'},
+ timeline:{kicker:'UNA ESPERA LARGUÍSIMA',headline:'1998 → 2026',sub:'Casi tres décadas entre récords',tag:'28 AÑOS',scribble:'histórico'},
+ ranking:{kicker:'LA SAGA EN NÚMEROS',headline:'98 · 97 · 99',sub:'GTA IV · GTA V · GTA VI',tag:'NUEVO LÍDER',scribble:'subió'},
+ world:{kicker:'LO QUE MÁS DESTACAN',headline:'UN MUNDO VIVO',sub:'Exploración, detalles y sorpresas',tag:'INMERSIÓN',scribble:'mira eso'},
+ duo:{kicker:'EL CORAZÓN DE LA HISTORIA',headline:'DOS PROTAGONISTAS',sub:'Química, decisiones y consecuencias',tag:'NO VAN SOLOS',scribble:'dupla'},
+ hours:{kicker:'¿CUÁNTO DURA?',headline:'60 H / 100 H+',sub:'Historia principal y completar todo',tag:'MUCHO POR HACER',scribble:'¡uff!'},
+ reviews:{kicker:'LAS NOTAS MÁS ALTAS',headline:'100 / 100',sub:'Medios que le dieron la máxima',tag:'NOTA PERFECTA',scribble:'wow'},
+ fps:{kicker:'LA PEGA MÁS REPETIDA',headline:'30 FPS',sub:'La discusión sobre fluidez',tag:'¿Y LOS 60?',scribble:'hmm…'},
+ performance:{kicker:'CUANDO TODO SE MUEVE',headline:'FRAME TIME',sub:'La estabilidad también importa',tag:'RENDIMIENTO',scribble:'ojo aquí'},
+ pacing:{kicker:'NO TODO ES PERFECTO',headline:'RITMO DESIGUAL',sub:'Hay tramos que pueden sentirse lentos',tag:'PERO…',scribble:'pausa'},
+ realism:{kicker:'MÁS DETALLE, MÁS SISTEMAS',headline:'REALISMO',sub:'Coches, gastos y rutinas',tag:'MÁS PROFUNDO',scribble:'detalle'},
+ preorders:{kicker:'EXPECTATIVA ENORME',headline:'17M+',sub:'Estimación de preventas, no cifra oficial',tag:'ESTIMACIÓN',scribble:'¿en serio?'},
+ comparison:{kicker:'DOS LANZAMIENTOS',headline:'11M VS 17M',sub:'Ventas reportadas frente a estimación',tag:'NO ES LO MISMO',scribble:'compara'},
+ split:{kicker:'DOS MIRADAS',headline:'CRÍTICOS / JUGADORES',sub:'Entusiasmo con algunos matices',tag:'EL DEBATE',scribble:'depende'},
+ verdict:{kicker:'LA CONCLUSIÓN',headline:'HISTÓRICO, NO PERFECTO',sub:'Un fenómeno con puntos por pulir',tag:'VEREDICTO ZINKO',scribble:'mi nota'},
+ outro:{kicker:'AHORA TE TOCA A TI',headline:'¿QUÉ OPINAS?',sub:'Deja tu nota en comentarios',tag:'NOS VEMOS',scribble:'comenta'}
+};
+
+export function cameraMove(index:number,frame:number){
+ const t=frame/30, phase=Math.floor(t/3.1), local=t-phase*3.1;
+ const kick=local<.28?Math.sin(local*22)*(1-local/.28):0;
+ const styles=[
+  {base:1.045,amp:.075,rot:1.2,dx:20,dy:12,mode:0},
+  {base:1.035,amp:.065,rot:2.1,dx:30,dy:14,mode:1},
+  {base:1.025,amp:.095,rot:.7,dx:14,dy:10,mode:2},
+  {base:1.04,amp:.08,rot:2.7,dx:34,dy:17,mode:3},
+  {base:1.03,amp:.09,rot:1.1,dx:19,dy:13,mode:4},
+  {base:1.05,amp:.06,rot:1.8,dx:32,dy:15,mode:5}
+ ];
+ const s=styles[index%styles.length], wave=Math.sin(frame*.035+index*1.7);
+ const scale=s.base+s.amp*(.5+.5*Math.sin(t*.7+index))+Math.max(0,kick)*.025;
+ const rotate=(s.mode%2===0?1:-1)*s.rot*wave+kick*1.8;
+ const x=Math.sin(frame*.021+index)*s.dx+kick*s.dx;
+ const y=Math.cos(frame*.027+index*.8)*s.dy-kick*12;
+ const skew=s.mode===1?Math.sin(t*.9)*1.7:s.mode===4?Math.cos(t*.65)*1.2:0;
+ return {transform:'translate('+x+'px,'+y+'px) scale('+scale+') rotate('+rotate+'deg) skewX('+skew+'deg)',filter:'saturate(1.14) contrast(1.09)'};
+}
+
+export const SceneEditorialOverlay:React.FC<{type:string;accent:string;frame:number;sceneIndex:number}> = ({type,accent,frame,sceneIndex})=>{
+ const copy=editorialCopy[type]||editorialCopy.welcome;
+ const beat=Math.floor(frame/92), local=frame%92;
+ const p=spring({frame:Math.max(0,local-2),fps:30,config:{mass:.55,damping:11,stiffness:190}});
+ const show=p*clamp01((92-local)/10);
+ const positions=[{x:64,y:178,r:-3},{x:70,y:205,r:2},{x:58,y:170,r:-1},{x:78,y:190,r:3},{x:62,y:215,r:-2},{x:75,y:180,r:1}];
+ const pos=positions[sceneIndex%positions.length], alt=beat%2===1;
+ const headline=alt?copy.tag:copy.headline, sub=alt?copy.scribble+'  /  '+copy.sub:copy.sub;
+ return <div style={{position:'absolute',inset:0,pointerEvents:'none',overflow:'hidden'}}>
+  <div style={{position:'absolute',left:pos.x+(alt?22:0),top:pos.y+(alt?28:0),width:410,padding:'17px 22px 19px',background:'linear-gradient(135deg,#fffdf2,#e8e3d5)',color:'#17151b',borderRadius:'4px 13px 4px 13px',boxShadow:'0 20px 42px #0009',transform:'translateX('+((1-p)*-150)+'px) translateY('+(1-p)*25+'px) rotate('+(pos.r+(alt?2:-1))+'deg) scale('+(0.86+.14*p)+')',opacity:show*.98,clipPath:'polygon(0 0,100% 0,100% 94%,97% 100%,0 96%)'}}>
+   <div style={{fontFamily:'ImpactLocal',fontSize:18,letterSpacing:3,color:accent,marginBottom:5}}>{copy.kicker}</div>
+   <div style={{fontFamily:'ImpactLocal',fontSize:alt?39:43,lineHeight:.98,letterSpacing:.5,color:'#17151b'}}>{headline}</div>
+   <div style={{fontFamily:'CaptionLocal',fontSize:18,fontWeight:800,color:'#45404b',marginTop:9,lineHeight:1.2}}>{sub}</div>
+   <div style={{position:'absolute',right:12,top:9,width:55,height:5,background:accent,transform:'rotate(-8deg)'}}/>
+  </div>
+  <svg viewBox="0 0 1920 1080" width="100%" height="100%" style={{position:'absolute',inset:0,opacity:show*.95}}>
+   <path d={sceneIndex%2===0?'M500 360 Q620 330 725 400':'M510 390 Q635 450 735 390'} fill="none" stroke={YELLOW} strokeWidth="9" strokeLinecap="round" strokeDasharray="18 12" strokeDashoffset={Math.max(0,120-local*9)}/>
+   <path d="M90 145 Q220 112 405 145" fill="none" stroke={accent} strokeWidth="7" strokeLinecap="round" strokeDasharray="8 12"/>
+   <circle cx="450" cy="335" r={32+Math.sin(frame*.18)*5} fill="none" stroke={PINK} strokeWidth="8" strokeDasharray="130 45" transform={'rotate('+frame*2+' 450 335)'}/>
+   <path d="M470 335 l34 -20 l-8 34" fill="none" stroke={PINK} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+  <div style={{position:'absolute',left:70,bottom:145,display:'flex',gap:9,opacity:show*.92,transform:'translateY('+(1-p)*22+'px) rotate(-2deg)'}}>
+   <div style={{padding:'8px 13px',background:accent,color:INK,fontFamily:'ImpactLocal',fontSize:17,letterSpacing:2,boxShadow:'0 8px 18px #0008'}}>{copy.tag}</div>
+   <div style={{padding:'8px 13px',background:'#17151b',border:'1px solid '+accent,color:WHITE,fontFamily:'CaptionLocal',fontSize:16,fontWeight:900,boxShadow:'0 8px 18px #0008'}}>ZINKO / {String(sceneIndex+1).padStart(2,'0')}</div>
+  </div>
+  <div style={{position:'absolute',right:60,top:95,width:230,height:7,background:'#ffffff30',opacity:show*.7,borderRadius:99,overflow:'hidden'}}>
+   <div style={{width:(local/92*100)+'%',height:'100%',background:accent,boxShadow:'0 0 16px '+accent}}/>
+  </div>
+ </div>;
+};
+
 export const TitleSting:React.FC<{frame:number}> = ({frame})=>{
   if(frame>96) return null;
   const enter=spring({frame:Math.max(0,frame-4),fps:30,config:{mass:.65,damping:10,stiffness:160}});
