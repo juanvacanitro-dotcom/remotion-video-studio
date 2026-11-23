@@ -59,12 +59,12 @@ jobs:
           cp /tmp/zinko-sfx/03_Efectos_Sonido/05_whoosh_largo.wav public/zinko-refined-preview/sfx/
           cp /tmp/zinko-sfx/03_Efectos_Sonido/11_swoosh.wav public/zinko-refined-preview/sfx/
 
-          # Gentle speech cleanup: remove low rumble and steady background hiss,
-          # then lightly level the complete two-scene narration. No music is added.
+          # Gentle speech cleanup: remove low rumble, lightly reduce room noise in pauses,
+          # and level each scene naturally. Avoid aggressive denoising artifacts.
           ffmpeg -hide_banner -loglevel error -y \
             -i /tmp/zinko-voice/1.mp3 \
             -i /tmp/zinko-voice/2.mp3 \
-            -filter_complex "[0:a]highpass=f=75,lowpass=f=11000,afftdn=nr=10:nf=-43:tn=1:gs=10[a0];[1:a]highpass=f=75,lowpass=f=11000,afftdn=nr=10:nf=-43:tn=1:gs=10[a1];[a0][a1]concat=n=2:v=0:a=1,acompressor=threshold=-21dB:ratio=1.6:attack=15:release=170:makeup=1.2,loudnorm=I=-16:TP=-1.5:LRA=8[out]" \
+            -filter_complex "[0:a]highpass=f=80,lowpass=f=11000,agate=threshold=-50dB:ratio=2:attack=20:release=180:range=0.5[a0];[1:a]highpass=f=80,lowpass=f=11000,agate=threshold=-50dB:ratio=2:attack=20:release=180:range=0.5[a1];[a0][a1]concat=n=2:v=0:a=1,acompressor=threshold=-21dB:ratio=1.6:attack=15:release=170:makeup=1.2,loudnorm=I=-16:TP=-1.5:LRA=8[out]" \
             -map "[out]" -ar 48000 -ac 2 -c:a pcm_s16le \
             public/zinko-refined-preview/voice/intro-clean.wav
 
