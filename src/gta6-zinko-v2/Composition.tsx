@@ -148,7 +148,7 @@ function Pill({f,x,y,text,accent,delay=0,angle=0}:{f:number;x:number;y:number;te
 function SceneHeader({index,accent,f}:{index:number;accent:string;f:number}){
  const p=ease(f/12);
  return <div style={{position:'absolute',left:52,top:34,display:'flex',alignItems:'center',gap:18,opacity:.96,transform:'translateY('+(1-p)*-20+'px)'}}>
-  <div style={{fontFamily:'ImpactLocal',fontSize:22,letterSpacing:4,color:WHITE,textShadow:'0 2px 4px #000'}}>ZINKO <span style={{color:accent}}>/</span> GTA VI</div>
+  <div style={{fontFamily:'ImpactLocal',fontSize:22,letterSpacing:4,color:WHITE,textShadow:'0 2px 4px #000'}}>ZINKO <span style={{color:accent}}>/</span> ANÁLISIS</div>
   <div style={{display:'flex',gap:5,alignItems:'center'}}>
    {scenes.map((s,i)=><div key={i} style={{width:i===index?25:9,height:8,borderRadius:99,background:i===index?accent:'#ffffff55',boxShadow:i===index?'0 0 12px '+accent:'none'}}/>)}
   </div>
