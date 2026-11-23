@@ -24,7 +24,9 @@ const scenes:SceneData[] = [
   {from:0.1,to:3.1,text:'Un juego acaba de igualar un récord de 28 años.',emphasis:'récord'},
   {from:3.1,to:6.3,text:'Es GTA 6 y las reseñas son históricas.',emphasis:'históricas'},
   {from:6.3,to:9.8,text:'Pero tiene pegas que casi nadie cuenta.',emphasis:'pegas'}
- ],sfx:[{at:0.1,file:'13_golpe_bajo.wav',volume:.22},{at:4.1,file:'04_whoosh.wav',volume:.18},{at:7.2,file:'08_error.wav',volume:.16}]},
+ ],sfx:[{at:0.1,file:'13_golpe_bajo.wav',volume:.22},{at:4.1,file:'04_whoosh.wav',volume:.18},{at:7.2,file:'08_error.wav',volume:.16}],cutaways:[
+  {from:0,duration:42,file:'action.mp4',label:'GTA VI · TRÁILER OFICIAL'}
+ ]},
  {file:'02.mp4',type:'welcome',accent:TEAL,cues:[
   {from:0.1,to:3.2,text:'Bienvenido a Zinko, el canal de la curiosidad.',emphasis:'Zinko'},
   {from:3.2,to:7.1,text:'Hoy veremos qué aman, qué critican y si valió la espera.',emphasis:'valió la espera'},
@@ -165,8 +167,8 @@ function Subtitle({scene,f}:{scene:SceneData;f:number}){
  const hi=idx>=0?cue.text.slice(idx,idx+cue.emphasis!.length):'';
  const after=idx>=0?cue.text.slice(idx+cue.emphasis!.length):'';
  return <div style={{position:'absolute',left:100,right:100,bottom:48,display:'flex',justifyContent:'center',opacity:Math.min(1,p),transform:'translateY('+(1-p)*24+'px) scale('+(0.96+.04*p)+')'}}>
-  <div style={{maxWidth:1580,textAlign:'center',fontFamily:'CaptionLocal',fontSize:47,lineHeight:1.12,fontWeight:900,color:WHITE,WebkitTextStroke:'3px '+INK,paintOrder:'stroke fill',textShadow:'2px 5px 0 '+INK+',0 8px 18px #0008'}}>
-   {before}<span style={{color:YELLOW}}>{hi}</span>{after}
+  <div style={{maxWidth:1580,textAlign:'center',fontFamily:'CaptionLocal',fontSize:52,lineHeight:1.1,fontWeight:900,color:YELLOW,WebkitTextStroke:'3px '+INK,paintOrder:'stroke fill',textShadow:'2px 5px 0 '+INK+',0 8px 18px #0008'}}>
+   {before}<span style={{color:WHITE}}>{hi}</span>{after}
   </div>
  </div>;
 }
@@ -283,9 +285,9 @@ function OutroUI({f}:{f:number}){
 
 function UIOverlay({type,accent,f}:{type:string;accent:string;f:number}){
  if(type==='hook')return <>
-  <GlassCard f={f} x={1330} y={180} w={430} accent={ORANGE} label="EL RÉCORD" value="28 AÑOS" note="UNA MARCA QUE PARECÍA INALCANZABLE" delay={6} angle={-3} valueSize={76}/>
-  <Pill f={f} x={1375} y={510} text="PERO HAY PEGAS" accent={PINK} delay={42} angle={3}/>
-  <div style={{position:'absolute',right:240,top:650,width:170,height:5,background:'linear-gradient(90deg,transparent,'+PINK+')',transform:'rotate(-15deg) scaleX('+ease((f-50)/12)+')',transformOrigin:'right'}}/>
+  <Pill f={f} x={1390} y={525} text="RÉCORD IGUALADO" accent={ORANGE} delay={14} angle={-3}/>
+  <Pill f={f} x={1390} y={610} text="PERO HAY PEGAS" accent={PINK} delay={42} angle={3}/>
+  <div style={{position:'absolute',right:240,top:710,width:170,height:5,background:'linear-gradient(90deg,transparent,'+PINK+')',transform:'rotate(-15deg) scaleX('+ease((f-50)/12)+')',transformOrigin:'right'}}/>
  </>;
  if(type==='welcome')return <>
   <GlassCard f={f} x={1160} y={205} w={330} accent={TEAL} label="LO QUE AMAN" value="MUNDO" note="HISTORIA · DETALLES" delay={8} angle={-3} valueSize={58}/>
@@ -293,9 +295,8 @@ function UIOverlay({type,accent,f}:{type:string;accent:string;f:number}){
   <Pill f={f} x={1260} y={730} text="EL BALANCE FINAL" accent={YELLOW} delay={48} angle={-2}/>
  </>;
  if(type==='score')return <>
-  <ScoreRing f={f} x={1460} y={350}/>
-  <GlassCard f={f} x={1310} y={575} w={420} accent={ORANGE} label="CRÍTICOS" value="+140" note="PUNTUACIONES RECOPILADAS" delay={24} angle={2} valueSize={70}/>
-  <Pill f={f} x={1230} y={180} text="METACRITIC" accent={ORANGE} delay={5}/>
+  <Pill f={f} x={1510} y={185} text="METACRITIC" accent={ORANGE} delay={12}/>
+  <div style={{position:'absolute',right:215,top:640,padding:'12px 18px',borderRadius:12,background:'rgba(6,6,18,.76)',border:'1px solid '+ORANGE+'aa',fontFamily:'CaptionLocal',fontSize:18,color:WHITE,transform:'rotate(2deg) scale('+pop(f,32)+')'}}>AGREGADOR DE RESEÑAS</div>
  </>;
  if(type==='timeline')return <>
   <TimelineUI f={f}/>
