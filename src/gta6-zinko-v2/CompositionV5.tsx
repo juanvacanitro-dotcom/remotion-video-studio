@@ -57,8 +57,10 @@ const stills:Record<string,[string,string,string]> = {
 };
 // Each moving insert is assigned to the exact subject being discussed.
 const videoPlan:Record<string,Record<number,{file:string;start:number}>>={
+ record:{0:{file:'cover-animation.mp4',start:0}},
  welcome:{0:{file:'opening.mp4',start:0}},
  world:{1:{file:'coast.mp4',start:0}},
+ duo:{0:{file:'jason.mp4',start:0},1:{file:'lucia.mp4',start:0}},
  fps:{1:{file:'action.mp4',start:0}},
  performance:{1:{file:'action.mp4',start:0}},
  realism:{1:{file:'lowrider.mp4',start:0}},
@@ -89,7 +91,7 @@ function Shot({cut,index,part,kind}:{cut:Cut;index:number;part:number;kind:strin
    <Loop durationInFrames={100}><OffthreadVideo src={media('clips/'+video)} startFrom={Math.round((insert?.start??0)*FPS)} muted playbackRate={1.04} style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale(1.12) translate('+panX+'%,'+panY+'%)',filter:'saturate(1.22) contrast(1.12) brightness(.9)'}}/></Loop>
   </div>}
   <AbsoluteFill style={{background:'linear-gradient(180deg,rgba(4,4,14,.28),transparent 23%,transparent 64%,rgba(4,4,14,.46))'}}/>
-  {video&&<div style={{position:'absolute',right:42,top:155,width:350,height:196,border:'2px solid rgba(255,255,255,.78)',boxShadow:'0 15px 35px #000c',transform:'rotate(2deg)',overflow:'hidden'}}><Img src={media('stills/'+image)} style={{width:'100%',height:'100%',objectFit:'cover'}}/><div style={{position:'absolute',left:0,bottom:0,padding:'5px 10px',background:'#050510dd',color:WHITE,fontFamily:'ImpactLocal',fontSize:15,letterSpacing:1.4}}>{kind==='world'?'LEONIDA / OPEN WORLD':kind==='fps'||kind==='performance'?'GAMEPLAY / ACTION':kind==='realism'?'VEHICLES / DETAIL':'OFFICIAL GAME IMAGE'}</div></div>}
+  {video&&<div style={{position:'absolute',right:42,top:155,width:350,height:196,border:'2px solid rgba(255,255,255,.78)',boxShadow:'0 15px 35px #000c',transform:'rotate(2deg)',overflow:'hidden'}}><Img src={media('stills/'+image)} style={{width:'100%',height:'100%',objectFit:'cover'}}/><div style={{position:'absolute',left:0,bottom:0,padding:'5px 10px',background:'#050510dd',color:WHITE,fontFamily:'ImpactLocal',fontSize:15,letterSpacing:1.4}}>{kind==='world'?'LEONIDA / OPEN WORLD':kind==='duo'&&part===0?'JASON DUVAL / OFFICIAL CLIP':kind==='duo'&&part===1?'LUCIA CAMINOS / OFFICIAL CLIP':kind==='fps'||kind==='performance'?'GAMEPLAY / ACTION':kind==='realism'?'VEHICLES / DETAIL':kind==='record'?'OFFICIAL COVER ANIMATION':'OFFICIAL GAME IMAGE'}</div></div>}
   <div style={{position:'absolute',inset:0,border:'1px solid rgba(255,255,255,.09)',boxShadow:'inset 0 0 120px rgba(0,0,0,.22)'}}/>
  </AbsoluteFill>;
 }
