@@ -235,6 +235,41 @@ export const SceneBackdrop:React.FC<{type:string;accent:string;frame:number}> = 
 };
 
 
+
+const screenshotSets:Record<string,string[]> = {
+ hook:['vice-city-13.jpg','jason-lucia-14.jpg'], welcome:['jason-lucia-14.jpg','vice-city-02.jpg'],
+ score:['vice-city-13.jpg','jason-lucia-14.jpg'], timeline:['vice-city-02.jpg','vice-city-13.jpg'],
+ ranking:['vice-city-13.jpg','jason-lucia-14.jpg'], world:['vice-city-13.jpg','port-gellhorn-07.jpg','grassrivers-07.jpg','leonida-keys-01.jpg'],
+ duo:['jason-lucia-14.jpg','jason-lucia-15.jpg','jason-lucia-16.jpg'], hours:['vice-city-02.jpg','port-gellhorn-07.jpg'],
+ reviews:['jason-lucia-14.jpg','vice-city-13.jpg'], fps:['vice-city-13.jpg','port-gellhorn-07.jpg'],
+ performance:['port-gellhorn-07.jpg','grassrivers-07.jpg'], pacing:['jason-lucia-15.jpg','vice-city-02.jpg'],
+ realism:['grotti-cheetah-01.jpg','safehouse-vehicles-01.jpg'], preorders:['vice-city-13.jpg','jason-lucia-14.jpg'],
+ comparison:['vice-city-02.jpg','vice-city-13.jpg'], split:['jason-lucia-14.jpg','vice-city-13.jpg'],
+ verdict:['jason-lucia-14.jpg','vice-city-13.jpg'], outro:['vice-city-13.jpg','jason-lucia-14.jpg']
+};
+export const SceneScreenshot:React.FC<{type:string;frame:number;sceneIndex:number;accent:string}> = ({type,frame,sceneIndex,accent})=>{
+ const set=screenshotSets[type]||screenshotSets.world;
+ const beat=Math.floor(frame/92), local=frame%92, asset=set[beat%set.length];
+ const p=spring({frame:Math.max(0,local-1),fps:30,config:{mass:.55,damping:10,stiffness:175}});
+ const out=clamp01((92-local)/9), side=sceneIndex%2===0?1:-1, pan=Math.sin(frame*.025+sceneIndex)*15;
+ const tag=type==='duo'?'JASON + LUCIA':type==='world'?'LEONIDA / VICE CITY':type==='realism'?'VEHÍCULOS':type==='fps'||type==='performance'?'GAMEPLAY / ANÁLISIS':'GTA VI / CAPTURA';
+ return <div style={{position:'absolute',left:500,top:205,width:650,height:370,pointerEvents:'none',opacity:p*out,transform:'perspective(1400px) translateX('+(side*(1-p)*120)+'px) translateY('+(1-p)*36+'px) rotateY('+(-side*8*(1-p))+'deg) rotateZ('+(sceneIndex%2===0?-1.7:1.7)+'deg) scale('+(0.88+.12*p)+')',filter:'drop-shadow(0 26px 36px #000b)'}}>
+  <div style={{position:'absolute',inset:0,padding:9,background:'linear-gradient(135deg,#fffdf3,#b7b0a8)',clipPath:'polygon(0 0,100% 0,100% 96%,98% 100%,0 100%)',boxShadow:'0 18px 38px #0009'}}>
+   <div style={{position:'relative',width:'100%',height:'100%',overflow:'hidden',background:'#10101a'}}>
+    <Img src={staticFile('gta6-zinko-v2/screenshots/'+asset)} style={{width:'100%',height:'100%',objectFit:'cover',transform:'scale('+(1.08+.025*Math.sin(frame*.05))+') translateX('+pan+'px)',filter:'saturate(1.13) contrast(1.08)'}}/>
+    <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(0,0,0,.10),transparent 46%,rgba(0,0,0,.82))'}}/>
+    <div style={{position:'absolute',left:20,bottom:16,right:20,display:'flex',alignItems:'end',justifyContent:'space-between',gap:12}}>
+     <div><div style={{fontFamily:'ImpactLocal',fontSize:17,letterSpacing:3,color:accent,textShadow:'0 2px 5px #000'}}>{tag}</div><div style={{fontFamily:'ImpactLocal',fontSize:25,letterSpacing:1,color:WHITE,textShadow:'0 3px 8px #000'}}>CAPTURA OFICIAL</div></div>
+     <div style={{padding:'7px 11px',background:accent,color:INK,fontFamily:'ImpactLocal',fontSize:16,letterSpacing:1}}>ROCKSTAR GAMES</div>
+    </div>
+    <div style={{position:'absolute',left:14,top:14,width:28,height:28,borderTop:'3px solid '+WHITE,borderLeft:'3px solid '+WHITE}}/>
+    <div style={{position:'absolute',right:14,top:14,width:28,height:28,borderTop:'3px solid '+WHITE,borderRight:'3px solid '+WHITE}}/>
+   </div>
+  </div>
+  <div style={{position:'absolute',left:-16,top:24,padding:'7px 12px',background:YELLOW,color:INK,fontFamily:'ImpactLocal',fontSize:16,letterSpacing:1,transform:'rotate(-7deg)',boxShadow:'0 6px 14px #0009'}}>B-ROLL / {String(beat+1).padStart(2,'0')}</div>
+ </div>;
+};
+
 const editorialCopy:Record<string,{kicker:string;headline:string;sub:string;tag:string;scribble:string}> = {
  hook:{kicker:'EL DATO QUE CAMBIA TODO',headline:'28 AÑOS',sub:'Un récord que parecía intocable',tag:'¿CASUALIDAD?',scribble:'¡OJO!'},
  welcome:{kicker:'EN ESTE VIDEO',headline:'AMOR VS CRÍTICAS',sub:'Lo que funciona y lo que divide',tag:'SIN SPOILERS',scribble:'vamos'},
