@@ -1,9 +1,5 @@
 name: GTA 6 ZINKO Editorial V2 Full Render
 on:
-  push:
-    branches: [feat/gta6-zinko-editorial-v2]
-    paths:
-      - 'src/gta6-zinko-v2/RENDER-FULL.txt'
   workflow_dispatch:
 permissions:
   contents: read
