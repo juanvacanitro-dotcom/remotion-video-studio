@@ -485,7 +485,7 @@ function SceneTwo() {
       </Sequence>
       <NicoCutout pose="question" x={1580} y={675} width={390} delay={38} tilt={-2} />
       <Sequence from={88} durationInFrames={72}>
-        <HeroText text="PERO HAY\nPEGAS" x={145} y={350} size={124} color={PINK} delay={0} width={900} angle={-3} depth={9} />
+        <HeroText text={'PERO HAY\nPEGAS'} x={145} y={350} size={124} color={PINK} delay={0} width={900} angle={-3} depth={9} />
         <AccentLine x={155} y={665} width={520} color={TEAL} delay={8} />
       </Sequence>
     </FadeScene>
@@ -543,7 +543,7 @@ function SceneFour() {
       </Sequence>
       <Sequence from={90} durationInFrames={70}>
         <GameShot name="coast.mp4" source="full" zoom={1.025} zoomTo={1.13} panX={-9} tint="warm" />
-        <HeroText text="¿VALIÓ LA\nESPERA?" x={145} y={320} size={150} color={YELLOW} delay={3} width={820} angle={-4} depth={10} />
+        <HeroText text={'¿VALIÓ LA\nESPERA?'} x={145} y={320} size={150} color={YELLOW} delay={3} width={820} angle={-4} depth={10} />
         <Eyebrow text="Y AL FINAL, MI VEREDICTO" x={160} y={665} color={WHITE} delay={20} />
         <NicoCutout pose="question" x={1510} y={660} width={430} delay={18} tilt={-2} />
       </Sequence>
