@@ -1,0 +1,1 @@
+Preview revision 5: shorten dark scene openings by trimming the first 0.5s, and hide the regular overlay cards while a custom desk cutaway is active.
