@@ -1,18 +1,18 @@
-name: GTA 6 ZINKO Motion V4 — Full Visual Edit
+name: GTA 6 ZINKO Motion V5 — Topic-Matched Motion Graphics
 on:
   push:
     branches: [feat/gta6-zinko-editorial-v2]
     paths:
-      - 'src/gta6-zinko-v2/CompositionV4.tsx'
+      - 'src/gta6-zinko-v2/CompositionV5.tsx'
       - 'src/gta6-zinko-v2/index.tsx'
-      - 'src/gta6-zinko-v2/RENDER-V4-FULL.txt'
+      - 'src/gta6-zinko-v2/RENDER-V5-FULL.txt'
       - '.github/workflows/render-gta6-zinko-v3-preview.yml'
   workflow_dispatch:
 permissions:
   contents: read
   actions: read
 concurrency:
-  group: gta6-zinko-v4-full
+  group: gta6-zinko-v5-full
   cancel-in-progress: true
 jobs:
   render:
@@ -97,16 +97,32 @@ jobs:
               shutil.copy2(match,Path('public/gta6-zinko-v4/sfx')/(name+'.wav'))
           print('Staged 18 original voice tracks and 6 GTA trailer cutaways.')
           PY
-      - name: Type-check V4
+      - name: Verify media sources and durations
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          root=Path('public/gta6-zinko-v5')
+          required=['clips/action.mp4','clips/coast.mp4','clips/rockstar.mp4','clips/opening.mp4','clips/lowrider.mp4','clips/crowd.mp4','voice/01.mp3','voice/18.mp3','fonts/Caption.ttf','fonts/Impact.ttf','nico/nico-happy.webp','nico/nico-question.webp','sfx/hit.wav','sfx/whoosh.wav','sfx/pop.wav']
+          missing=[x for x in required if not (root/x).is_file()]
+          if missing: raise SystemExit('Missing media assets: '+', '.join(missing))
+          for name in ['action.mp4','coast.mp4','rockstar.mp4','opening.mp4','lowrider.mp4','crowd.mp4']:
+              path=root/'clips'/name
+              result=subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',str(path)],text=True).strip()
+              print(f'{name}: {float(result):.2f}s')
+          print('All required voice, font, Nico and SFX assets exist.')
+          PY
+      - name: Type-check V5
         run: npx tsc --noEmit
-      - name: Render full 3-minute video
+      - name: Render full 3-minute V5 video
         run: |
           mkdir -p out
-          npx remotion render src/gta6-zinko-v2/index.tsx GTA6ZinkoMotionV4 out/GTA6-ZINKO-MOTION-V4-FULL.mp4 --codec=h264 --crf=18 --audio-bitrate=256k --concurrency=4
-          ffprobe -v error -show_entries format=duration,size -of json out/GTA6-ZINKO-MOTION-V4-FULL.mp4
+          npx remotion render src/gta6-zinko-v2/index.tsx GTA6ZinkoMotionV5 out/GTA6-ZINKO-MOTION-V5-FULL.mp4 --codec=h264 --crf=18 --audio-bitrate=256k --concurrency=4
+          ffprobe -v error -show_entries format=duration,size -of json out/GTA6-ZINKO-MOTION-V5-FULL.mp4
+          ffmpeg -v error -i out/GTA6-ZINKO-MOTION-V5-FULL.mp4 -f null -
       - uses: actions/upload-artifact@v4
         with:
-          name: GTA6-ZINKO-MOTION-V4-FULL
+          name: GTA6-ZINKO-MOTION-V5-FULL
           path: out/GTA6-ZINKO-MOTION-V4-FULL.mp4
           if-no-files-found: error
           retention-days: 7
