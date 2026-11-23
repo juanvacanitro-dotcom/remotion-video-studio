@@ -1,22 +1,25 @@
-# ZINKO GTA 6 — Editorial V2
+# ZINKO GTA 6 — Motion V3 (no supplied video clips)
 
 ## Composition
-- Remotion composition: `GTA6ZinkoEditorialV2`
+- Remotion composition: `GTA6ZinkoMotionV3`
 - Entry: `src/gta6-zinko-v2/index.tsx`
 - Duration: 180 seconds
 - Output: 1920×1080, 30 fps, H.264 MP4
 
-## Creative rules
-- Use the creator's 18 supplied animated clips and Nico character.
-- Use the creator's original Spanish voice tracks from `voz.zip`.
-- Use only short, non-musical sound effects from the supplied SFX pack.
-- No background music or musical stingers.
-- No official game footage, game logos, game characters, branded console imagery, or copied TikTok footage.
-- Visual cutaways are original Remotion vector artwork: generic controller, trophy, map, car, coins, charts, phone UI, and balance scale.
-- Yellow kinetic captions with dark outline; floating 3D UI panels; short top-down desk cutaways; progress dots; varied motion and transitions.
+## Production approach
+- Build every visual scene inside Remotion; do not download or use a user video-clips ZIP.
+- Use the 18 Spanish narration tracks and the supplied sound-effects pack.
+- Use original generated motion backplates and scene-specific SVG motifs: trophy, score ring, timeline, ranking bars, map, character pair, clock, review cards, controller, performance graph, car, coins, comparison split, verdict scale and end-screen cards.
+- Use the project's mascot artwork in presenter cut-ins.
+- Kinetic captions, punch-in movement, impact transitions, perspective panels and a metallic title sting.
+- No official GTA footage, official game logo, Rockstar marks or copied TikTok footage.
+
+## GTA Components research and adaptation
+The external `echris6/gta-components` repository contains 126 standalone HyperFrames projects using HTML, GSAP and Three.js. It is not a Remotion package and does not include gameplay footage. Its MIT-licensed code was reviewed; rather than adding a second renderer, selected motion patterns were adapted into `GtaMotionKit.tsx` as native Remotion components. See the root `THIRD-PARTY-NOTICES.md`.
 
 ## Cloud rendering
-- Preview workflow: `.github/workflows/render-gta6-zinko-v2-preview.yml`
-- Full workflow: `.github/workflows/render-gta6-zinko-v2-full.yml`
-- Full workflow is triggered by updating `src/gta6-zinko-v2/RENDER-FULL.txt`.
-- Source media is downloaded at render time from the creator's shared Drive folder; ZIP files are not committed to the repository.
+- Preview workflow: `.github/workflows/render-gta6-zinko-v3-preview.yml`
+- Full workflow: `.github/workflows/render-gta6-zinko-v3-full.yml`
+- Preview trigger: `src/gta6-zinko-v2/RENDER-V3-PREVIEW.txt`
+- Full render trigger: `src/gta6-zinko-v2/RENDER-V3-FULL.txt`
+- Both V3 workflows stage only narration and sound effects; neither downloads video clips.
