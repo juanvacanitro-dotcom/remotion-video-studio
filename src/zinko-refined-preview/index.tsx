@@ -630,7 +630,7 @@ function RefinedIntro() {
 
       <Sequence from={204} durationInFrames={46}>
         <Headline
-          text={'RESEÑAS\\nHISTÓRICAS'}
+          text={'RESEÑAS\nHISTÓRICAS'}
           left={185}
           top={305}
           width={660}
@@ -658,7 +658,7 @@ function RefinedIntro() {
       {/* ESCENA 2 — bienvenida y promesa del vídeo */}
       <Sequence from={300} durationInFrames={82}>
         <Headline
-          text={'BIENVENIDO\\nA ZINKO'}
+          text={'BIENVENIDO\nA ZINKO'}
           eyebrow="EL CANAL DE LA CURIOSIDAD"
           left={185}
           top={300}
@@ -714,7 +714,7 @@ function RefinedIntro() {
       </Sequence>
       <Sequence from={546} durationInFrames={54}>
         <Headline
-          text={'MI\\nVEREDICTO'}
+          text={'MI\nVEREDICTO'}
           eyebrow="Y AL FINAL..."
           left={245}
           top={330}
