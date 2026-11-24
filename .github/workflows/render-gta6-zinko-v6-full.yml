@@ -20,12 +20,12 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Install render tools
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq ffmpeg
-          npm ci --no-audit --no-fund
-          python3 -m pip install --quiet --upgrade gdown
+      - name: Verify FFmpeg is available on the hosted runner
+        run: ffmpeg -version | head -n 1
+      - name: Install Node dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install Google Drive downloader
+        run: python3 -m pip install --quiet --upgrade gdown
       - name: Download official Rockstar screenshots
         run: |
           mkdir -p public/gta6-zinko-v6/stills
