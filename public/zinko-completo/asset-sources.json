@@ -1,0 +1,74 @@
+[
+  {
+    "name": "pair",
+    "url": "https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_14.10e7v.06pcm_t.jpg",
+    "size": [
+      2048,
+      1152
+    ],
+    "bytes": 1017759
+  },
+  {
+    "name": "lucia",
+    "url": "https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_12.0saq9ns-~xj03.jpg",
+    "size": [
+      2048,
+      1152
+    ],
+    "bytes": 805430
+  },
+  {
+    "name": "city",
+    "url": "https://www.rockstargames.com/VI/_next/static/media/Vice_City_27.0d2e~w_r93hmh.jpg",
+    "size": [
+      2048,
+      1152
+    ],
+    "bytes": 1132950
+  },
+  {
+    "name": "rooftop",
+    "url": "https://www.rockstargames.com/VI/_next/static/media/Jason_Lucia_Rooftop_landscape.0c6p5do~-8~7..jpg",
+    "size": [
+      2048,
+      1152
+    ],
+    "bytes": 1865556
+  },
+  {
+    "name": "lock",
+    "url": "https://www.rockstargames.com/VI/_next/static/media/Jason_Lucia_Lock_And_Load_landscape.0l9s5w7ih9p~3.jpg",
+    "size": [
+      2048,
+      1152
+    ],
+    "bytes": 1280488
+  },
+  {
+    "name": "car",
+    "url": "https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_GROTTI_CHEETAH_01.0a.wy3s_ogjey.jpg",
+    "size": [
+      2048,
+      1152
+    ],
+    "bytes": 1864182
+  },
+  {
+    "name": "map",
+    "url": "https://www.rockstargames.com/VI/_next/static/media/Leonida_Map_Poster.08ir77j-.26ny.jpg",
+    "size": [
+      1496,
+      2048
+    ],
+    "bytes": 2211062
+  },
+  {
+    "name": "cover",
+    "url": "https://www.rockstargames.com/VI/_next/static/media/Cover_Art_Poster.05g75soif2t00.jpg",
+    "size": [
+      1496,
+      2048
+    ],
+    "bytes": 2703223
+  }
+]
