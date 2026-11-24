@@ -1,0 +1,36 @@
+name: Inspect clean GTA VI footage sources
+on:
+  push:
+    branches: [feat/gta6-zinko-motion-v7]
+    paths:
+      - 'assets/inspect-footage.txt'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package clean source footage
+        run: |
+          mkdir -p out
+          zip -j out/GTA6-CLEAN-FOOTAGE.zip \
+            public/zinko-full/action.mp4 \
+            public/zinko-full/coast.mp4 \
+            public/zinko-full/rockstar.mp4 \
+            public/zinko-full/shock.mp4 \
+            public/zinko-full/success.mp4 \
+            public/zinko-proof/crowd.mp4 \
+            public/zinko-proof/lowrider.mp4 \
+            public/zinko-proof/opening.mp4
+          for f in public/zinko-full/*.mp4 public/zinko-proof/*.mp4; do
+            echo "SOURCE: $f"
+            ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$f" || true
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-CLEAN-FOOTAGE
+          path: out/GTA6-CLEAN-FOOTAGE.zip
+          if-no-files-found: error
+          retention-days: 7
