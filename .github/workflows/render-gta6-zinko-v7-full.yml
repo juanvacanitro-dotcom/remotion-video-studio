@@ -1,0 +1,146 @@
+name: GTA 6 ZINKO V7 — Full 3 Minute Clean Motion Graphics
+on:
+  push:
+    branches: [feat/gta6-zinko-motion-v7]
+    paths:
+      - 'src/gta6-zinko-v7/FINAL-RENDER-READY.txt'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: gta6-zinko-v7-full
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install FFmpeg and verify its tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          command -v ffmpeg
+          command -v ffprobe
+      - name: Install Node dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install Google Drive downloader
+        run: python3 -m pip install --quiet --upgrade gdown
+      - name: Download official Rockstar screenshots
+        run: |
+          mkdir -p public/gta6-zinko-v7/stills
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_17.117_b11r13mg5.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/jason-lucia-17.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Jason_Duval_14.0eczq557_iuqo.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/jason-duval-14.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Lucia_Caminos_12.0saq9ns-~xj03.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/lucia-caminos-12.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_14.0fu8u9jh5hkg7.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/vice-city-14.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_17.0er79m2u3nygs.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/vice-city-17.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_20.18c75478u52nf.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/vice-city-20.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_25.0f72z-5qgyd~v.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/vice-city-25.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Grassrivers_07.0txitddjiq5o1.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/grassrivers-07.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_03.15z-.c0tptrzs.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/jason-lucia-03.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_05.0ypw_.fz.~4k0.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/jason-lucia-05.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Jason_and_Lucia_09.11_dlvb_8svuu.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/jason-lucia-09.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_10.0f1q-xa_4q8r2.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/vice-city-10.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Leonida_Keys_06.0eapr3hbeyewx.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/leonida-keys-06.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Grassrivers_06.0bdeicllwisnc.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/grassrivers-06.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_01.135x56yoeu.6t.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/vice-city-01.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Leonida_Keys_01.0zgz7tveur6y8.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/leonida-keys-01.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Port_Gellhorn_01.0fmisvza-5-cq.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/port-gellhorn-01.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Ambrosia_01.0rqphs0gazkm..jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/ambrosia-01.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Grassrivers_01.1096rw4lbjur_.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/grassrivers-01.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Mount_Kalaga_National_Park_02.0f24dhopdprvx.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/mount-kalaga-02.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/ULTIMATE_EDITION_GROTTI_CHEETAH_01.0a.wy3s_ogjey.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/grotti-cheetah-01.jpg
+          curl -fL --retry 3 -A 'Mozilla/5.0' 'https://www.rockstargames.com/VI/_next/static/media/Vice_City_13.0iq8ff474tsdx.jpg?akim=1&imdensity=1&imwidth=1920' -o public/gta6-zinko-v7/stills/vice-city-13.jpg
+          python3 - <<'PY'
+          from pathlib import Path
+          folder=Path('public/gta6-zinko-v7/stills')
+          files=list(folder.glob('*.jpg'))
+          for p in files:
+              if p.stat().st_size < 12000: raise SystemExit('Screenshot download incomplete: '+p.name)
+          if len(files)<20: raise SystemExit('Need at least 20 official Rockstar screenshots; got '+str(len(files)))
+          print('Official Rockstar screenshots staged:',len(files))
+          PY
+      - name: Stage original voice, SFX, brand assets and clean Rockstar footage
+        run: |
+          mkdir -p /tmp/gta-v7-voice /tmp/gta-v7-sfx public/gta6-zinko-v7/voice public/gta6-zinko-v7/sfx public/gta6-zinko-v7/fonts public/gta6-zinko-v7/nico public/gta6-zinko-v7/gear public/gta6-zinko-v7/cutaways
+          gdown '1ETmtPQ0u35WKySVo2HqdKJxhsnFfK3Mj' -O /tmp/gta-v7-voice.zip
+          gdown '1BeQ7rkfScTRLBfwsutf7GVO5mP1BMU74' -O /tmp/gta-v7-sfx.zip
+          unzip -q -o /tmp/gta-v7-voice.zip -d /tmp/gta-v7-voice
+          unzip -q -o /tmp/gta-v7-sfx.zip -d /tmp/gta-v7-sfx
+          cp public/zinko-proof/Caption.ttf public/gta6-zinko-v7/fonts/Caption.ttf
+          cp public/zinko-proof/Impact.ttf public/gta6-zinko-v7/fonts/Impact.ttf
+          cp public/zinko-proof/nico-happy.webp public/gta6-zinko-v7/nico/nico-happy.webp
+          cp public/zinko-proof/nico-question.webp public/gta6-zinko-v7/nico/nico-question.webp
+          cp public/zinko-proof/paper.jpg public/gta6-zinko-v7/paper.jpg
+          cp public/zinko-proof/gta-logo.webp public/gta6-zinko-v7/gta-logo.webp
+          cp public/zinko-full/ps5.webp public/gta6-zinko-v7/gear/ps5.webp
+          cp public/zinko-full/xbox.webp public/gta6-zinko-v7/gear/xbox.webp
+          cp public/zinko-full/action.mp4 public/gta6-zinko-v7/cutaways/action.mp4
+          cp public/zinko-full/coast.mp4 public/gta6-zinko-v7/cutaways/coast.mp4
+          cp public/zinko-full/rockstar.mp4 public/gta6-zinko-v7/cutaways/rockstar.mp4
+          cp public/zinko-proof/crowd.mp4 public/gta6-zinko-v7/cutaways/crowd.mp4
+          cp public/zinko-proof/lowrider.mp4 public/gta6-zinko-v7/cutaways/lowrider.mp4
+          cp public/zinko-proof/opening.mp4 public/gta6-zinko-v7/cutaways/opening.mp4
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, shutil
+          voices=list(Path('/tmp/gta-v7-voice').rglob('*.mp3'))
+          for n in range(1,19):
+              voice=next((p for p in voices if re.match(r'^'+str(n)+r'(?:\s|$|\()',p.stem)),None)
+              if voice is None: raise SystemExit('Missing original voice track '+str(n))
+              shutil.copy2(voice,Path('public/gta6-zinko-v7/voice')/('{:02d}.mp3'.format(n)))
+          sounds=list(Path('/tmp/gta-v7-sfx').rglob('*.wav'))
+          if not sounds: raise SystemExit('No WAV sound effects found')
+          for p in sounds: shutil.copy2(p,Path('public/gta6-zinko-v7/sfx')/p.name)
+          print('Staged all 18 original narration tracks and',len(sounds),'sound effects.')
+          PY
+      - name: Verify clean visual assets and original audio
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          root=Path('public/gta6-zinko-v7')
+          required=['voice/{:02d}.mp3'.format(i) for i in range(1,19)]
+          required += ['fonts/Caption.ttf','fonts/Impact.ttf','nico/nico-happy.webp','nico/nico-question.webp','paper.jpg','gta-logo.webp','gear/ps5.webp','gear/xbox.webp','sfx/01_pop.wav']
+          stills=['jason-lucia-17.jpg','vice-city-14.jpg','vice-city-17.jpg','vice-city-20.jpg','grassrivers-07.jpg','leonida-keys-06.jpg','jason-duval-14.jpg','lucia-caminos-12.jpg','grotti-cheetah-01.jpg','jason-lucia-03.jpg','vice-city-25.jpg','grassrivers-07.jpg','vice-city-10.jpg','jason-lucia-05.jpg','leonida-keys-01.jpg','vice-city-13.jpg','vice-city-01.jpg','port-gellhorn-01.jpg','ambrosia-01.jpg','grassrivers-01.jpg','mount-kalaga-02.jpg','leonida-keys-06.jpg','jason-lucia-09.jpg']
+          required += ['stills/'+s for s in stills]
+          required += ['cutaways/action.mp4','cutaways/coast.mp4','cutaways/rockstar.mp4','cutaways/crowd.mp4','cutaways/lowrider.mp4','cutaways/opening.mp4']
+          missing=[p for p in required if not (root/p).is_file()]
+          if missing: raise SystemExit('Missing V7 assets: '+', '.join(missing))
+          for name in ['action.mp4','coast.mp4','rockstar.mp4','crowd.mp4','lowrider.mp4','opening.mp4']:
+              p=root/'cutaways'/name
+              d=float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',str(p)],text=True).strip())
+              subprocess.run(['ffmpeg','-v','error','-i',str(p),'-f','null','-'],check=True)
+              if d < 1: raise SystemExit('Cutaway too short: '+name)
+          print('Verified 18 voice tracks, 6 clean Rockstar cutaways, 22 stills, fonts, Nico and SFX.')
+          PY
+      - name: Type-check V7
+        run: npx tsc --noEmit
+      - name: Ensure Chromium for Remotion
+        run: npx remotion browser ensure
+      - name: Render full 3-minute V7
+        run: |
+          mkdir -p out
+          npx remotion render src/gta6-zinko-v7/index.tsx GTA6ZinkoMotionV7 out/GTA6-ZINKO-V7-FULL.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k --concurrency=4
+          python3 - <<'PY'
+          import subprocess, re
+          from pathlib import Path
+          p=Path('out/GTA6-ZINKO-V7-FULL.mp4')
+          r=subprocess.run(['ffmpeg','-hide_banner','-i',str(p),'-f','null','-'],capture_output=True,text=True)
+          if r.returncode: raise SystemExit(r.stderr[-2000:])
+          m=re.search(r'Duration: (\d+):(\d+):(\d+(?:\.\d+)?)',r.stderr)
+          if not m: raise SystemExit('Could not read final video duration')
+          d=int(m.group(1))*3600+int(m.group(2))*60+float(m.group(3))
+          if d < 179: raise SystemExit('Final render shorter than expected: '+str(d))
+          print('Decoded final render: {:.2f}s, {} bytes'.format(d,p.stat().st_size))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GTA6-ZINKO-V7-FULL
+          path: out/GTA6-ZINKO-V7-FULL.mp4
+          if-no-files-found: error
+          retention-days: 14
