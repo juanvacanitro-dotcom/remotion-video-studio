@@ -32,7 +32,8 @@ const Bedroom:React.FC<{frame:number}> = ({frame})=><g>
  <path d="M0 740 H1920 V1080 H0Z" fill="#101321"/><path d="M0 740 L960 590 L1920 740" fill="none" stroke="#30334f" strokeWidth="5"/>
  <rect x="1030" y="190" width="690" height="430" rx="24" fill="#05060c" stroke="#8d8da7" strokeWidth="12"/>
  <rect x="1055" y="215" width="640" height="380" rx="8" fill="#10152c"/>
- <City frame={frame*.12}/>
+ <defs><clipPath id="monitor-city-clip"><rect x="1055" y="215" width="640" height="380" rx="8"/></clipPath></defs>
+ <g clipPath="url(#monitor-city-clip)" transform="translate(1055 215) scale(.333333 .351852)"><City frame={frame*.12}/></g>
  <rect x="1055" y="215" width="640" height="380" fill="#080916" opacity=".3"/>
  <path d="M1020 625 H1730 L1800 670 H960Z" fill="#292c44" stroke="#777894" strokeWidth="5"/>
  <rect x="180" y="540" width="650" height="260" rx="28" fill="#20243b" stroke="#5b5d7a" strokeWidth="7"/>
