@@ -1,4 +1,4 @@
-export type SceneData = {id:number; title:string; beatTitles:[string,string,string]; narration:string; location:'bedroom'|'city'|'street'|'beach'|'arcade'|'portal'|'chase'; cast:('adri'|'lucia'|'jason')[]; action:string};
+// 30 x 10-second storyboard beats for the five-minute short.\nexport type SceneData = {id:number; title:string; beatTitles:[string,string,string]; narration:string; location:'bedroom'|'city'|'street'|'beach'|'arcade'|'portal'|'chase'; cast:('adri'|'lucia'|'jason')[]; action:string};
 export const scenes:SceneData[] = [
 {id:1,title:'EL GANCHO',beatTitles:['¿Y SI ENTRARAS?','GTA 6','¡NO PUEDE SER!'],narration:'¿Y si pudieras entrar realmente a GTA 6? Adri solo quería probarlo... pero la pantalla acaba de tragárselo.',location:'bedroom',cast:['adri'],action:'sucked'},
 {id:2,title:'UNA NOCHE NORMAL',beatTitles:['UNA NOCHE NORMAL','A JUGAR','TODO TRANQUILO'],narration:'Todo comenzó una noche cualquiera. Adri estaba frente a su pantalla, esperando descubrir el videojuego más esperado de su vida.',location:'bedroom',cast:['adri'],action:'gaming'},
