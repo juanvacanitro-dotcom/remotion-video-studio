@@ -109,11 +109,16 @@ jobs:
           required += ['stills/jason-lucia-17.jpg','stills/vice-city-14.jpg','stills/vice-city-17.jpg','stills/vice-city-20.jpg','stills/grassrivers-07.jpg','stills/leonida-keys-06.jpg','stills/jason-duval-14.jpg','stills/lucia-caminos-12.jpg','stills/grotti-cheetah-01.jpg']
           missing=[p for p in required if not (root/p).is_file()]
           if missing: raise SystemExit('Missing V6 assets: '+', '.join(missing))
+          import re
           for i in range(1,19):
               p=root/'clips'/('{:02d}.mp4'.format(i))
-              d=float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',str(p)],text=True).strip())
+              probe=subprocess.run(['ffmpeg','-hide_banner','-i',str(p),'-f','null','-'],capture_output=True,text=True)
+              if probe.returncode: raise SystemExit('Invalid video clip: '+str(p)+'\\n'+probe.stderr[-1200:])
+              m=re.search(r'Duration: (\\d+):(\\d+):(\\d+(?:\\.\\d+)?)',probe.stderr)
+              if not m: raise SystemExit('Could not read clip duration: '+str(p))
+              d=int(m.group(1))*3600+int(m.group(2))*60+float(m.group(3))
               if d < 8: raise SystemExit('Clip too short: '+str(p)+' '+str(d))
-          print('Verified 18 clips, 18 voice tracks, ZINKO cutouts, fonts, SFX and 9 official Rockstar stills.')
+          print('Verified 18 decodable clips, 18 voice tracks, ZINKO cutouts, fonts, SFX and 9 official Rockstar stills.')
           PY
       - name: Type-check V6
         run: npx tsc --noEmit
@@ -123,8 +128,18 @@ jobs:
         run: |
           mkdir -p out
           npx remotion render src/gta6-zinko-v6/index.tsx GTA6ZinkoMotionV6Preview out/GTA6-ZINKO-V6-PREVIEW.mp4 --codec=h264 --crf=18 --pixel-format=yuv420p --audio-bitrate=192k --concurrency=3
-          ffprobe -v error -show_entries format=duration,size -show_entries stream=width,height,r_frame_rate -of json out/GTA6-ZINKO-V6-PREVIEW.mp4
-          ffmpeg -v error -i out/GTA6-ZINKO-V6-PREVIEW.mp4 -f null -
+          python3 - <<'PY'
+          import subprocess, re
+          from pathlib import Path
+          p=Path('out/GTA6-ZINKO-V6-PREVIEW.mp4')
+          r=subprocess.run(['ffmpeg','-hide_banner','-i',str(p),'-f','null','-'],capture_output=True,text=True)
+          if r.returncode: raise SystemExit(r.stderr[-2000:])
+          m=re.search(r'Duration: (\\d+):(\\d+):(\\d+(?:\\.\\d+)?)',r.stderr)
+          if not m: raise SystemExit('Could not read preview duration')
+          d=int(m.group(1))*3600+int(m.group(2))*60+float(m.group(3))
+          if d < 20: raise SystemExit('Preview shorter than expected: '+str(d))
+          print('Decoded preview: {:.2f}s, {} bytes'.format(d,p.stat().st_size))
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: GTA6-ZINKO-V6-PREVIEW
