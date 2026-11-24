@@ -22,8 +22,12 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Verify FFmpeg is available on the hosted runner
-        run: ffmpeg -version | head -n 1
+      - name: Install FFmpeg and verify its tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          command -v ffmpeg
+          command -v ffprobe
       - name: Install Node dependencies
         run: npm ci --no-audit --no-fund
       - name: Install Google Drive downloader
