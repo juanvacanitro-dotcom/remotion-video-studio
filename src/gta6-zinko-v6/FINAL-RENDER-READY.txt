@@ -1,0 +1,1 @@
+ZINKO V6 approved for the full 180-second render after successful 21-second motion-graphics proof, asset validation and TypeScript check.
