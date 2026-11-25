@@ -24,8 +24,10 @@ claims remains pending before completing a factual final cut.
 ## Edit
 
 - Keep the new project's midnight-neon look, Nico, narrative order and voices.
-- Recreate the top headlines as clean animated type, correcting the generated
-  extra-letter typo in scene 2 and removing “the data stage” from scene 3.
+- Keep the source's hand-drawn headlines. Repair only the extra-letter typo in
+  scene 2 with animated type and replace “the data stage” in scene 3 with a small
+  ZINKO mark. The masks follow the specific text areas and leave Nico and the
+  survival ring visible.
 - Add ZINKO yellow captions with a dark outline, synchronized to detected words
   and proofread against the supplied narration. `transcript.json` retains ASR
   output; captions correct punctuation, “este aro”, and the duplicate final ASR

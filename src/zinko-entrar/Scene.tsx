@@ -15,18 +15,24 @@ export function EditedScene({src,headings,camera}:SceneProps){
  const settle=spring({frame:Math.max(0,age)+3,fps,config:{stiffness:210,damping:18,mass:.7}});
  const first=camera==='room';
  const focus=first&&f>3.3*fps&&f<5.8*fps?'68% 55%':camera==='rules'?'45% 55%':'50% 55%';
- const zoom=first&&f>3.3*fps&&f<5.8*fps?1.045:1.012;
+ const zoom=first&&f>3.3*fps&&f<5.8*fps?1.015:1;
+ const repairHeading=camera==='tunnel'&&f>=3.3*fps&&f<6.9*fps;
+ const repairLabel=camera==='rules'&&f<3.65*fps;
  const impact=first&&f>=5.86*fps&&f<6.16*fps?Math.sin((f-5.86*fps)*2)*5*Math.exp(-(f-5.86*fps)*.22):0;
  return <AbsoluteFill style={{background:INK,overflow:'hidden'}}>
-   <Video src={staticFile(src)} muted objectFit="cover" premountFor={fps} style={{width:1920,height:1080,scale:zoom+Math.sin(f*.018)*.004,transformOrigin:focus,translate:`${impact}px 0px`}}/>
-   {/* Replace the generated headline strip, including the English artifact in E3. */}
-   <div style={{position:'absolute',left:0,top:0,width:1920,height:245,background:`linear-gradient(${INK} 0%,${INK} 76%,${INK}ee 84%,${INK}00 100%)`}}/>
-   <svg width={1920} height={210} style={{position:'absolute',left:0,top:0,opacity:.70}}>
-     <path d="M45 120 L95 65 L220 65 M1700 65 L1825 65 L1875 120" stroke={h.color} strokeWidth={3} fill="none" strokeDasharray="300" strokeDashoffset={300*(1-Math.min(1,(Math.max(0,age)+5)/15))}/>
-   </svg>
-   <div style={{position:'absolute',left:150,top:48,width:1620,textAlign:'center',fontFamily:'ZinkoImpact',fontSize:h.size??100,lineHeight:1.18,letterSpacing:1,color:WHITE,WebkitTextStroke:`2px ${INK}`,paintOrder:'stroke fill',textShadow:`3px 4px 0 ${INK},5px 7px 0 ${INK},0 0 18px ${h.color}33`,rotate:'-1deg',scale:.91+.09*settle,translate:`0px ${(1-settle)*23}px`}}>
-     {h.lead} <span style={{color:h.color}}>{h.accent}</span>
-   </div>
+   <Video src={staticFile(src)} muted objectFit="cover" premountFor={fps} style={{width:1920,height:1080,scale:zoom+Math.sin(f*.018)*.001,transformOrigin:focus,translate:`${impact}px 0px`}}/>
+   {/* Keep correct source lettering. Repair only the two generated artifacts. */}
+   {repairHeading&&<>
+     <div style={{position:'absolute',left:0,top:0,width:1920,height:296,background:`linear-gradient(${INK} 0%,${INK} 92%,${INK}00 100%)`}}/>
+     <div style={{position:'absolute',left:0,top:260,width:470,height:85,background:`linear-gradient(${INK} 0%,${INK} 78%,${INK}00 100%)`}}/>
+     <div style={{position:'absolute',left:110,top:62,width:1700,textAlign:'center',fontFamily:'ZinkoImpact',fontSize:150,lineHeight:1.18,letterSpacing:2,color:WHITE,WebkitTextStroke:`2px ${INK}`,paintOrder:'stroke fill',textShadow:`3px 4px 0 ${INK},5px 7px 0 ${INK},0 0 18px ${h.color}44`,rotate:'-1deg',scale:.94+.06*settle,translate:`0px ${(1-settle)*20}px`}}>
+       {h.lead} <span style={{color:h.color}}>{h.accent}</span>
+     </div>
+   </>}
+   {repairLabel&&<div style={{position:'absolute',left:0,top:0,width:660,height:158,background:INK,clipPath:'polygon(0 0,100% 0,97% 100%,0 100%)'}}>
+     <div style={{position:'absolute',left:50,top:29,font:'65px ZinkoImpact',letterSpacing:6,color:TEAL,textShadow:`0 0 15px ${TEAL}55`}}>ZINKO</div>
+     <div style={{position:'absolute',left:50,top:113,width:165,height:3,background:TEAL}}/>
+   </div>}
    <div style={{position:'absolute',left:0,right:0,bottom:0,height:190,background:'linear-gradient(transparent,#080a1a77)'}}/>
  </AbsoluteFill>;
 }
