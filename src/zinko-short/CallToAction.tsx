@@ -13,7 +13,7 @@ export const CallToAction=()=>{
      <div style={{position:'absolute',left:45,top:90,font:'80px ZinkoImpact',lineHeight:1.08,color:Y,WebkitTextStroke:`2px ${INK}`,paintOrder:'stroke fill',textShadow:`4px 6px 0 ${INK}`,rotate:'-3deg'}}>¿VALIÓ<br/>LA ESPERA?</div>
      <CanvasImage src={staticFile('zinko-proof/gta-logo.webp')} style={{position:'absolute',right:45,top:95,width:235,rotate:'7deg',filter:'drop-shadow(6px 8px 5px #0009)'}}/>
    </div>
-   <Label text="TOCA EL VÍDEO\nRELACIONADO" y={1190} size={66} color={WHITE} angle={-2} delay={15}/>
+   <Label text={'TOCA EL VÍDEO\nRELACIONADO'} y={1190} size={66} color={WHITE} angle={-2} delay={15}/>
    <Arrow y={1280}/><Nico x={820} y={1350} width={190} delay={12} angle={5}/>
    <CaptionLine scene="cta" y={1490}/>
    <div style={{position:'absolute',left:435,top:1670,font:'44px ZinkoImpact',color:INK,rotate:'-3deg'}}>ZINKO</div>
