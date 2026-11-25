@@ -1,0 +1,280 @@
+{
+  "title": "¿Qué pasaría si entraras a GTA 6?",
+  "aspectRatio": "16:9",
+  "targetMinutes": 5,
+  "music": false,
+  "sourceScriptLibraryId": "libfile_14bf8015732c81918c82c959f31f2f98",
+  "sourceZipLibraryId": "libfile_7c830477a99481918f8fe736bb4218d1",
+  "scenes": [
+    {
+      "number": 1,
+      "title": "Gancho: el televisor te succiona",
+      "narration": "Estás jugando a GTA seis en el sofá. Y el televisor hace un ruido muy raro. Ay, no. Te está succionando dentro del juego.",
+      "targetSeconds": 10,
+      "source": "escena-01.mp4",
+      "status": "available",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 2,
+      "title": "Bienvenida y el reto",
+      "narration": "Bienvenido a Zinko, el canal de la curiosidad. Hoy respondemos: ¿qué pasaría si entraras a GTA seis? Tienes veinticuatro horas para sobrevivir.",
+      "targetSeconds": 10,
+      "source": "escena-02.mp4",
+      "status": "available",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 3,
+      "title": "Las reglas",
+      "narration": "Regla uno: solo datos reales de reseñas y guías. Regla dos: este aro mide tus posibilidades de sobrevivir. Regla tres: no intentes esto en la vida real.",
+      "targetSeconds": 10,
+      "source": "escena-03.mp4",
+      "status": "available",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 4,
+      "title": "Aterrizas en Leonida",
+      "narration": "Aterrizas en Leonida, un estado inspirado en Florida. Con su sol, su mar y sus palmeras. Todo parece tranquilo. Qué ingenuo eres.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 5,
+      "title": "El mapa es el doble",
+      "narration": "El mapa es el doble de grande que el de GTA cinco. Según uno de los directores de Rockstar. Y tú ya te has perdido.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 6,
+      "title": "Vice City",
+      "narration": "Llegas a Vice City, la ciudad inspirada en Miami. Calles llenas, playas con gente y tiendas. Aquí sí que se vive. Y se sobrevive.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 7,
+      "title": "La gente",
+      "narration": "Lo más curioso es la gente: cada personaje es único. En las reseñas dicen que no hay dos iguales. Hasta hay abuelos en scooters de movilidad.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 8,
+      "title": "Más de 170 especies",
+      "narration": "Pero aquí no solo vive la gente. Leonida tiene más de ciento setenta especies de animales. Sí, ciento setenta. Qué ganas de socializar.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 9,
+      "title": "Los simpáticos",
+      "narration": "Los flamencos y los pelícanos son los simpáticos. Posan, pasean y no molestan a nadie. Por fin, un buen consejo: haz amigos aquí.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 10,
+      "title": "El caimán",
+      "narration": "Pero hay otros animales que no son tan simpáticos. El caimán espera inmóvil, y ataca si te acercas demasiado. Y tú te acercas, claro.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 11,
+      "title": "Los jabalíes",
+      "narration": "Escapas, y te topas con unos jabalíes. Dicen las reseñas que embisten nada más verte. Hoy no es tu día. Ni tu semana.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 12,
+      "title": "El clima localizado",
+      "narration": "Por suerte vuelves a la ciudad, pero cambia el tiempo. El clima es localizado: sol aquí y tormenta allí. Todo en el mismo momento. La naturaleza presume.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 13,
+      "title": "Charcos y arcoíris",
+      "narration": "Después de la tormenta, quedan charcos que no se van. Y a veces, hasta sale un arcoíris. Tú saltas en los charcos. Nadie te va a juzgar.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 14,
+      "title": "Autobuses y trenes",
+      "narration": "Hay autobuses y trenes que funcionan de verdad. Con rutas, paradas y horarios como en la vida real. Hoy te toca ser un ciudadano modelo.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 15,
+      "title": "Pierdes el autobús",
+      "narration": "Llega el autobús, y tú estás atando un cordón. Se va sin ti. Los horarios no esperan. Así de realista es todo en Leonida.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 16,
+      "title": "Los coches son más frágiles",
+      "narration": "Cuidado con los coches: son más frágiles. Un golpe pequeño, y el coche ya se resiente. Aquí un rasguño duele en la cartera.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 17,
+      "title": "Gastos y tareas",
+      "narration": "Y en Leonida también hay gastos y tareas diarias. Facturas, recados y cosas que hacer antes de divertirte. Sí, hasta el paraíso tiene papeleo.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 18,
+      "title": "Los mil encuentros",
+      "narration": "Pero el mundo tiene más de mil encuentros aleatorios. Cosas que pasan sin que las busques. Hoy, por fin, te toca uno bueno.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 19,
+      "title": "El abuelo del scooter",
+      "narration": "Un abuelo del scooter se para a saludarte. Te ofrece agua y te lleva a dar una vuelta. Primera lección: no todo en Leonida es peligro.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 20,
+      "title": "La policía y las seis estrellas",
+      "narration": "Y ahora, la parte seria: la policía de Leonida. El sistema de búsqueda llega hasta seis estrellas. Seis. Con cada estrella, más agentes.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 21,
+      "title": "La policía no reacciona al instante",
+      "narration": "Lo curioso: la policía no siempre reacciona al instante. Depende de quién te vea y de las alarmas. Los testigos cuentan más que nunca.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 22,
+      "title": "La pinta importa",
+      "narration": "Tu ropa, tu coche y tu forma de actuar importan. Con la pinta equivocada, te identifican antes. Hasta en el juego, la pinta lo es todo.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 23,
+      "title": "Cambiar de aspecto",
+      "narration": "Cambiar de ropa o de coche puede despistar a la policía. En el juego, claro. En la vida real, no cuela. Pregunta a cualquier agente.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 24,
+      "title": "El sistema de calor",
+      "narration": "El sistema de calor recuerda lo que haces en cada zona. Y la policía te busca más donde llamaste la atención. Moraleja: pasa desapercibido.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 25,
+      "title": "Cae la noche",
+      "narration": "Cae la noche en Vice City, y todo cambia. Neón, reflejos y mar: lo más bonito. Aquí, por un momento, te olvidas de todo.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 26,
+      "title": "Treinta fotogramas",
+      "narration": "Eso sí: en consolas todo va a treinta fotogramas por segundo. Tus movimientos, un poco menos fluidos. Aun así, el paisaje lo compensa casi todo.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 27,
+      "title": "El marcador final",
+      "narration": "Hora de ver tu marcador final de supervivencia. Has esquivado caimanes, jabalíes, tormentas y policías. Y apenas llevas unas horas. Qué nivel.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": true
+    },
+    {
+      "number": 28,
+      "title": "El veredicto",
+      "narration": "¿Sobrevivirías veinticuatro horas en GTA seis? Mi veredicto: sí, si respetas a los animales y a las reglas. Y si no pierdes el autobús.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": false
+    },
+    {
+      "number": 29,
+      "title": "Reglas finales",
+      "narration": "Regla uno: respeta a los caimanes y a los jabalíes. Regla dos: lleva paraguas y toma el autobús. Regla tres: sé amable con los abuelos.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": false
+    },
+    {
+      "number": 30,
+      "title": "Cierre y pantallas finales",
+      "narration": "¿Sobrevivirías tú en GTA seis? Cuéntamelo en los comentarios. Suscríbete a Zinko para más curiosidad. Y mira el siguiente vídeo, está justo aquí.",
+      "targetSeconds": 10,
+      "source": null,
+      "status": "pending-source",
+      "generationPromptInDocument": false
+    }
+  ]
+}

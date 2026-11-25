@@ -1,0 +1,497 @@
+[
+  {
+    "number": 1,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 7.52,
+        "text": " ¿Estás jugando a GTA seis en el sofá? ¿Y el televisor hace un ruido muy raro? Ay no. ¿Te está",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.48,
+            "word": " ¿Estás",
+            "probability": 0.6951488604148229
+          },
+          {
+            "start": 0.48,
+            "end": 0.88,
+            "word": " jugando",
+            "probability": 0.995926171541214
+          },
+          {
+            "start": 0.88,
+            "end": 1.02,
+            "word": " a",
+            "probability": 0.8641474843025208
+          },
+          {
+            "start": 1.02,
+            "end": 1.22,
+            "word": " GTA",
+            "probability": 0.9107564687728882
+          },
+          {
+            "start": 1.22,
+            "end": 1.64,
+            "word": " seis",
+            "probability": 0.00634816475212574
+          },
+          {
+            "start": 1.64,
+            "end": 1.88,
+            "word": " en",
+            "probability": 0.9869368672370911
+          },
+          {
+            "start": 1.88,
+            "end": 1.98,
+            "word": " el",
+            "probability": 0.958306074142456
+          },
+          {
+            "start": 1.98,
+            "end": 2.34,
+            "word": " sofá?",
+            "probability": 0.9830963611602783
+          },
+          {
+            "start": 3.36,
+            "end": 3.44,
+            "word": " ¿Y",
+            "probability": 0.6473424285650253
+          },
+          {
+            "start": 3.44,
+            "end": 3.56,
+            "word": " el",
+            "probability": 0.990126371383667
+          },
+          {
+            "start": 3.56,
+            "end": 3.96,
+            "word": " televisor",
+            "probability": 0.7009384483098984
+          },
+          {
+            "start": 3.96,
+            "end": 4.2,
+            "word": " hace",
+            "probability": 0.895734965801239
+          },
+          {
+            "start": 4.2,
+            "end": 4.34,
+            "word": " un",
+            "probability": 0.9977395534515381
+          },
+          {
+            "start": 4.34,
+            "end": 4.58,
+            "word": " ruido",
+            "probability": 0.9926006197929382
+          },
+          {
+            "start": 4.58,
+            "end": 4.88,
+            "word": " muy",
+            "probability": 0.9883409142494202
+          },
+          {
+            "start": 4.88,
+            "end": 5.26,
+            "word": " raro?",
+            "probability": 0.9954758286476135
+          },
+          {
+            "start": 5.86,
+            "end": 6.16,
+            "word": " Ay",
+            "probability": 0.40957409143447876
+          },
+          {
+            "start": 6.16,
+            "end": 6.44,
+            "word": " no.",
+            "probability": 0.7828096151351929
+          },
+          {
+            "start": 7.0,
+            "end": 7.22,
+            "word": " ¿Te",
+            "probability": 0.8481520712375641
+          },
+          {
+            "start": 7.22,
+            "end": 7.52,
+            "word": " está",
+            "probability": 0.1650824248790741
+          }
+        ]
+      },
+      {
+        "start": 7.52,
+        "end": 8.96,
+        "text": " succionando dentro del juego?",
+        "words": [
+          {
+            "start": 7.52,
+            "end": 8.14,
+            "word": " succionando",
+            "probability": 0.6815779702737927
+          },
+          {
+            "start": 8.14,
+            "end": 8.44,
+            "word": " dentro",
+            "probability": 0.9539653062820435
+          },
+          {
+            "start": 8.44,
+            "end": 8.68,
+            "word": " del",
+            "probability": 0.9904637336730957
+          },
+          {
+            "start": 8.68,
+            "end": 8.96,
+            "word": " juego?",
+            "probability": 0.9934130311012268
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "number": 2,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 6.76,
+        "text": " Bienvenido a Zinko, el canal de la curiosidad. Hoy respondemos, ¿qué pasaría si entraras a GTA seis?",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.78,
+            "word": " Bienvenido",
+            "probability": 0.9539769689242045
+          },
+          {
+            "start": 0.78,
+            "end": 0.94,
+            "word": " a",
+            "probability": 0.9907751679420471
+          },
+          {
+            "start": 0.94,
+            "end": 1.34,
+            "word": " Zinko,",
+            "probability": 0.3203047807328403
+          },
+          {
+            "start": 1.58,
+            "end": 1.72,
+            "word": " el",
+            "probability": 0.943008542060852
+          },
+          {
+            "start": 1.72,
+            "end": 1.96,
+            "word": " canal",
+            "probability": 0.8656321167945862
+          },
+          {
+            "start": 1.96,
+            "end": 2.16,
+            "word": " de",
+            "probability": 0.9661846160888672
+          },
+          {
+            "start": 2.16,
+            "end": 2.26,
+            "word": " la",
+            "probability": 0.9536939263343811
+          },
+          {
+            "start": 2.26,
+            "end": 2.94,
+            "word": " curiosidad.",
+            "probability": 0.9890698492527008
+          },
+          {
+            "start": 3.46,
+            "end": 3.6,
+            "word": " Hoy",
+            "probability": 0.9680545330047607
+          },
+          {
+            "start": 3.6,
+            "end": 4.32,
+            "word": " respondemos,",
+            "probability": 0.9714155495166779
+          },
+          {
+            "start": 4.6,
+            "end": 4.7,
+            "word": " ¿qué",
+            "probability": 0.7860953509807587
+          },
+          {
+            "start": 4.7,
+            "end": 5.14,
+            "word": " pasaría",
+            "probability": 0.955092191696167
+          },
+          {
+            "start": 5.14,
+            "end": 5.34,
+            "word": " si",
+            "probability": 0.6297807693481445
+          },
+          {
+            "start": 5.34,
+            "end": 5.78,
+            "word": " entraras",
+            "probability": 0.6921380162239075
+          },
+          {
+            "start": 5.78,
+            "end": 5.94,
+            "word": " a",
+            "probability": 0.9683988690376282
+          },
+          {
+            "start": 5.94,
+            "end": 6.2,
+            "word": " GTA",
+            "probability": 0.9311432242393494
+          },
+          {
+            "start": 6.2,
+            "end": 6.76,
+            "word": " seis?",
+            "probability": 0.0038618387188762426
+          }
+        ]
+      },
+      {
+        "start": 7.22,
+        "end": 9.24,
+        "text": " Tienes 24 horas para sobrevivir.",
+        "words": [
+          {
+            "start": 7.22,
+            "end": 7.48,
+            "word": " Tienes",
+            "probability": 0.8991790215174357
+          },
+          {
+            "start": 7.48,
+            "end": 7.94,
+            "word": " 24",
+            "probability": 0.8944724798202515
+          },
+          {
+            "start": 7.94,
+            "end": 8.3,
+            "word": " horas",
+            "probability": 0.9733664393424988
+          },
+          {
+            "start": 8.3,
+            "end": 8.54,
+            "word": " para",
+            "probability": 0.9926859140396118
+          },
+          {
+            "start": 8.54,
+            "end": 9.24,
+            "word": " sobrevivir.",
+            "probability": 0.986180305480957
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "number": 3,
+    "segments": [
+      {
+        "start": 0.0,
+        "end": 9.38,
+        "text": " Regla 1. Solo datos reales de reseñas y guías. Regla 2. Estearo mide tus posibilidades de sobrevivir. Regla 3. No intentes esto en la vida real.",
+        "words": [
+          {
+            "start": 0.0,
+            "end": 0.5,
+            "word": " Regla",
+            "probability": 0.6460831612348557
+          },
+          {
+            "start": 0.5,
+            "end": 0.76,
+            "word": " 1.",
+            "probability": 0.6247566342353821
+          },
+          {
+            "start": 1.12,
+            "end": 1.3,
+            "word": " Solo",
+            "probability": 0.7928152084350586
+          },
+          {
+            "start": 1.3,
+            "end": 1.6,
+            "word": " datos",
+            "probability": 0.9802788496017456
+          },
+          {
+            "start": 1.6,
+            "end": 2.06,
+            "word": " reales",
+            "probability": 0.9778496623039246
+          },
+          {
+            "start": 2.06,
+            "end": 2.16,
+            "word": " de",
+            "probability": 0.9934857487678528
+          },
+          {
+            "start": 2.16,
+            "end": 2.58,
+            "word": " reseñas",
+            "probability": 0.9383848905563354
+          },
+          {
+            "start": 2.58,
+            "end": 2.8,
+            "word": " y",
+            "probability": 0.992984414100647
+          },
+          {
+            "start": 2.8,
+            "end": 3.14,
+            "word": " guías.",
+            "probability": 0.9829117953777313
+          },
+          {
+            "start": 3.72,
+            "end": 4.04,
+            "word": " Regla",
+            "probability": 0.9239117801189423
+          },
+          {
+            "start": 4.04,
+            "end": 4.22,
+            "word": " 2.",
+            "probability": 0.9775681495666504
+          },
+          {
+            "start": 4.56,
+            "end": 4.98,
+            "word": " Estearo",
+            "probability": 0.6148077547550201
+          },
+          {
+            "start": 4.98,
+            "end": 5.22,
+            "word": " mide",
+            "probability": 0.9156332612037659
+          },
+          {
+            "start": 5.22,
+            "end": 5.42,
+            "word": " tus",
+            "probability": 0.9777732491493225
+          },
+          {
+            "start": 5.42,
+            "end": 6.04,
+            "word": " posibilidades",
+            "probability": 0.992305596669515
+          },
+          {
+            "start": 6.04,
+            "end": 6.2,
+            "word": " de",
+            "probability": 0.9895232319831848
+          },
+          {
+            "start": 6.2,
+            "end": 6.78,
+            "word": " sobrevivir.",
+            "probability": 0.9871402780214945
+          },
+          {
+            "start": 7.1,
+            "end": 7.34,
+            "word": " Regla",
+            "probability": 0.9660241603851318
+          },
+          {
+            "start": 7.34,
+            "end": 7.58,
+            "word": " 3.",
+            "probability": 0.9938283562660217
+          },
+          {
+            "start": 8.0,
+            "end": 8.08,
+            "word": " No",
+            "probability": 0.9633222222328186
+          },
+          {
+            "start": 8.08,
+            "end": 8.52,
+            "word": " intentes",
+            "probability": 0.9044831991195679
+          },
+          {
+            "start": 8.52,
+            "end": 8.74,
+            "word": " esto",
+            "probability": 0.9678369760513306
+          },
+          {
+            "start": 8.74,
+            "end": 8.82,
+            "word": " en",
+            "probability": 0.9966631531715393
+          },
+          {
+            "start": 8.82,
+            "end": 8.92,
+            "word": " la",
+            "probability": 0.9959606528282166
+          },
+          {
+            "start": 8.92,
+            "end": 9.1,
+            "word": " vida",
+            "probability": 0.991434633731842
+          },
+          {
+            "start": 9.1,
+            "end": 9.38,
+            "word": " real.",
+            "probability": 0.9935729503631592
+          }
+        ]
+      },
+      {
+        "start": 9.38,
+        "end": 9.48,
+        "text": " Real.",
+        "words": [
+          {
+            "start": 9.38,
+            "end": 9.48,
+            "word": " Real.",
+            "probability": 0.0006809139158576727
+          }
+        ]
+      }
+    ]
+  }
+]
