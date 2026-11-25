@@ -1,0 +1,38 @@
+name: Render ZINKO vertical teaser
+on:
+  push:
+    branches: [codex/zinko-short-teaser-20261125]
+    paths: ['src/zinko-short/**', '.github/workflows/zinko-short.yml', 'package.json', 'package-lock.json']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: zinko-short-teaser-20261125
+  cancel-in-progress: true
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - run: python3 src/zinko-short/build_audio.py
+      - run: npx tsc --noEmit
+      - run: npx remotion browser ensure
+      - name: Render Short
+        run: npx remotion render src/zinko-short/index.tsx ZinkoShortTeaser out/ZINKO-GTA6-Short-Teaser.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+      - name: Check delivered media
+        run: |
+          ffmpeg -v error -i out/ZINKO-GTA6-Short-Teaser.mp4 -f null -
+          ffprobe -v error -show_entries format=duration,size:stream=codec_name,codec_type,width,height,r_frame_rate -of json out/ZINKO-GTA6-Short-Teaser.mp4 > out/media-info.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZINKO-GTA6-Short-Teaser
+          path: out/
+          if-no-files-found: error
+          retention-days: 30

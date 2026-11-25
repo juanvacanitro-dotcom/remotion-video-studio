@@ -9,14 +9,17 @@
     "render:r8": "remotion render src/index.ts GTA6R8Intro out/GTA6-R8-preview.mp4 --codec=h264"
   },
   "dependencies": {
+    "@remotion/captions": "4.0.544",
     "@remotion/cli": "4.0.544",
-    "remotion": "4.0.544",
+    "@remotion/media": "4.0.544",
+    "@remotion/transitions": "4.0.544",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "remotion": "4.0.544"
   },
   "devDependencies": {
-    "@types/react": "19.1.8",
     "@types/node": "22.15.30",
+    "@types/react": "19.1.8",
     "typescript": "5.8.3"
   }
 }

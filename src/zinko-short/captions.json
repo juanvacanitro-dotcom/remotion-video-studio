@@ -1,0 +1,135 @@
+{
+  "hook": [
+    {
+      "text": "99 sobre 100\nen Metacritic",
+      "startMs": 91,
+      "endMs": 2658,
+      "timestampMs": null,
+      "confidence": null
+    }
+  ],
+  "world": [
+    {
+      "text": "Lo primero que alaban es",
+      "startMs": 0,
+      "endMs": 1199,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "el mundo abierto,",
+      "startMs": 1199,
+      "endMs": 2132,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "enorme,",
+      "startMs": 2466,
+      "endMs": 3732,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "vivo y lleno de detalles.",
+      "startMs": 4132,
+      "endMs": 5732,
+      "timestampMs": null,
+      "confidence": null
+    }
+  ],
+  "twist": [
+    {
+      "text": "pero tiene pegas que casi",
+      "startMs": 67,
+      "endMs": 1234,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "nadie cuenta.",
+      "startMs": 1234,
+      "endMs": 1901,
+      "timestampMs": null,
+      "confidence": null
+    }
+  ],
+  "fps": [
+    {
+      "text": "La más repetida,",
+      "startMs": 88,
+      "endMs": 1154,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "30 fotogramas\npor segundo.",
+      "startMs": 1421,
+      "endMs": 2921,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "En todas las consolas,",
+      "startMs": 3288,
+      "endMs": 4288,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "incluso en PS5 Pro.",
+      "startMs": 4521,
+      "endMs": 5854,
+      "timestampMs": null,
+      "confidence": null
+    }
+  ],
+  "paradox": [
+    {
+      "text": "Y aún así,",
+      "startMs": 108,
+      "endMs": 708,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "el aplauso es casi unánime.",
+      "startMs": 908,
+      "endMs": 2408,
+      "timestampMs": null,
+      "confidence": null
+    }
+  ],
+  "question": [
+    {
+      "text": "¿Qué nota\nle pondrías tú",
+      "startMs": 88,
+      "endMs": 1688,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "a GTA 6?",
+      "startMs": 1788,
+      "endMs": 2688,
+      "timestampMs": null,
+      "confidence": null
+    }
+  ],
+  "cta": [
+    {
+      "text": "Y mira el siguiente vídeo,",
+      "startMs": 101,
+      "endMs": 1268,
+      "timestampMs": null,
+      "confidence": null
+    },
+    {
+      "text": "está justo aquí.",
+      "startMs": 1368,
+      "endMs": 2134,
+      "timestampMs": null,
+      "confidence": null
+    }
+  ]
+}
