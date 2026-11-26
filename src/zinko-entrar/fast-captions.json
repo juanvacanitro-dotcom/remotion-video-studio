@@ -1,0 +1,211 @@
+{
+  "1": [
+    {
+      "text": "ESTÁS JUGANDO",
+      "startMs": 0,
+      "endMs": 785,
+      "timestampMs": 392,
+      "confidence": null
+    },
+    {
+      "text": "A GTA 6",
+      "startMs": 785,
+      "endMs": 1462,
+      "timestampMs": 1123,
+      "confidence": null
+    },
+    {
+      "text": "EN EL SOFÁ",
+      "startMs": 1462,
+      "endMs": 2086,
+      "timestampMs": 1774,
+      "confidence": null
+    },
+    {
+      "text": "Y EL TELEVISOR",
+      "startMs": 2265,
+      "endMs": 2800,
+      "timestampMs": 2532,
+      "confidence": null
+    },
+    {
+      "text": "HACE UN RUIDO",
+      "startMs": 2800,
+      "endMs": 3353,
+      "timestampMs": 3077,
+      "confidence": null
+    },
+    {
+      "text": "MUY RARO",
+      "startMs": 3353,
+      "endMs": 3960,
+      "timestampMs": 3656,
+      "confidence": null
+    },
+    {
+      "text": "¡AY, NO!",
+      "startMs": 4138,
+      "endMs": 4651,
+      "timestampMs": 4395,
+      "confidence": null
+    },
+    {
+      "text": "TE ESTÁ",
+      "startMs": 4855,
+      "endMs": 5316,
+      "timestampMs": 5086,
+      "confidence": null
+    },
+    {
+      "text": "SUCCIONANDO",
+      "startMs": 5316,
+      "endMs": 5865,
+      "timestampMs": 5591,
+      "confidence": null
+    },
+    {
+      "text": "DENTRO DEL JUEGO",
+      "startMs": 5865,
+      "endMs": 6592,
+      "timestampMs": 6228,
+      "confidence": null
+    }
+  ],
+  "2": [
+    {
+      "text": "BIENVENIDO A ZINKO",
+      "startMs": 0,
+      "endMs": 1190,
+      "timestampMs": 595,
+      "confidence": null
+    },
+    {
+      "text": "EL CANAL DE LA",
+      "startMs": 1403,
+      "endMs": 2007,
+      "timestampMs": 1705,
+      "confidence": null
+    },
+    {
+      "text": "CURIOSIDAD",
+      "startMs": 2007,
+      "endMs": 2611,
+      "timestampMs": 2309,
+      "confidence": null
+    },
+    {
+      "text": "HOY RESPONDEMOS",
+      "startMs": 2753,
+      "endMs": 3512,
+      "timestampMs": 3132,
+      "confidence": null
+    },
+    {
+      "text": "¿QUÉ PASARÍA",
+      "startMs": 3653,
+      "endMs": 4134,
+      "timestampMs": 3894,
+      "confidence": null
+    },
+    {
+      "text": "SI ENTRARAS",
+      "startMs": 4134,
+      "endMs": 4703,
+      "timestampMs": 4419,
+      "confidence": null
+    },
+    {
+      "text": "A GTA 6?",
+      "startMs": 4703,
+      "endMs": 5575,
+      "timestampMs": 5139,
+      "confidence": null
+    },
+    {
+      "text": "TIENES 24 HORAS",
+      "startMs": 5789,
+      "endMs": 6747,
+      "timestampMs": 6268,
+      "confidence": null
+    },
+    {
+      "text": "PARA SOBREVIVIR",
+      "startMs": 6747,
+      "endMs": 7580,
+      "timestampMs": 7164,
+      "confidence": null
+    }
+  ],
+  "3": [
+    {
+      "text": "REGLA UNO",
+      "startMs": 0,
+      "endMs": 691,
+      "timestampMs": 345,
+      "confidence": null
+    },
+    {
+      "text": "SOLO DATOS REALES",
+      "startMs": 871,
+      "endMs": 1704,
+      "timestampMs": 1287,
+      "confidence": null
+    },
+    {
+      "text": "DE RESEÑAS Y GUÍAS",
+      "startMs": 1704,
+      "endMs": 2660,
+      "timestampMs": 2182,
+      "confidence": null
+    },
+    {
+      "text": "REGLA DOS",
+      "startMs": 2839,
+      "endMs": 3289,
+      "timestampMs": 3064,
+      "confidence": null
+    },
+    {
+      "text": "ESTE ARO MIDE",
+      "startMs": 3505,
+      "endMs": 4096,
+      "timestampMs": 3800,
+      "confidence": null
+    },
+    {
+      "text": "TUS POSIBILIDADES",
+      "startMs": 4096,
+      "endMs": 4830,
+      "timestampMs": 4463,
+      "confidence": null
+    },
+    {
+      "text": "DE SOBREVIVIR",
+      "startMs": 4830,
+      "endMs": 5493,
+      "timestampMs": 5161,
+      "confidence": null
+    },
+    {
+      "text": "REGLA TRES",
+      "startMs": 5670,
+      "endMs": 6093,
+      "timestampMs": 5881,
+      "confidence": null
+    },
+    {
+      "text": "NO INTENTES ESTO",
+      "startMs": 6305,
+      "endMs": 6967,
+      "timestampMs": 6636,
+      "confidence": null
+    },
+    {
+      "text": "EN LA VIDA REAL",
+      "startMs": 6967,
+      "endMs": 7539,
+      "timestampMs": 7253,
+      "confidence": null
+    }
+  ]
+}

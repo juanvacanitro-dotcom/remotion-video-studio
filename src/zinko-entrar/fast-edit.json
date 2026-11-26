@@ -1,0 +1,132 @@
+{
+  "fps": 30,
+  "frames": 675,
+  "scenes": [
+    {
+      "scene": 1,
+      "fromFrame": 0,
+      "frames": 211,
+      "segments": [
+        {
+          "sourceStart": 0,
+          "sourceEnd": 2.43,
+          "frames": 65,
+          "fromFrame": 0,
+          "rate": 1.1215384615384616
+        },
+        {
+          "sourceStart": 3.25,
+          "sourceEnd": 5.38,
+          "frames": 57,
+          "fromFrame": 65,
+          "rate": 1.1210526315789473
+        },
+        {
+          "sourceStart": 5.78,
+          "sourceEnd": 6.57,
+          "frames": 21,
+          "fromFrame": 122,
+          "rate": 1.1285714285714288
+        },
+        {
+          "sourceStart": 6.9,
+          "sourceEnd": 9.12,
+          "frames": 59,
+          "fromFrame": 143,
+          "rate": 1.1288135593220334
+        },
+        {
+          "sourceStart": 9.12,
+          "sourceEnd": 9.96,
+          "frames": 9,
+          "fromFrame": 202,
+          "rate": 2.8000000000000056
+        }
+      ]
+    },
+    {
+      "scene": 2,
+      "fromFrame": 211,
+      "frames": 233,
+      "segments": [
+        {
+          "sourceStart": 0,
+          "sourceEnd": 3.04,
+          "frames": 81,
+          "fromFrame": 0,
+          "rate": 1.125925925925926
+        },
+        {
+          "sourceStart": 3.4,
+          "sourceEnd": 4.42,
+          "frames": 27,
+          "fromFrame": 81,
+          "rate": 1.1333333333333333
+        },
+        {
+          "sourceStart": 4.54,
+          "sourceEnd": 6.9,
+          "frames": 63,
+          "fromFrame": 108,
+          "rate": 1.123809523809524
+        },
+        {
+          "sourceStart": 7.12,
+          "sourceEnd": 9.45,
+          "frames": 62,
+          "fromFrame": 171,
+          "rate": 1.1274193548387093
+        }
+      ]
+    },
+    {
+      "scene": 3,
+      "fromFrame": 444,
+      "frames": 231,
+      "segments": [
+        {
+          "sourceStart": 0,
+          "sourceEnd": 0.88,
+          "frames": 24,
+          "fromFrame": 0,
+          "rate": 1.0999999999999999
+        },
+        {
+          "sourceStart": 1.04,
+          "sourceEnd": 3.26,
+          "frames": 59,
+          "fromFrame": 24,
+          "rate": 1.1288135593220339
+        },
+        {
+          "sourceStart": 3.64,
+          "sourceEnd": 4.38,
+          "frames": 20,
+          "fromFrame": 83,
+          "rate": 1.1099999999999997
+        },
+        {
+          "sourceStart": 4.48,
+          "sourceEnd": 6.9,
+          "frames": 65,
+          "fromFrame": 103,
+          "rate": 1.116923076923077
+        },
+        {
+          "sourceStart": 7.02,
+          "sourceEnd": 7.74,
+          "frames": 19,
+          "fromFrame": 168,
+          "rate": 1.136842105263159
+        },
+        {
+          "sourceStart": 7.92,
+          "sourceEnd": 9.56,
+          "frames": 44,
+          "fromFrame": 187,
+          "rate": 1.1181818181818186
+        }
+      ]
+    }
+  ]
+}

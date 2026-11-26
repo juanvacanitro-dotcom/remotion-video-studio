@@ -1,4 +1,37 @@
-# ¿Qué pasaría si entraras a GTA 6? — Avance 01
+# ¿Qué pasaría si entraras a GTA 6? — V2 dinámico
+
+## Current cut: V2
+
+The first 3 supplied scenes now run **22.5 seconds** (675 frames at 30fps),
+instead of the previous 30-second cut. Same narration, narrative order and
+16:9 delivery; pauses between clauses are cut and spoken sections run about
+1.12× with FFmpeg `atempo` preserving voice pitch. A non-spoken portal flourish
+is speed-ramped to 2.8×. No missing scenes are fabricated.
+
+- 26 separately authored shots: alternating wide views, character reactions,
+  television/ring details and camera punches. Avoid ten-second uncut holds.
+- 26 short original synthesized sound accents, balanced below the narration.
+- Snap zooms, short shakes, electrical interference, drawn speed lines, two
+  scene transitions, two internal whips, GTA logo pops, a 24-hour slam and
+  animated rule numerals. Keep the original neon animation visible.
+- Short uppercase yellow caption phrases with dark outlines and word-group
+  entry motion; scene timing is shared with each trimmed shot.
+- The original two malformed labels remain repaired before camera movement.
+- `fast-edit.json` is the frame-exact source/edited-time map. Generated footage
+  and mix files are ignored by git and rebuilt by `build_fast.py`.
+
+The user rejected V1 as sleepy and requested “pim, pam, pum”: rapid edits,
+visual effects, fluid transitions and no dead pauses. V2 implements that
+direction; it has not yet been approved by the user. Preserve this distinction
+when using it as a style reference for later scenes.
+
+```bash
+python3 src/zinko-entrar/build_fast.py
+npx tsc --noEmit
+npx remotion render src/zinko-entrar/index-fast.tsx ZinkoEntrarV2Dinamico out/ZINKO-Entrar-GTA6-V2-Dinamico.mp4 --concurrency=2 --crf=18 --pixel-format=yuv420p --audio-bitrate=256k
+```
+
+## Previous cut: V1 (kept for comparison)
 
 New long-form ZINKO project. The current deliverable contains only received
 scenes 1–3: 30 seconds, 16:9, 1920×1080, 30fps, H.264/AAC. Original footage is
